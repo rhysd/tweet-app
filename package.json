@@ -1,0 +1,26 @@
+{
+  "name": "tweet-app",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhysd/tweet-app.git"
+  },
+  "author": "rhysd <https://rhysd.github.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rhysd/tweet-app/issues"
+  },
+  "homepage": "https://github.com/rhysd/tweet-app#readme",
+  "devDependencies": {
+    "@types/node": "^10.12.23",
+    "typescript": "^3.3.3"
+  },
+  "optionalDependencies": {
+    "electron": "^4.0.4"
+  }
+}
