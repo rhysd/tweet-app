@@ -1,16 +1,16 @@
 {
   "name": "tweet-app",
   "productName": "Tweet",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Desktop app only for tweeting. Timeline is never shown",
   "main": "main/index.js",
   "bin": {
     "tweet": "./bin/cli.js"
   },
   "scripts": {
     "build:tsc": "tsc -p .",
-    "build:aprcel": "parcel build -o preload.js -d renderer/ --target electron renderer/index.js",
-    "build": "npm-run-all -p build:tsc build:parcel",
+    "build:parcel": "parcel build -o preload.js -d renderer/ --target electron renderer/index.js",
+    "build": "npm-run-all build:tsc build:parcel",
     "watch:tsc": "tsc -p . --watch",
     "watch:parcel": "parcel -o preload.js -d renderer/ --target electron renderer/index.js",
     "watch": "npm-run-all -p watch:tsc watch:parcel",
