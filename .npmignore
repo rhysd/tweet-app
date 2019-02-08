@@ -1,0 +1,9 @@
+*.plist
+*.log
+*.icns
+*.ico
+*.svg
+/dist
+/app
+/scripts
+/.github
