@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmitOnError": true,
+    "strictNullChecks": true,
+    "target": "es2015",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "main/**/*.ts",
+    "renderer/**/*.ts",
+    "types/**/*.d.ts"
+  ]
+}
