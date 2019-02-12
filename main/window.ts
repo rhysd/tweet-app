@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, session } from 'electron';
 import windowState = require('electron-window-state');
 import log from './log';
 import { IS_DEBUG, PRELOAD_JS } from './constants';
@@ -81,9 +81,28 @@ export default class TweetWindow {
                 log.debug('Event: did-finish-load');
                 win.webContents.insertCSS('[aria-label="Back"] { display: none !important; }');
             });
-            win.webContents.once('dom-ready', () => {
+            win.webContents.on('dom-ready', () => {
                 log.debug('Event: dom-ready');
                 ipc.send('tweetapp:config', this.config);
+            });
+            win.webContents.once('dom-ready', () => {
+                const ses = session.defaultSession;
+                if (ses !== undefined) {
+                    // 'https://api.twitter.com/1.1/statuses/update.json'
+                    const req = ses.webRequest;
+                    const filter = {
+                        urls: ['https://api.twitter.com/1.1/statuses/update.json'],
+                    };
+                    req.onCompleted(filter, (details: Electron.OnCompletedDetails) => {
+                        if (details.statusCode !== 200 || details.method !== 'POST' || details.fromCache) {
+                            return;
+                        }
+                        log.debug('Posted tweet:', details.url);
+                        ipc.send('tweetapp:sent-tweet');
+                    });
+                } else {
+                    log.error('Could not get default session');
+                }
                 if (IS_DEBUG) {
                     win.webContents.openDevTools({ mode: 'detach' });
                 }

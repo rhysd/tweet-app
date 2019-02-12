@@ -34,9 +34,10 @@
     "@types/node": "^10.12.23",
     "npm-run-all": "^4.1.5",
     "parcel-bundler": "^1.11.0",
-    "typescript": "^3.3.3"
+    "typescript": "^3.3.3",
+    "electron": "^4.0.4"
   },
-  "optionalDependencies": {
+  "peerDependencies": {
     "electron": "^4.0.4"
   },
   "dependencies": {
