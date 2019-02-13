@@ -1,3 +1,4 @@
+import { Menu } from 'electron';
 import TweetWindow from './window';
 import Ipc from './ipc';
 import log from './log';
@@ -11,17 +12,20 @@ class Lifecycle {
     private resolveQuit: () => void;
 
     constructor(config: Config, private opts: CommandLineOptions) {
-        const menu = createMenu();
+        this.quit = this.quit.bind(this);
         this.didQuit = new Promise(resolve => {
             this.resolveQuit = resolve;
         });
         this.ipc = new Ipc();
-        // TODO: Create a menu
-        this.win = new TweetWindow(config, this.ipc, opts);
+
+        const menu = createMenu(this.ipc, this.quit);
+        Menu.setApplicationMenu(menu);
+
+        this.win = new TweetWindow(config, this.ipc, opts, menu);
     }
 
     start(): Promise<void> {
-        this.win.didClose = this.quit.bind(this);
+        this.win.didClose = this.quit;
         return this.win.open(this.opts.text);
     }
 

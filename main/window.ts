@@ -1,8 +1,8 @@
 import * as querystring from 'querystring';
-import { BrowserWindow, session } from 'electron';
+import { BrowserWindow, session, Menu } from 'electron';
 import windowState = require('electron-window-state');
 import log from './log';
-import { IS_DEBUG, PRELOAD_JS } from './constants';
+import { ON_DIRWIN, IS_DEBUG, PRELOAD_JS } from './constants';
 import Ipc from './ipc';
 
 export default class TweetWindow {
@@ -10,7 +10,7 @@ export default class TweetWindow {
     private win: BrowserWindow | null;
     private hashtags: string;
 
-    constructor(private config: Config, private ipc: Ipc, opts: CommandLineOptions) {
+    constructor(private config: Config, private ipc: Ipc, opts: CommandLineOptions, private menu: Menu) {
         this.hashtags = (opts.hashtags || []).join(',');
         this.win = null;
     }
@@ -64,6 +64,10 @@ export default class TweetWindow {
                 },
             });
             state.manage(win);
+
+            if (!ON_DIRWIN) {
+                win.setMenu(this.menu);
+            }
 
             this.ipc.attach(win.webContents);
 
