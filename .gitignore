@@ -1,4 +1,6 @@
 /node_modules
+/bin/*.js
+/bin/*.js.map
 /main/**/*.js
 /main/**/*.map
 /renderer/**/*.js

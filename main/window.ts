@@ -1,3 +1,4 @@
+import * as querystring from 'querystring';
 import { BrowserWindow, session } from 'electron';
 import windowState = require('electron-window-state');
 import log from './log';
@@ -5,16 +6,37 @@ import { IS_DEBUG, PRELOAD_JS } from './constants';
 import Ipc from './ipc';
 
 export default class TweetWindow {
-    public didCloseWindow?: () => void;
+    public didClose: (() => void) | null;
     private win: BrowserWindow | null;
-    private ipc: Ipc | null;
+    private hashtags: string;
 
-    constructor(private config: Config) {
+    constructor(private config: Config, private ipc: Ipc, opts: CommandLineOptions) {
+        this.hashtags = (opts.hashtags || []).join(',');
         this.win = null;
-        this.ipc = null;
     }
 
-    open() {
+    composeTweetUrl(text?: string): string {
+        let queries = [];
+        if (text !== undefined && text !== '') {
+            queries.push('text=' + querystring.escape(text));
+        }
+        if (this.hashtags.length > 0) {
+            queries.push('hashtags=' + querystring.escape(this.hashtags));
+        }
+
+        let url = 'https://mobile.twitter.com/compose/tweet';
+        if (queries.length > 0) {
+            url += '?' + queries.join('&');
+        }
+        return url;
+    }
+
+    open(text?: string) {
+        if (this.win !== null) {
+            // TODO: Should we refresh content?
+            this.win.show();
+            return Promise.resolve();
+        }
         return new Promise<void>(resolve => {
             log.debug('Start application');
 
@@ -27,36 +49,35 @@ export default class TweetWindow {
                 y: state.y,
                 // TODO: icon: ...
                 show: false,
-                titleBarStyle: 'hidden',
+                titleBarStyle: 'hiddenInset',
+                frame: false,
+                fullscreenable: false,
+                useContentSize: true,
                 autoHideMenuBar: true,
                 webPreferences: {
                     nodeIntegration: false,
                     sandbox: true,
                     preload: PRELOAD_JS,
                     contextIsolation: true,
+                    webviewTag: false,
                     // TODO: partition: ... for multiple accounts
                 },
             });
             state.manage(win);
 
-            const ipc = new Ipc(win.webContents);
+            this.ipc.attach(win.webContents);
 
             win.once('ready-to-show', () => {
                 win.show();
             });
             win.once('closed', () => {
                 log.debug('Event: closed');
-                if (this.ipc !== null) {
-                    this.ipc.dispose();
-                    this.ipc = null;
-                }
                 if (this.win !== null) {
-                    this.win.webContents.removeAllListeners();
                     this.win.removeAllListeners();
                     this.win = null;
                 }
-                if (this.didCloseWindow) {
-                    this.didCloseWindow();
+                if (this.didClose) {
+                    this.didClose();
                 }
             });
 
@@ -74,7 +95,7 @@ export default class TweetWindow {
             win.webContents.on('new-window', (e, url) => {
                 log.info('Event: new-window:', url);
                 e.preventDefault();
-                log.warn('Blocked navigation:', url);
+                log.warn('Blocked gew window creation:', url);
             });
 
             win.webContents.on('did-finish-load', () => {
@@ -83,7 +104,7 @@ export default class TweetWindow {
             });
             win.webContents.on('dom-ready', () => {
                 log.debug('Event: dom-ready');
-                ipc.send('tweetapp:config', this.config);
+                this.ipc.send('tweetapp:config', this.config);
             });
             win.webContents.once('dom-ready', () => {
                 const ses = session.defaultSession;
@@ -97,8 +118,9 @@ export default class TweetWindow {
                         if (details.statusCode !== 200 || details.method !== 'POST' || details.fromCache) {
                             return;
                         }
-                        log.debug('Posted tweet:', details.url);
-                        ipc.send('tweetapp:sent-tweet');
+                        const tweetUrl = this.composeTweetUrl();
+                        log.debug('Posted tweet:', details.url, 'next URL:', tweetUrl);
+                        this.ipc.send('tweetapp:sent-tweet', tweetUrl);
                     });
                 } else {
                     log.error('Could not get default session');
@@ -109,12 +131,12 @@ export default class TweetWindow {
                 resolve();
             });
 
-            const url = 'https://mobile.twitter.com/compose/tweet';
+            const url = this.composeTweetUrl(text);
             log.info('Opening', url);
             win.loadURL(url);
+            win.focus();
 
             this.win = win;
-            this.ipc = ipc;
         });
     }
 

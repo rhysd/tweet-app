@@ -30,17 +30,19 @@
   },
   "homepage": "https://github.com/rhysd/tweet-app#readme",
   "devDependencies": {
+    "@types/commander": "^2.12.2",
     "@types/electron-window-state": "^2.0.33",
     "@types/node": "^10.12.23",
+    "electron": "^4.0.4",
     "npm-run-all": "^4.1.5",
     "parcel-bundler": "^1.11.0",
-    "typescript": "^3.3.3",
-    "electron": "^4.0.4"
+    "typescript": "^3.3.3"
   },
   "peerDependencies": {
     "electron": "^4.0.4"
   },
   "dependencies": {
+    "commander": "^2.19.0",
     "electron-context-menu": "^0.11.0",
     "electron-window-state": "^5.0.3"
   }

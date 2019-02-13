@@ -1,6 +1,6 @@
 import { IS_DEBUG, IS_DEV } from './constants';
 
-const log = console;
+const log = { ...console };
 
 function noop() {}
 

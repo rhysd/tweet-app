@@ -17,6 +17,7 @@
     "resolveJsonModule": true
   },
   "include": [
+    "bin/cli.ts",
     "main/**/*.ts",
     "renderer/**/*.ts",
     "types/**/*.d.ts"
