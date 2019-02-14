@@ -24,7 +24,7 @@ export default class TweetWindow {
         private menu: Menu,
     ) {
         this.hashtags = (opts.hashtags || []).join(',');
-        if (screenName !== undefined) {
+        if (screenName !== undefined && screenName !== '') {
             this.screenName = screenName;
             if (this.screenName.startsWith('@')) {
                 this.screenName = this.screenName.slice(1);

@@ -1,5 +1,6 @@
 import { Menu, shell } from 'electron';
-import { ON_DIRWIN, CONFIG_FILE, APP_NAME, IS_DEV } from './constants';
+import { openConfig } from './config';
+import { ON_DIRWIN, APP_NAME, IS_DEV } from './constants';
 
 type A = () => void;
 export default function createMenu(quit: A, tweet: A, reply: A, debug: A): Menu {
@@ -26,7 +27,14 @@ export default function createMenu(quit: A, tweet: A, reply: A, debug: A): Menu 
         {
             label: 'Reply to Previous Tweet',
             click: reply,
-            accelerator: 'CmdOrCtrl+T',
+            accelerator: 'CmdOrCtrl+R',
+        },
+        {
+            type: 'separator',
+        },
+        {
+            label: 'Edit Config',
+            click: openConfig,
         },
     ];
     if (IS_DEV) {
@@ -49,12 +57,6 @@ export default function createMenu(quit: A, tweet: A, reply: A, debug: A): Menu 
         {
             label: 'Edit',
             submenu: [
-                {
-                    label: 'Edit Config',
-                    click() {
-                        shell.openItem(CONFIG_FILE);
-                    },
-                },
                 {
                     type: 'separator',
                 },
@@ -92,7 +94,6 @@ export default function createMenu(quit: A, tweet: A, reply: A, debug: A): Menu 
             submenu: [
                 {
                     role: 'reload',
-                    accelerator: 'CmdOrCtrl+R',
                     click(_, focusedWindow) {
                         if (focusedWindow) focusedWindow.reload();
                     },

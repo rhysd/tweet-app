@@ -16,7 +16,7 @@
     "watch": "npm-run-all -p watch:tsc watch:parcel",
     "cli": "node ./bin/cli.js",
     "app": "NODE_ENV=development node ./bin/cli.js",
-    "debug": "TWEET_APP_DEBUG=true node ./bin/cli.js",
+    "debug": "TWEET_APP_DEBUG=true NODE_ENV=development node ./bin/cli.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
