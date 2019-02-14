@@ -1,10 +1,51 @@
 import { Menu, shell } from 'electron';
-import Ipc from './ipc';
-import { ON_DIRWIN, CONFIG_FILE, APP_NAME } from './constants';
+import { ON_DIRWIN, CONFIG_FILE, APP_NAME, IS_DEV } from './constants';
 
-// TODO: Add 'Page' menu list
-export default function createMenu(_ipc: Ipc, quit: () => void): Menu {
+type A = () => void;
+export default function createMenu(quit: A, tweet: A, reply: A, debug: A): Menu {
+    const windowSubmenu: Electron.MenuItemConstructorOptions[] = [
+        {
+            role: 'minimize',
+            accelerator: 'CmdOrCtrl+M',
+        },
+        {
+            type: 'separator',
+        },
+        {
+            role: 'close',
+            accelerator: 'CmdOrCtrl+W',
+        },
+    ];
+
+    const actionSubmenu: Electron.MenuItemConstructorOptions[] = [
+        {
+            label: 'New Tweet',
+            click: tweet,
+            accelerator: 'CmdOrCtrl+T',
+        },
+        {
+            label: 'Reply to Previous Tweet',
+            click: reply,
+            accelerator: 'CmdOrCtrl+T',
+        },
+    ];
+    if (IS_DEV) {
+        actionSubmenu.push(
+            {
+                type: 'separator',
+            },
+            {
+                label: 'Open Profile (Debug)',
+                click: debug,
+            },
+        );
+    }
+
     const template: Electron.MenuItemConstructorOptions[] = [
+        {
+            label: 'Action',
+            submenu: actionSubmenu,
+        },
         {
             label: 'Edit',
             submenu: [
@@ -78,19 +119,7 @@ export default function createMenu(_ipc: Ipc, quit: () => void): Menu {
         },
         {
             role: 'window',
-            submenu: [
-                {
-                    role: 'minimize',
-                    accelerator: 'CmdOrCtrl+M',
-                },
-                {
-                    type: 'separator',
-                },
-                {
-                    role: 'close',
-                    accelerator: 'CmdOrCtrl+W',
-                },
-            ],
+            submenu: windowSubmenu,
         },
         {
             role: 'help',
@@ -146,14 +175,12 @@ export default function createMenu(_ipc: Ipc, quit: () => void): Menu {
                 {
                     role: 'quit',
                     accelerator: 'Command+Q',
-                    click() {
-                        quit();
-                    },
+                    click: quit,
                 },
             ],
         });
-        const winMenu = template.find(m => m.role === 'window')!.submenu! as Electron.MenuItemConstructorOptions[];
-        winMenu.push(
+
+        windowSubmenu.push(
             {
                 type: 'separator',
             },
@@ -161,6 +188,16 @@ export default function createMenu(_ipc: Ipc, quit: () => void): Menu {
                 role: 'front',
             },
         );
+    } else {
+        template.unshift({
+            label: 'File',
+            submenu: [
+                {
+                    role: 'quit',
+                    accelerator: 'CmdOrCtrl+Q',
+                },
+            ],
+        });
     }
 
     return Menu.buildFromTemplate(template);

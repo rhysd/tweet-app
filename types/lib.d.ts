@@ -1,6 +1,8 @@
 // These type definitions are used across main process, renderer process and bin/cli.ts.
 
-interface Config {}
+interface Config {
+    default_account?: string;
+}
 
 interface CommandLineOptions {
     hashtags?: string[];
@@ -8,5 +10,10 @@ interface CommandLineOptions {
 }
 
 declare namespace IPC {
-    type Chan = 'tweetapp:config' | 'tweetapp:sent-tweet';
+    type Chan =
+        | 'tweetapp:config'
+        | 'tweetapp:sent-tweet'
+        | 'tweetapp:screen-name'
+        | 'tweetapp:prev-tweet-id'
+        | 'tweetapp:open';
 }

@@ -7,33 +7,51 @@ import createMenu from './menu';
 class Lifecycle {
     // Use Promise for representing quit() is called only once in lifecycle.
     public didQuit: Promise<void>;
-    private win: TweetWindow;
+    private currentWin: TweetWindow;
     private ipc: Ipc;
     private resolveQuit: () => void;
 
     constructor(config: Config, private opts: CommandLineOptions) {
-        this.quit = this.quit.bind(this);
         this.didQuit = new Promise(resolve => {
             this.resolveQuit = resolve;
         });
         this.ipc = new Ipc();
 
-        const menu = createMenu(this.ipc, this.quit);
+        const menu = createMenu(this.quit, this.newTweet, this.replyToPrevTweet, this.openProfilePageForDebug);
         Menu.setApplicationMenu(menu);
 
-        this.win = new TweetWindow(config, this.ipc, opts, menu);
+        this.currentWin = new TweetWindow(config.default_account, config, this.ipc, opts, menu);
     }
 
     start(): Promise<void> {
-        this.win.didClose = this.quit;
-        return this.win.open(this.opts.text);
+        this.currentWin.didClose = this.quit;
+
+        // Constraint: Only one window should be open at the same time because IPC channel
+        // from renderer process is broadcast.
+        return this.currentWin.open(this.opts.text);
     }
 
-    quit() {
-        // this.win.close();
+    quit = () => {
+        this.currentWin.close();
         this.ipc.dispose();
         this.resolveQuit();
-    }
+    };
+
+    newTweet = () => {
+        this.ipc.send('tweetapp:open', this.currentWin.composeTweetUrl());
+    };
+
+    replyToPrevTweet = () => {
+        this.ipc.send('tweetapp:open', this.currentWin.composeReplyUrl());
+    };
+
+    openProfilePageForDebug = () => {
+        let url = 'https://mobile.twitter.com';
+        if (this.currentWin.screenName !== undefined) {
+            url = `https://mobile.twitter.com/${this.currentWin.screenName}`;
+        }
+        this.ipc.send('tweetapp:open', url);
+    };
 }
 
 export default function runApp(config: Config, opts: CommandLineOptions): Promise<void> {
