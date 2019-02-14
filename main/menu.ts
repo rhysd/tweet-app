@@ -3,7 +3,7 @@ import { openConfig } from './config';
 import { ON_DIRWIN, APP_NAME, IS_DEV } from './constants';
 
 type A = () => void;
-export default function createMenu(quit: A, tweet: A, reply: A, debug: A): Menu {
+export default function createMenu(quit: A, tweet: A, reply: A, tweetButton: A, debug: A): Menu {
     const windowSubmenu: Electron.MenuItemConstructorOptions[] = [
         {
             role: 'minimize',
@@ -28,6 +28,14 @@ export default function createMenu(quit: A, tweet: A, reply: A, debug: A): Menu 
             label: 'Reply to Previous Tweet',
             click: reply,
             accelerator: 'CmdOrCtrl+R',
+        },
+        {
+            type: 'separator',
+        },
+        {
+            label: 'Click Tweet Button',
+            click: tweetButton,
+            accelerator: 'CmdOrCtrl+Enter',
         },
         {
             type: 'separator',

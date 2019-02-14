@@ -17,7 +17,13 @@ class Lifecycle {
         });
         this.ipc = new Ipc();
 
-        const menu = createMenu(this.quit, this.newTweet, this.replyToPrevTweet, this.openProfilePageForDebug);
+        const menu = createMenu(
+            this.quit,
+            this.newTweet,
+            this.replyToPrevTweet,
+            this.clickTweetButton,
+            this.openProfilePageForDebug,
+        );
         Menu.setApplicationMenu(menu);
 
         this.currentWin = new TweetWindow(config.default_account, config, this.ipc, opts, menu);
@@ -30,6 +36,10 @@ class Lifecycle {
         // from renderer process is broadcast.
         return this.currentWin.open(this.opts.text);
     }
+
+    clickTweetButton = () => {
+        this.ipc.send('tweetapp:click-tweet-button');
+    };
 
     quit = () => {
         this.currentWin.close();

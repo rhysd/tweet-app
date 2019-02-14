@@ -15,5 +15,6 @@ declare namespace IPC {
         | 'tweetapp:sent-tweet'
         | 'tweetapp:screen-name'
         | 'tweetapp:prev-tweet-id'
-        | 'tweetapp:open';
+        | 'tweetapp:open'
+        | 'tweetapp:click-tweet-button';
 }

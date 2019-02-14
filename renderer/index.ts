@@ -10,6 +10,19 @@ Ipc.on('tweetapp:screen-name', (_: Event, name: string) => {
     screenName = name;
 });
 
+function createCoverElement(): HTMLElement {
+    const e = document.createElement('div');
+    e.style.display = 'block';
+    e.style.position = 'fixed';
+    e.style.left = '0';
+    e.style.top = '0';
+    e.style.width = '100%';
+    e.style.height = '100%';
+    e.style.zIndex = '530000';
+    e.style.backgroundColor = 'white';
+    return e;
+}
+
 function inReplyTo(url: string, screenName: string, retry: number) {
     const a: HTMLAnchorElement | null = document.querySelector(`a[href^="/${screenName}/status/"]`);
     if (a === null) {
@@ -46,10 +59,41 @@ Ipc.on('tweetapp:sent-tweet', (_: Event, url: string) => {
         console.log('Screen name is not set. Open:', url);
         return;
     }
+    document.body.appendChild(createCoverElement());
     inReplyTo(url, screenName, 0);
 });
 
 Ipc.on('tweetapp:open', (_: Event, url: string) => {
     window.location.href = url;
     console.log('Open URL due to tweetapp:open message:', url);
+});
+
+function findTweetButton(): HTMLElement | null {
+    const button = document.querySelector('[data-testid="tweetButton"]') as HTMLElement;
+    if (button !== null) {
+        return button;
+    }
+
+    const text = ['Tweet', 'ツイート'];
+    const buttons = document.querySelectorAll('[role="button"][tabIndex="0"]') as NodeList;
+    for (const b of buttons) {
+        const label = b.textContent;
+        if (label === null) {
+            continue;
+        }
+        if (text.indexOf(label) >= 0) {
+            return b as HTMLElement;
+        }
+    }
+
+    console.warn("Could not find 'Tweet' button");
+    return null; // Not found
+}
+
+Ipc.on('tweetapp:click-tweet-button', (_: Event) => {
+    const btn = findTweetButton();
+    if (btn !== null) {
+        console.log('Click tweet button', btn);
+        btn.click();
+    }
 });
