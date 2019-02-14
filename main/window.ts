@@ -5,6 +5,8 @@ import log from './log';
 import { ON_DIRWIN, IS_DEBUG, PRELOAD_JS } from './constants';
 import Ipc from './ipc';
 
+const CSS_REMOVE_BACK = ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
+
 export default class TweetWindow {
     public didClose: (() => void) | null;
     private win: BrowserWindow | null;
@@ -104,7 +106,7 @@ export default class TweetWindow {
 
             win.webContents.on('did-finish-load', () => {
                 log.debug('Event: did-finish-load');
-                win.webContents.insertCSS('[aria-label="Back"] { display: none !important; }');
+                win.webContents.insertCSS(CSS_REMOVE_BACK);
             });
             win.webContents.on('dom-ready', () => {
                 log.debug('Event: dom-ready');
@@ -123,7 +125,8 @@ export default class TweetWindow {
                             return;
                         }
                         const tweetUrl = this.composeTweetUrl();
-                        log.debug('Posted tweet:', details.url, 'next URL:', tweetUrl);
+                        log.info('Posted tweet:', details.url, 'Next URL:', tweetUrl);
+
                         this.ipc.send('tweetapp:sent-tweet', tweetUrl);
                     });
                 } else {

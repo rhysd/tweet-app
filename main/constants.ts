@@ -1,6 +1,8 @@
 import * as path from 'path';
 import { app } from 'electron';
 
+// Constants used by multiple sources.
+
 export const IS_DEBUG = process.env.TWEET_APP_DEBUG !== undefined;
 export const IS_DEV = process.env.NODE_ENV === 'development';
 export const DATA_DIR = app.getPath('userData');
