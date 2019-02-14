@@ -18,6 +18,7 @@ class Lifecycle {
         this.ipc = new Ipc();
 
         const menu = createMenu(
+            config.keymaps || {},
             this.quit,
             this.newTweet,
             this.replyToPrevTweet,

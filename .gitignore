@@ -6,3 +6,4 @@
 /renderer/**/*.js
 /renderer/**/*.map
 /.cache
+/config.json

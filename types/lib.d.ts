@@ -1,7 +1,15 @@
 // These type definitions are used across main process, renderer process and bin/cli.ts.
 
+interface KeyMapConfig {
+    'New Tweet'?: string | null;
+    'Reply to Previous Tweet'?: string | null;
+    'Click Tweet Button'?: string | null;
+    'Edit Config'?: string | null;
+}
+
 interface Config {
     default_account?: string;
+    keymaps?: KeyMapConfig;
 }
 
 interface CommandLineOptions {

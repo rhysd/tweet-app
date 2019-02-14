@@ -2,8 +2,24 @@ import { Menu, shell } from 'electron';
 import { openConfig } from './config';
 import { ON_DIRWIN, APP_NAME, IS_DEV } from './constants';
 
+const DefaultKeyMaps: Required<KeyMapConfig> = {
+    'New Tweet': 'CmdOrCtrl+T',
+    'Reply to Previous Tweet': 'CmdOrCtrl+R',
+    'Click Tweet Button': 'CmdOrCtrl+Enter',
+    'Edit Config': null,
+};
+
 type A = () => void;
-export default function createMenu(quit: A, tweet: A, reply: A, tweetButton: A, debug: A): Menu {
+export default function createMenu(config: KeyMapConfig, quit: A, tweet: A, reply: A, tweetButton: A, debug: A): Menu {
+    const keymaps = Object.assign({}, DefaultKeyMaps, config);
+    function actionMenuItem(label: keyof KeyMapConfig, click: A): Electron.MenuItemConstructorOptions {
+        const accelerator = keymaps[label];
+        if (accelerator === null) {
+            return { label, click };
+        }
+        return { label, click, accelerator };
+    }
+
     const windowSubmenu: Electron.MenuItemConstructorOptions[] = [
         {
             role: 'minimize',
@@ -19,31 +35,16 @@ export default function createMenu(quit: A, tweet: A, reply: A, tweetButton: A, 
     ];
 
     const actionSubmenu: Electron.MenuItemConstructorOptions[] = [
-        {
-            label: 'New Tweet',
-            click: tweet,
-            accelerator: 'CmdOrCtrl+T',
-        },
-        {
-            label: 'Reply to Previous Tweet',
-            click: reply,
-            accelerator: 'CmdOrCtrl+R',
-        },
+        actionMenuItem('New Tweet', tweet),
+        actionMenuItem('Reply to Previous Tweet', reply),
         {
             type: 'separator',
         },
-        {
-            label: 'Click Tweet Button',
-            click: tweetButton,
-            accelerator: 'CmdOrCtrl+Enter',
-        },
+        actionMenuItem('Click Tweet Button', tweetButton),
         {
             type: 'separator',
         },
-        {
-            label: 'Edit Config',
-            click: openConfig,
-        },
+        actionMenuItem('Edit Config', openConfig),
     ];
     if (IS_DEV) {
         actionSubmenu.push(
