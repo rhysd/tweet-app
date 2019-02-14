@@ -6,7 +6,9 @@ import log from './log';
 import { ON_DIRWIN, IS_DEBUG, PRELOAD_JS } from './constants';
 import Ipc from './ipc';
 
-const CSS_REMOVE_BACK = ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
+const CSS_REMOVE_BACK =
+    'body {-webkit-app-region: drag;}' +
+    ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
 
 export default class TweetWindow {
     public didClose: (() => void) | null;

@@ -74,7 +74,7 @@ function findTweetButton(): HTMLElement | null {
         return button;
     }
 
-    const text = ['Tweet', 'ツイート'];
+    const text = ['Tweet', 'Tweet All', 'ツイート', 'すべてツイート'];
     const buttons = document.querySelectorAll('[role="button"][tabIndex="0"]') as NodeList;
     for (const b of buttons) {
         const label = b.textContent;
