@@ -15,8 +15,8 @@
     "watch:parcel": "parcel -o preload.js -d renderer/ --target electron renderer/index.js",
     "watch": "npm-run-all -p watch:tsc watch:parcel",
     "cli": "node ./bin/cli.js",
-    "app": "NODE_ENV=development node ./bin/cli.js",
-    "debug": "TWEET_APP_DEBUG=true NODE_ENV=development node ./bin/cli.js",
+    "app": "NODE_ENV=development node ./bin/cli.js --no-detach",
+    "debug": "TWEET_APP_DEBUG=true NODE_ENV=development node ./bin/cli.js --no-detach",
     "prod": "node ./bin/cli.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
