@@ -86,7 +86,10 @@ export default class TweetWindow {
     open(text?: string) {
         if (this.win !== null) {
             // TODO: Should we refresh content?
-            this.win.show();
+            if (this.win.isMinimized()) {
+                this.win.restore();
+            }
+            this.win.focus();
             return Promise.resolve();
         }
         return new Promise<void>(resolve => {

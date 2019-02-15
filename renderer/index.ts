@@ -3,7 +3,7 @@ import Ipc from './ipc';
 let afterTweet: ConfigAfterTweet = 'new tweet';
 
 Ipc.on('tweetapp:action-after-tweet', (_: Event, action: ConfigAfterTweet | undefined) => {
-    if (action !== undefined) {
+    if (action) {
         console.log('After tweet:', action);
         afterTweet = action;
     }

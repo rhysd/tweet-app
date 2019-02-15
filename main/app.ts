@@ -4,7 +4,7 @@ import Ipc from './ipc';
 import log from './log';
 import createMenu from './menu';
 
-class Lifecycle {
+export class Lifecycle {
     // Use Promise for representing quit() is called only once in lifecycle.
     public didQuit: Promise<void>;
     private currentWin: TweetWindow;
@@ -38,6 +38,16 @@ class Lifecycle {
         // Constraint: Only one window should be open at the same time because IPC channel
         // from renderer process is broadcast.
         return this.currentWin.open(this.opts.text);
+    }
+
+    async run(): Promise<void> {
+        await this.start();
+        log.info('App has started');
+        return this.didQuit;
+    }
+
+    show(): Promise<void> {
+        return this.currentWin.open();
     }
 
     // Actions

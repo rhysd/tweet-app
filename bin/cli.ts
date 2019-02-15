@@ -18,7 +18,7 @@ const { hashtags, args, afterTweet } = commander
     .parse(process.argv);
 
 // Verify --after-tweet
-if (!AfterTweetActions.includes(afterTweet)) {
+if (afterTweet !== undefined && !AfterTweetActions.includes(afterTweet)) {
     console.error('Unknown action for --after-tweet:', afterTweet);
     process.exit(100);
 }
