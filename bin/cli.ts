@@ -4,16 +4,24 @@ import * as cp from 'child_process';
 import { join } from 'path';
 import commander = require('commander');
 
+const AfterTweetActions: ConfigAfterTweet[] = ['new tweet', 'reply previous', 'close', 'quit'];
+
 const { hashtags, args, afterTweet } = commander
     .version('0.0.2')
-    .usage('[options] <text>')
-    .option('-t --hashtags [list]', 'Comma-separated list of hashtags', s => s.split(','))
+    .usage('[options] [text]')
+    .option('-t --hashtags <list>', 'Comma-separated list of hashtags', s => s.split(','))
     .option(
-        '-a --after-tweet [action]',
-        "What to do after sending tweet. One of 'new tweet', 'reply previous', 'close', 'quit'",
-        s => s.toLowerCase(),
+        '-a --after-tweet <action>',
+        'What to do after sending tweet. One of ' + AfterTweetActions.map(a => `'${a}'`).join(', '),
+        (s: string) => s.toLowerCase(),
     )
     .parse(process.argv);
+
+// Verify --after-tweet
+if (!AfterTweetActions.includes(afterTweet)) {
+    console.error('Unknown action for --after-tweet:', afterTweet);
+    process.exit(100);
+}
 
 const opts: CommandLineOptions = {
     hashtags,
