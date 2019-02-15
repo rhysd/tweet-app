@@ -1,7 +1,12 @@
 import Ipc from './ipc';
 
+let afterTweet: ConfigAfterTweet = 'new tweet';
+
 Ipc.on('tweetapp:config', (_: Event, config: Config) => {
-    console.log('TODO: Config:', config);
+    console.log('Config:', config);
+    if (config.after_tweet !== undefined) {
+        afterTweet = config.after_tweet.toLowerCase() as ConfigAfterTweet;
+    }
 });
 
 let screenName: string | null = null;
@@ -42,10 +47,20 @@ function inReplyTo(url: string, screenName: string, retry: number) {
 
     Ipc.send('tweetapp:prev-tweet-id', statusId);
 
-    if (url.includes('?')) {
-        url += '&in_reply_to=' + statusId;
-    } else {
-        url += '?in_reply_to=' + statusId;
+    switch (afterTweet) {
+        case 'reply previous':
+            if (url.includes('?')) {
+                url += '&in_reply_to=' + statusId;
+            } else {
+                url += '?in_reply_to=' + statusId;
+            }
+            break;
+        case 'new tweet':
+            /* do nothing */
+            break;
+        default:
+            console.warn("Unknown value for 'after_tweet' configuration value:", afterTweet);
+            break;
     }
 
     window.location.href = url;

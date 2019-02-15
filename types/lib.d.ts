@@ -7,9 +7,11 @@ interface KeyMapConfig {
     'Edit Config'?: string | null;
 }
 
+type ConfigAfterTweet = 'new tweet' | 'reply previous' | 'close' | 'quit';
 interface Config {
     default_account?: string;
     keymaps?: KeyMapConfig;
+    after_tweet?: ConfigAfterTweet;
 }
 
 interface CommandLineOptions {
@@ -24,5 +26,6 @@ declare namespace IPC {
         | 'tweetapp:screen-name'
         | 'tweetapp:prev-tweet-id'
         | 'tweetapp:open'
-        | 'tweetapp:click-tweet-button';
+        | 'tweetapp:click-tweet-button'
+        | 'tweetapp:exit-app';
 }

@@ -14,9 +14,11 @@ export default class TweetWindow {
     public didClose: (() => void) | null;
     public readonly screenName: string | undefined;
     public prevTweetId: string | null;
+    public wantToQuit: Promise<void>;
     private win: BrowserWindow | null;
     private hashtags: string;
     private partition: string | undefined;
+    private resolveWantToQuit: () => void;
 
     constructor(
         screenName: string | undefined,
@@ -36,6 +38,9 @@ export default class TweetWindow {
         this.win = null;
         this.prevTweetId = null;
         this.onPrevTweetIdReceived = this.onPrevTweetIdReceived.bind(this);
+        this.wantToQuit = new Promise<void>(resolve => {
+            this.resolveWantToQuit = resolve;
+        });
     }
 
     composeTweetUrl(text?: string): string {
@@ -63,9 +68,9 @@ export default class TweetWindow {
             return url;
         }
         if (url.includes('?')) {
-            url += '&in_reply_to' + this.prevTweetId;
+            url += '&in_reply_to=' + this.prevTweetId;
         } else {
-            url += '?in_reply_to' + this.prevTweetId;
+            url += '?in_reply_to=' + this.prevTweetId;
         }
         return url;
     }
@@ -176,7 +181,17 @@ export default class TweetWindow {
                     const tweetUrl = this.composeTweetUrl();
                     log.info('Posted tweet:', details.url, 'Next URL:', tweetUrl);
 
-                    this.ipc.send('tweetapp:sent-tweet', tweetUrl);
+                    switch (this.config.after_tweet) {
+                        case 'close':
+                            this.close();
+                            break;
+                        case 'quit':
+                            this.resolveWantToQuit();
+                            break;
+                        default:
+                            this.ipc.send('tweetapp:sent-tweet', tweetUrl);
+                            break;
+                    }
                 });
                 if (IS_DEBUG) {
                     win.webContents.openDevTools({ mode: 'detach' });

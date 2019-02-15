@@ -27,7 +27,9 @@ class Lifecycle {
         );
         Menu.setApplicationMenu(menu);
 
-        this.currentWin = new TweetWindow(config.default_account, config, this.ipc, opts, menu);
+        const win = new TweetWindow(config.default_account, config, this.ipc, opts, menu);
+        win.wantToQuit.then(this.quit);
+        this.currentWin = win;
     }
 
     start(): Promise<void> {
@@ -37,6 +39,8 @@ class Lifecycle {
         // from renderer process is broadcast.
         return this.currentWin.open(this.opts.text);
     }
+
+    // Actions
 
     clickTweetButton = () => {
         this.ipc.send('tweetapp:click-tweet-button');
