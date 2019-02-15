@@ -6,7 +6,7 @@ import commander = require('commander');
 
 const AfterTweetActions: ConfigAfterTweet[] = ['new tweet', 'reply previous', 'close', 'quit'];
 
-const { hashtags, args, afterTweet, detach } = commander
+const { hashtags, args, afterTweet, detach, reply } = commander
     .version('0.0.3')
     .usage('[options] [text]')
     .option('-t --hashtags <list>', 'Comma-separated list of hashtags', s => s.split(','))
@@ -16,6 +16,7 @@ const { hashtags, args, afterTweet, detach } = commander
         (s: string) => s.toLowerCase(),
     )
     .option('--no-detach', '(Do not) Detach process from shell', false)
+    .option('--reply', 'Reply to previous tweet. This option is only effective when app is already running')
     .parse(process.argv);
 
 // Verify --after-tweet
@@ -28,6 +29,7 @@ const opts: CommandLineOptions = {
     hashtags,
     afterTweet,
     text: args.join(' '),
+    reply,
 };
 
 // XXX: In node context, require('electron') returns a string which represents path to electron

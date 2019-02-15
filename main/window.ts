@@ -11,7 +11,7 @@ const CSS_REMOVE_BACK =
     ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
 
 export default class TweetWindow {
-    public didClose: (() => void) | null;
+    public didClose: Promise<void>;
     public readonly screenName: string | undefined;
     public prevTweetId: string | null;
     public wantToQuit: Promise<void>;
@@ -23,17 +23,12 @@ export default class TweetWindow {
 
     constructor(
         screenName: string | undefined,
-        config: Config,
+        private config: Config,
         private ipc: Ipc,
         opts: CommandLineOptions,
         private menu: Menu,
     ) {
-        this.hashtags = (opts.hashtags || []).join(',');
-
-        this.actionAfterTweet = opts.afterTweet || config.after_tweet;
-        if (this.actionAfterTweet !== undefined) {
-            this.actionAfterTweet = this.actionAfterTweet.toLowerCase() as ConfigAfterTweet;
-        }
+        this.updateOptions(opts);
 
         if (screenName !== undefined && screenName !== '') {
             this.screenName = screenName;
@@ -49,9 +44,18 @@ export default class TweetWindow {
         this.wantToQuit = new Promise<void>(resolve => {
             this.resolveWantToQuit = resolve;
         });
+        this.didClose = Promise.resolve();
     }
 
-    composeTweetUrl(text?: string): string {
+    updateOptions(opts: CommandLineOptions) {
+        this.hashtags = (opts.hashtags || []).join(',');
+        this.actionAfterTweet = opts.afterTweet || this.config.after_tweet;
+        if (this.actionAfterTweet !== undefined) {
+            this.actionAfterTweet = this.actionAfterTweet.toLowerCase() as ConfigAfterTweet;
+        }
+    }
+
+    composeNewTweetUrl(text?: string): string {
         let queries = [];
         if (text !== undefined && text !== '') {
             queries.push('text=' + querystring.escape(text));
@@ -68,7 +72,7 @@ export default class TweetWindow {
     }
 
     composeReplyUrl(text?: string): string {
-        let url = this.composeTweetUrl(text);
+        let url = this.composeNewTweetUrl(text);
         if (this.prevTweetId === null) {
             log.warn(
                 'Fall back to new tweet form since previous tweet is not found. You need to tweet at least once before this item',
@@ -83,15 +87,32 @@ export default class TweetWindow {
         return url;
     }
 
-    open(text?: string) {
+    composeTweetUrl(reply?: boolean, text?: string): string {
+        if (reply) {
+            return this.composeReplyUrl(text);
+        } else {
+            return this.composeNewTweetUrl(text);
+        }
+    }
+
+    open(reply?: boolean, text?: string) {
         if (this.win !== null) {
-            // TODO: Should we refresh content?
             if (this.win.isMinimized()) {
                 this.win.restore();
             }
             this.win.focus();
-            return Promise.resolve();
+            const url = this.composeTweetUrl(reply, text);
+            log.info('Window is already open. Will reopen content:', url);
+
+            return new Promise<void>(resolve => {
+                this.ipc.send('tweetapp:open', url);
+                this.win!.webContents.once('dom-ready', () => {
+                    log.debug('Reopened content:', url);
+                    resolve();
+                });
+            });
         }
+
         return new Promise<void>(resolve => {
             log.debug('Start application');
 
@@ -138,14 +159,14 @@ export default class TweetWindow {
                 this.win!.webContents.removeAllListeners();
             });
 
-            win.once('closed', (_: Event) => {
-                log.debug('Event: closed');
-                assert.ok(this.win !== null);
-                this.win!.removeAllListeners();
-                this.win = null;
-                if (this.didClose) {
-                    this.didClose();
-                }
+            this.didClose = new Promise<void>(resolve => {
+                win.once('closed', (_: Event) => {
+                    log.debug('Event: closed');
+                    assert.ok(this.win !== null);
+                    this.win!.removeAllListeners();
+                    this.win = null;
+                    resolve();
+                });
             });
 
             win.webContents.on('will-navigate', (e, url) => {
@@ -213,7 +234,7 @@ export default class TweetWindow {
 
             this.ipc.on('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
 
-            const url = this.composeTweetUrl(text);
+            const url = this.composeTweetUrl(reply, text);
             log.info('Opening', url);
             win.loadURL(url);
             win.focus();
@@ -222,10 +243,14 @@ export default class TweetWindow {
         });
     }
 
-    close() {
+    close(): Promise<void> {
         if (this.win !== null) {
+            log.debug('Will close window');
             this.win.close();
+        } else {
+            log.debug('Window was already closed');
         }
+        return this.didClose;
     }
 
     private onPrevTweetIdReceived(_: Event, id: string) {

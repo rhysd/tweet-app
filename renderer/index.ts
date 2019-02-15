@@ -4,7 +4,7 @@ let afterTweet: ConfigAfterTweet = 'new tweet';
 
 Ipc.on('tweetapp:action-after-tweet', (_: Event, action: ConfigAfterTweet | undefined) => {
     if (action) {
-        console.log('After tweet:', action);
+        console.log('Specifying action after tweet:', action);
         afterTweet = action;
     }
 });
@@ -89,7 +89,7 @@ function findTweetButton(): HTMLElement | null {
         return button;
     }
 
-    const text = ['Tweet', 'Tweet All', 'ツイート', 'すべてツイート'];
+    const text = ['Tweet', 'Tweet All', 'Reply', 'ツイート', 'すべてツイート', '返信'];
     const buttons = document.querySelectorAll('[role="button"][tabIndex="0"]') as NodeList;
     for (const b of buttons) {
         const label = b.textContent;

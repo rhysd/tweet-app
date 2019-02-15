@@ -17,6 +17,7 @@ interface Config {
 interface CommandLineOptions {
     hashtags?: string[];
     afterTweet?: ConfigAfterTweet;
+    reply?: boolean;
     text: string;
 }
 

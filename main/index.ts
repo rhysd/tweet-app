@@ -33,16 +33,18 @@ async function go() {
         log.info('App is starting with config', config, 'and cmdOpts', cmdOpts);
         const lifecycle = new Lifecycle(config, cmdOpts);
 
-        app.on('second-instance', (_: Event, _cmdline: string[], _cwd: string) => {
-            // TODO: Check _cmdline
-            lifecycle.show();
+        app.on('second-instance', async (_: Event, cmdline: string[], _cwd: string) => {
+            const newOpts = parseCmdlineOptions(cmdline);
+            log.info('Second instance:', cmdline, newOpts);
+            await lifecycle.restart(newOpts);
+            log.info('Second instance started');
         });
 
-        await lifecycle.run();
+        await lifecycle.runUntilQuit();
 
-        log.info('App has quit');
+        log.info('App quits successfully');
     } catch (err) {
-        log.error('App quit due to error:', err.message);
+        log.error('App quits due to error:', err.message);
     } finally {
         app.quit();
     }
