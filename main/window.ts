@@ -19,15 +19,22 @@ export default class TweetWindow {
     private hashtags: string;
     private partition: string | undefined;
     private resolveWantToQuit: () => void;
+    private actionAfterTweet: ConfigAfterTweet | undefined;
 
     constructor(
         screenName: string | undefined,
-        private config: Config,
+        config: Config,
         private ipc: Ipc,
         opts: CommandLineOptions,
         private menu: Menu,
     ) {
         this.hashtags = (opts.hashtags || []).join(',');
+
+        this.actionAfterTweet = opts.afterTweet || config.after_tweet;
+        if (this.actionAfterTweet !== undefined) {
+            this.actionAfterTweet = this.actionAfterTweet.toLowerCase() as ConfigAfterTweet;
+        }
+
         if (screenName !== undefined && screenName !== '') {
             this.screenName = screenName;
             if (this.screenName.startsWith('@')) {
@@ -35,6 +42,7 @@ export default class TweetWindow {
             }
             this.partition = `persist:tweet:${this.screenName}`;
         }
+
         this.win = null;
         this.prevTweetId = null;
         this.onPrevTweetIdReceived = this.onPrevTweetIdReceived.bind(this);
@@ -165,7 +173,7 @@ export default class TweetWindow {
                 if (this.screenName !== undefined) {
                     this.ipc.send('tweetapp:screen-name', this.screenName);
                 }
-                this.ipc.send('tweetapp:config', this.config);
+                this.ipc.send('tweetapp:action-after-tweet', this.actionAfterTweet);
             });
 
             win.webContents.once('dom-ready', () => {
@@ -178,10 +186,11 @@ export default class TweetWindow {
                     if (details.statusCode !== 200 || details.method !== 'POST' || details.fromCache) {
                         return;
                     }
+
                     const tweetUrl = this.composeTweetUrl();
                     log.info('Posted tweet:', details.url, 'Next URL:', tweetUrl);
 
-                    switch (this.config.after_tweet) {
+                    switch (this.actionAfterTweet) {
                         case 'close':
                             this.close();
                             break;

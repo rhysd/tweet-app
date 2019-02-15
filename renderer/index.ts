@@ -2,10 +2,10 @@ import Ipc from './ipc';
 
 let afterTweet: ConfigAfterTweet = 'new tweet';
 
-Ipc.on('tweetapp:config', (_: Event, config: Config) => {
-    console.log('Config:', config);
-    if (config.after_tweet !== undefined) {
-        afterTweet = config.after_tweet.toLowerCase() as ConfigAfterTweet;
+Ipc.on('tweetapp:action-after-tweet', (_: Event, action: ConfigAfterTweet | undefined) => {
+    if (action !== undefined) {
+        console.log('After tweet:', action);
+        afterTweet = action;
     }
 });
 

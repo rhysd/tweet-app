@@ -16,12 +16,13 @@ interface Config {
 
 interface CommandLineOptions {
     hashtags?: string[];
+    afterTweet?: ConfigAfterTweet;
     text: string;
 }
 
 declare namespace IPC {
     type Chan =
-        | 'tweetapp:config'
+        | 'tweetapp:action-after-tweet'
         | 'tweetapp:sent-tweet'
         | 'tweetapp:screen-name'
         | 'tweetapp:prev-tweet-id'
