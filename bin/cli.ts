@@ -50,6 +50,6 @@ if (detach) {
         stdio: 'inherit',
     });
     app.on('exit', code => {
-        process.exit(code || 3);
+        process.exit(typeof code === 'number' ? code : 3);
     });
 }
