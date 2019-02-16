@@ -1,9 +1,9 @@
-import { Menu } from 'electron';
+import { app, Menu } from 'electron';
 import TweetWindow from './window';
 import Ipc from './ipc';
 import log from './log';
-import createMenu from './menu';
-import { ON_DARWIN } from './constants';
+import { createMenu, dockMenu } from './menu';
+import { ON_DARWIN, ON_WINDOWS } from './constants';
 
 export class Lifecycle {
     // Use Promise for representing quit() is called only once in lifecycle.
@@ -34,6 +34,31 @@ export class Lifecycle {
     }
 
     async runUntilQuit(): Promise<void> {
+        if (ON_DARWIN) {
+            app.dock.setMenu(dockMenu(this.newTweet, this.replyToPrevTweet));
+        }
+
+        if (ON_WINDOWS) {
+            app.setUserTasks([
+                {
+                    program: process.execPath,
+                    arguments: '',
+                    iconPath: process.execPath,
+                    iconIndex: 0,
+                    title: 'New',
+                    description: 'Create a new tweet',
+                },
+                {
+                    program: process.execPath,
+                    arguments: '--reply',
+                    iconPath: process.execPath,
+                    iconIndex: 0,
+                    title: 'Reply',
+                    description: 'Reply to a previous tweet',
+                },
+            ]);
+        }
+
         // Constraint: Only one window should be open at the same time because IPC channel
         // from renderer process is broadcast.
         await this.currentWin.open(false, this.opts.text);

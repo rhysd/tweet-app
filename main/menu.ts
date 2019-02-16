@@ -10,7 +10,7 @@ const DefaultKeyMaps: Required<KeyMapConfig> = {
 };
 
 type A = () => void;
-export default function createMenu(config: KeyMapConfig, quit: A, tweet: A, reply: A, tweetButton: A, debug: A): Menu {
+export function createMenu(config: KeyMapConfig, quit: A, tweet: A, reply: A, tweetButton: A, debug: A): Menu {
     const keymaps = Object.assign({}, DefaultKeyMaps, config);
     function actionMenuItem(label: keyof KeyMapConfig, click: A): Electron.MenuItemConstructorOptions {
         const accelerator = keymaps[label];
@@ -211,5 +211,19 @@ export default function createMenu(config: KeyMapConfig, quit: A, tweet: A, repl
         });
     }
 
+    return Menu.buildFromTemplate(template);
+}
+
+export function dockMenu(tweet: A, reply: A) {
+    const template: Electron.MenuItemConstructorOptions[] = [
+        {
+            label: 'New Tweet',
+            click: tweet,
+        },
+        {
+            label: 'Reply to Previous Tweet',
+            click: reply,
+        },
+    ];
     return Menu.buildFromTemplate(template);
 }

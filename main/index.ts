@@ -1,6 +1,6 @@
 import { app } from 'electron';
 import contextMenu = require('electron-context-menu');
-import { Lifecycle } from './app';
+import { Lifecycle } from './lifecycle';
 import log from './log';
 import { loadConfig } from './config';
 import { ON_DARWIN, ICON_PATH } from './constants';
@@ -35,6 +35,10 @@ async function go() {
 
         if (ON_DARWIN) {
             app.dock.setIcon(ICON_PATH);
+            app.on('activate', async () => {
+                log.info('App activated');
+                await lifecycle.restart();
+            });
         }
 
         log.info('App is starting with config', config, 'and cmdOpts', cmdOpts);

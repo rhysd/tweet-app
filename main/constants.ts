@@ -10,4 +10,5 @@ export const APP_NAME = 'Tweet App'; // app.getName() is not available with elec
 export const CONFIG_FILE = path.join(DATA_DIR, 'config.json');
 export const PRELOAD_JS = path.join(__dirname, '..', 'renderer', 'preload.js');
 export const ON_DARWIN = process.platform === 'darwin';
+export const ON_WINDOWS = process.platform === 'win32';
 export const ICON_PATH = path.join(__dirname, '..', 'assets', 'icon', 'icon.png');
