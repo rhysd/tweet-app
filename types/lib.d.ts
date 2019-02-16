@@ -10,6 +10,7 @@ interface KeyMapConfig {
 type ConfigAfterTweet = 'new tweet' | 'reply previous' | 'close' | 'quit';
 interface Config {
     default_account?: string;
+    other_accounts?: string[];
     keymaps?: KeyMapConfig;
     after_tweet?: ConfigAfterTweet;
 }

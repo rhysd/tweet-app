@@ -1,6 +1,7 @@
 import { Menu, shell } from 'electron';
 import { openConfig } from './config';
 import { ON_DARWIN, APP_NAME, IS_DEV } from './constants';
+import log from './log';
 
 const DefaultKeyMaps: Required<KeyMapConfig> = {
     'New Tweet': 'CmdOrCtrl+T',
@@ -10,8 +11,17 @@ const DefaultKeyMaps: Required<KeyMapConfig> = {
 };
 
 type A = () => void;
-export function createMenu(config: KeyMapConfig, quit: A, tweet: A, reply: A, tweetButton: A, debug: A): Menu {
-    const keymaps = Object.assign({}, DefaultKeyMaps, config);
+export function createMenu(
+    userKeyMaps: KeyMapConfig,
+    accounts: string[],
+    quit: A,
+    tweet: A,
+    reply: A,
+    tweetButton: A,
+    switchAccount: (s: string) => Promise<void>,
+    debug: A,
+): Menu {
+    const keymaps = Object.assign({}, DefaultKeyMaps, userKeyMaps);
     function actionMenuItem(label: keyof KeyMapConfig, click: A): Electron.MenuItemConstructorOptions {
         const accelerator = keymaps[label];
         if (accelerator === null) {
@@ -149,6 +159,20 @@ export function createMenu(config: KeyMapConfig, quit: A, tweet: A, reply: A, tw
             ],
         },
     ];
+
+    if (accounts.length > 1) {
+        const accountSubmenu = accounts.map(a => ({
+            label: a.startsWith('@') ? a : '@' + a,
+            click() {
+                log.info('Switching account to', a);
+                switchAccount(a);
+            },
+        }));
+        template.splice(1, 0, {
+            label: 'Accounts',
+            submenu: accountSubmenu,
+        });
+    }
 
     if (ON_DARWIN) {
         template.unshift({

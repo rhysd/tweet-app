@@ -11,26 +11,45 @@ export class Lifecycle {
     private currentWin: TweetWindow;
     private ipc: Ipc;
     private resolveQuit: () => void;
+    private accounts: string[];
+    private switchingAccount: boolean;
+    private menu: Menu;
 
-    constructor(config: Config, private opts: CommandLineOptions) {
+    constructor(private config: Config, private opts: CommandLineOptions) {
         this.didQuit = new Promise(resolve => {
             this.resolveQuit = resolve;
         });
+        this.switchingAccount = false;
         this.ipc = new Ipc();
 
-        const menu = createMenu(
+        this.accounts = [];
+        if (config.default_account !== undefined) {
+            this.accounts.push(config.default_account);
+            if (config.other_accounts !== undefined) {
+                Array.prototype.push.apply(this.accounts, config.other_accounts);
+            }
+        }
+        log.debug('Accounts:', this.accounts);
+
+        this.menu = createMenu(
             config.keymaps || {},
+            this.accounts,
             this.quit,
             this.newTweet,
             this.replyToPrevTweet,
             this.clickTweetButton,
+            this.switchAccount,
             this.openProfilePageForDebug,
         );
-        Menu.setApplicationMenu(menu);
+        Menu.setApplicationMenu(this.menu);
 
-        const win = new TweetWindow(config.default_account, config, this.ipc, opts, menu);
+        this.currentWin = this.newWindow(config.default_account);
+    }
+
+    private newWindow(screenName?: string): TweetWindow {
+        const win = new TweetWindow(screenName, this.config, this.ipc, this.opts, this.menu);
         win.wantToQuit.then(this.quit);
-        this.currentWin = win;
+        return win;
     }
 
     async runUntilQuit(): Promise<void> {
@@ -69,7 +88,10 @@ export class Lifecycle {
         // This process would be not correct when multiple accounts are supported since switching
         // among accounts would require to close window
         if (!ON_DARWIN) {
-            await this.currentWin.didClose;
+            // Ignore closing window while switching account
+            do {
+                await this.currentWin.didClose;
+            } while (this.switchingAccount);
             await this.quit();
         }
 
@@ -113,5 +135,23 @@ export class Lifecycle {
             url = `https://mobile.twitter.com/${this.currentWin.screenName}`;
         }
         this.ipc.send('tweetapp:open', url);
+    };
+
+    switchAccount = async (screenName: string) => {
+        if (screenName.startsWith('@')) {
+            screenName = screenName.slice(1);
+        }
+        if (this.currentWin.screenName === screenName) {
+            log.debug('Skip switching account since given screen name is the same:', screenName);
+            return;
+        }
+        this.switchingAccount = true;
+        try {
+            await this.currentWin.close();
+            this.currentWin = this.newWindow(screenName);
+            await this.currentWin.open();
+        } finally {
+            this.switchingAccount = false;
+        }
     };
 }

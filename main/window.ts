@@ -245,6 +245,7 @@ export default class TweetWindow {
             win.loadURL(url);
             win.focus();
 
+            log.info('Created window for', this.screenName);
             this.win = win;
         });
     }

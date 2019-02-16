@@ -6,6 +6,7 @@ import log from './log';
 function makeDefaultConfig(): Config {
     return {
         default_account: '',
+        other_accounts: [],
         keymaps: {},
     };
 }

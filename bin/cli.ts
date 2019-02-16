@@ -15,7 +15,7 @@ const { hashtags, args, afterTweet, detach, reply } = commander
         'What to do after sending tweet. One of ' + AfterTweetActions.map(a => `'${a}'`).join(', '),
         (s: string) => s.toLowerCase(),
     )
-    .option('--no-detach', '(Do not) Detach process from shell', false)
+    .option('--no-detach', 'Do not detach process from shell', false)
     .option('--reply', 'Reply to previous tweet. This option is only effective when app is already running')
     .parse(process.argv);
 
