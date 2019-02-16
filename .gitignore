@@ -7,3 +7,4 @@
 /renderer/**/*.map
 /.cache
 /config.json
+/dist
