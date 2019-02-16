@@ -46,7 +46,10 @@ if (detach) {
         detached: true,
     }).unref();
 } else {
-    cp.spawn(electron, argv, {
+    const app = cp.spawn(electron, argv, {
         stdio: 'inherit',
+    });
+    app.on('exit', code => {
+        process.exit(code || 3);
     });
 }

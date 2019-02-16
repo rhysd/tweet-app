@@ -183,7 +183,7 @@ export default function createMenu(config: KeyMapConfig, quit: A, tweet: A, repl
                     type: 'separator',
                 },
                 {
-                    role: 'quit',
+                    label: 'Quit ' + APP_NAME,
                     accelerator: 'Command+Q',
                     click: quit,
                 },
@@ -203,8 +203,9 @@ export default function createMenu(config: KeyMapConfig, quit: A, tweet: A, repl
             label: 'File',
             submenu: [
                 {
-                    role: 'quit',
+                    label: 'Quit ' + APP_NAME,
                     accelerator: 'CmdOrCtrl+Q',
+                    click: quit,
                 },
             ],
         });

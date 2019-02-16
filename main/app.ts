@@ -68,6 +68,7 @@ export class Lifecycle {
     };
 
     quit = async () => {
+        log.debug('Will close window and quit');
         await this.currentWin.close();
         this.ipc.dispose();
         this.resolveQuit();

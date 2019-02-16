@@ -26,6 +26,8 @@ async function go() {
 
     contextMenu();
 
+    let exitStatus = 99;
+
     try {
         const cmdOpts = parseCmdlineOptions(process.argv);
         const [config] = await Promise.all([loadConfig(), app.whenReady()]);
@@ -41,11 +43,12 @@ async function go() {
         });
 
         await lifecycle.runUntilQuit();
-
-        log.info('App quits successfully');
     } catch (err) {
         log.error('App quits due to error:', err.message);
+        exitStatus = 1;
     } finally {
         app.quit();
+        log.info('App quits with exit status', exitStatus);
+        process.exit(exitStatus);
     }
 }
