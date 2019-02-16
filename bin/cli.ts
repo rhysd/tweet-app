@@ -7,7 +7,7 @@ import commander = require('commander');
 const AfterTweetActions: ConfigAfterTweet[] = ['new tweet', 'reply previous', 'close', 'quit'];
 
 const { hashtags, args, afterTweet, detach, reply } = commander
-    .version('0.0.3')
+    .version('0.0.4')
     .usage('[options] [text]')
     .option('-t --hashtags <list>', 'Comma-separated list of hashtags', s => s.split(','))
     .option(

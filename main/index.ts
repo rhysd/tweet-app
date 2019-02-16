@@ -26,7 +26,7 @@ async function go() {
 
     contextMenu();
 
-    let exitStatus = 99;
+    let exitStatus = 0;
 
     try {
         const cmdOpts = parseCmdlineOptions(process.argv);
