@@ -102,6 +102,12 @@ export default class TweetWindow {
             }
             this.win.focus();
             const url = this.composeTweetUrl(reply, text);
+
+            if (this.win.webContents.getURL() === url) {
+                log.info('Skip reopening content since URL is the same:', url);
+                return Promise.resolve();
+            }
+
             log.info('Window is already open. Will reopen content:', url);
 
             return new Promise<void>(resolve => {
