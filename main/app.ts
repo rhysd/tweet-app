@@ -3,7 +3,7 @@ import TweetWindow from './window';
 import Ipc from './ipc';
 import log from './log';
 import createMenu from './menu';
-import { ON_DIRWIN } from './constants';
+import { ON_DARWIN } from './constants';
 
 export class Lifecycle {
     // Use Promise for representing quit() is called only once in lifecycle.
@@ -43,7 +43,7 @@ export class Lifecycle {
         // Otherwise, quit on the main window is closing.
         // This process would be not correct when multiple accounts are supported since switching
         // among accounts would require to close window
-        if (!ON_DIRWIN) {
+        if (!ON_DARWIN) {
             await this.currentWin.didClose;
             await this.quit();
         }

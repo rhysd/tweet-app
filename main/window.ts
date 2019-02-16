@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import { BrowserWindow, Menu } from 'electron';
 import windowState = require('electron-window-state');
 import log from './log';
-import { ON_DIRWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
+import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
 import Ipc from './ipc';
 
 const CSS_REMOVE_BACK =
@@ -141,7 +141,7 @@ export default class TweetWindow {
             });
             state.manage(win);
 
-            if (!ON_DIRWIN) {
+            if (!ON_DARWIN) {
                 win.setMenu(this.menu);
             }
 

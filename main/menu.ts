@@ -1,6 +1,6 @@
 import { Menu, shell } from 'electron';
 import { openConfig } from './config';
-import { ON_DIRWIN, APP_NAME, IS_DEV } from './constants';
+import { ON_DARWIN, APP_NAME, IS_DEV } from './constants';
 
 const DefaultKeyMaps: Required<KeyMapConfig> = {
     'New Tweet': 'CmdOrCtrl+T',
@@ -150,7 +150,7 @@ export default function createMenu(config: KeyMapConfig, quit: A, tweet: A, repl
         },
     ];
 
-    if (ON_DIRWIN) {
+    if (ON_DARWIN) {
         template.unshift({
             label: 'Tweet App',
             submenu: [

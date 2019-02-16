@@ -3,7 +3,7 @@ import contextMenu = require('electron-context-menu');
 import { Lifecycle } from './app';
 import log from './log';
 import { loadConfig } from './config';
-import { ON_DIRWIN, ICON_PATH } from './constants';
+import { ON_DARWIN, ICON_PATH } from './constants';
 
 const locked = app.requestSingleInstanceLock();
 if (!locked) {
@@ -33,7 +33,7 @@ async function go() {
         const cmdOpts = parseCmdlineOptions(process.argv);
         const [config] = await Promise.all([loadConfig(), app.whenReady()]);
 
-        if (ON_DIRWIN) {
+        if (ON_DARWIN) {
             app.dock.setIcon(ICON_PATH);
         }
 
