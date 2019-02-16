@@ -8,5 +8,5 @@
 /scripts
 /.github
 /config.json
-/assets/icon/icon.[xcf, icns, ico]
+/assets/icon/icon[.xcf, .icns, .ico]
 /dist

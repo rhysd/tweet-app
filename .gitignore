@@ -5,6 +5,8 @@
 /main/**/*.map
 /renderer/**/*.js
 /renderer/**/*.map
+/test/**/*.js
+/test/**/*.map
 /.cache
 /config.json
 /dist

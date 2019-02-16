@@ -20,6 +20,7 @@
     "bin/cli.ts",
     "main/**/*.ts",
     "renderer/**/*.ts",
+    "test/**/*.ts",
     "types/**/*.d.ts"
   ]
 }
