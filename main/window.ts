@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import { BrowserWindow, Menu } from 'electron';
 import windowState = require('electron-window-state');
 import log from './log';
-import { ON_DIRWIN, IS_DEBUG, PRELOAD_JS } from './constants';
+import { ON_DIRWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
 import Ipc from './ipc';
 
 const CSS_REMOVE_BACK =
@@ -123,7 +123,7 @@ export default class TweetWindow {
                 resizable: false,
                 x: state.x,
                 y: state.y,
-                // TODO: icon: ...
+                icon: ICON_PATH,
                 show: false,
                 titleBarStyle: 'hiddenInset',
                 frame: false,
