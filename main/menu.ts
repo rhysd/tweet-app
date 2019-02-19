@@ -1,7 +1,9 @@
-import { Menu, shell } from 'electron';
+import { Menu, shell, TouchBar } from 'electron';
 import { openConfig } from './config';
 import { ON_DARWIN, APP_NAME, IS_DEV } from './constants';
 import log from './log';
+
+const { TouchBarLabel, TouchBarButton, TouchBarSpacer } = TouchBar;
 
 const DefaultKeyMaps: Required<KeyMapConfig> = {
     'New Tweet': 'CmdOrCtrl+T',
@@ -253,4 +255,31 @@ export function dockMenu(tweet: A, reply: A) {
         },
     ];
     return Menu.buildFromTemplate(template);
+}
+
+export function touchBar(screenName: string | undefined, tweet: A, reply: A) {
+    const smallSpacer = new TouchBarSpacer({ size: 'small' });
+    const items = [
+        smallSpacer,
+        new TouchBarButton({
+            label: 'New Tweet',
+            backgroundColor: '#1da1f2',
+            click: tweet,
+        }),
+        smallSpacer,
+        new TouchBarButton({
+            label: 'Reply To Previous',
+            backgroundColor: '#1da1f2',
+            click: reply,
+        }),
+    ];
+
+    if (screenName !== undefined) {
+        if (!screenName.startsWith('@')) {
+            screenName = '@' + screenName;
+        }
+        items.unshift(smallSpacer, new TouchBarLabel({ label: screenName }));
+    }
+
+    return new TouchBar({ items });
 }

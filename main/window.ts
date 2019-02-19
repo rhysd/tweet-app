@@ -5,6 +5,7 @@ import windowState = require('electron-window-state');
 import log from './log';
 import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
 import Ipc from './ipc';
+import { touchBar } from './menu';
 
 const CSS_REMOVE_BACK =
     'body {-webkit-app-region: drag;}' +
@@ -154,6 +155,7 @@ export default class TweetWindow {
             this.ipc.attach(win.webContents);
 
             win.once('ready-to-show', () => {
+                log.debug('Event: ready-to-show');
                 win.show();
             });
 
@@ -243,7 +245,11 @@ export default class TweetWindow {
             const url = this.composeTweetUrl(reply, text);
             log.info('Opening', url);
             win.loadURL(url);
-            win.focus();
+
+            if (ON_DARWIN) {
+                win.setTouchBar(touchBar(this.screenName, () => this.open(false), () => this.open(true)));
+                log.debug('Touch bar was set');
+            }
 
             log.info('Created window for', this.screenName);
             this.win = win;
