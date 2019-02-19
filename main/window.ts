@@ -214,7 +214,7 @@ export default class TweetWindow {
                     urls: ['https://api.twitter.com/1.1/statuses/update.json'],
                 };
 
-                req.onCompleted(filter, (details: Electron.OnCompletedDetails) => {
+                req.onCompleted(filter, details => {
                     if (details.statusCode !== 200 || details.method !== 'POST' || details.fromCache) {
                         return;
                     }
@@ -239,6 +239,11 @@ export default class TweetWindow {
                 }
                 resolve();
             });
+
+            // TODO?: May be blocked for better performance?
+            // - 'https://api.twitter.com/2/notifications/all.json?*',
+            // - 'https://api.twitter.com/2/timeline/home.json?*',
+            // - 'https://api.twitter.com/1.1/client_event.json',
 
             this.ipc.on('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
 
