@@ -30,5 +30,6 @@ declare namespace IPC {
         | 'tweetapp:prev-tweet-id'
         | 'tweetapp:open'
         | 'tweetapp:click-tweet-button'
+        | 'tweetapp:login'
         | 'tweetapp:exit-app';
 }

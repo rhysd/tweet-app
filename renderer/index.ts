@@ -15,6 +15,20 @@ Ipc.on('tweetapp:screen-name', (_: Event, name: string) => {
     screenName = name;
 });
 
+Ipc.on('tweetapp:login', (_: Event) => {
+    console.log('Login detected with screen name', screenName);
+    const loginInput = document.querySelector('input[name*="username_or_email"]') as HTMLInputElement | null;
+    if (loginInput === null || screenName === null) {
+        console.warn('Cannot set login value', loginInput, screenName);
+        return;
+    }
+    loginInput.value = screenName;
+    const passwordInput = document.querySelector('input[name*="password"]') as HTMLInputElement | null;
+    if (passwordInput !== null) {
+        passwordInput.focus();
+    }
+});
+
 function createCoverElement(): HTMLElement {
     const e = document.createElement('div');
     e.style.display = 'block';
@@ -89,6 +103,7 @@ function findTweetButton(): HTMLElement | null {
         return button;
     }
 
+    // XXX: TENTATIVE: detect tweet button by aria label
     const text = ['Tweet', 'Tweet All', 'Reply', 'ツイート', 'すべてツイート', '返信'];
     const buttons = document.querySelectorAll('[role="button"][tabIndex="0"]') as NodeList;
     for (const b of buttons) {

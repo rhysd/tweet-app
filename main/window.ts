@@ -7,6 +7,7 @@ import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
 import Ipc from './ipc';
 import { touchBar } from './menu';
 
+// XXX: TENTATIVE: detect back button by aria label
 const CSS_REMOVE_BACK =
     'body {-webkit-app-region: drag;}' +
     ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
@@ -244,6 +245,19 @@ export default class TweetWindow {
             // - 'https://api.twitter.com/2/notifications/all.json?*',
             // - 'https://api.twitter.com/2/timeline/home.json?*',
             // - 'https://api.twitter.com/1.1/client_event.json',
+            const filter = {
+                urls: ['https://www.google-analytics.com/r/*'],
+            };
+            win.webContents.session.webRequest.onBeforeRequest(filter, (details: any, callback) => {
+                // XXX: TENTATIVE: detect login from google-analitics requests
+                if ((details as any).referrer === 'https://mobile.twitter.com/login') {
+                    log.debug('Login detected from URL', details.url);
+                    this.ipc.send('tweetapp:login');
+                    // Remove listener anymore
+                    win.webContents.session.webRequest.onBeforeRequest(null as any);
+                }
+                callback({});
+            });
 
             this.ipc.on('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
 
