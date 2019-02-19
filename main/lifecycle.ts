@@ -85,8 +85,6 @@ export class Lifecycle {
 
         // Only on macOS, closing window does not mean finishing app.
         // Otherwise, quit on the main window is closing.
-        // This process would be not correct when multiple accounts are supported since switching
-        // among accounts would require to close window
         if (!ON_DARWIN) {
             // Ignore closing window while switching account
             do {

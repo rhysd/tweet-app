@@ -13,7 +13,7 @@ export default class Ipc {
     }
 
     attach(sender: Electron.WebContents) {
-        log.debug('Attach webContents as IPC sender');
+        log.debug('Attach webContents as IPC sender', sender.id);
         this.sender = sender;
     }
 
@@ -21,7 +21,7 @@ export default class Ipc {
         if (this.sender !== sender) {
             return;
         }
-        log.debug('Attach webContents as IPC sender');
+        log.debug('Detach webContents as IPC sender', sender.id);
         this.sender = null;
     }
 
@@ -29,7 +29,7 @@ export default class Ipc {
         if (this.sender === null) {
             log.error('Cannot send IPC message because sender is not existing', chan, args);
         } else {
-            log.debug('Send IPC message', chan, args);
+            log.debug('Send IPC message', chan, args, 'to sender', this.sender.id);
             this.sender.send(chan, ...args);
         }
     }
