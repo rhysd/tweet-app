@@ -46,20 +46,47 @@ export function createMenu(
         },
     ];
 
-    const actionSubmenu: Electron.MenuItemConstructorOptions[] = [
+    const editSubmenu: Electron.MenuItemConstructorOptions[] = [
+        {
+            type: 'separator',
+        },
+        {
+            role: 'undo',
+            accelerator: 'CmdOrCtrl+Z',
+        },
+        {
+            role: 'redo',
+            accelerator: 'Shift+CmdOrCtrl+Z',
+        },
+        {
+            type: 'separator',
+        },
+        {
+            role: 'cut',
+            accelerator: 'CmdOrCtrl+X',
+        },
+        {
+            role: 'copy',
+            accelerator: 'CmdOrCtrl+C',
+        },
+        {
+            role: 'paste',
+            accelerator: 'CmdOrCtrl+V',
+        },
+        {
+            role: 'selectall',
+            accelerator: 'CmdOrCtrl+A',
+        },
+        {
+            type: 'separator',
+        },
         actionMenuItem('New Tweet', tweet),
         actionMenuItem('Reply to Previous Tweet', reply),
-        {
-            type: 'separator',
-        },
         actionMenuItem('Click Tweet Button', tweetButton),
-        {
-            type: 'separator',
-        },
         actionMenuItem('Edit Config', openConfig),
     ];
     if (IS_DEV) {
-        actionSubmenu.push(
+        editSubmenu.push(
             {
                 type: 'separator',
             },
@@ -72,43 +99,8 @@ export function createMenu(
 
     const template: Electron.MenuItemConstructorOptions[] = [
         {
-            label: 'Action',
-            submenu: actionSubmenu,
-        },
-        {
             label: 'Edit',
-            submenu: [
-                {
-                    type: 'separator',
-                },
-                {
-                    role: 'undo',
-                    accelerator: 'CmdOrCtrl+Z',
-                },
-                {
-                    role: 'redo',
-                    accelerator: 'Shift+CmdOrCtrl+Z',
-                },
-                {
-                    type: 'separator',
-                },
-                {
-                    role: 'cut',
-                    accelerator: 'CmdOrCtrl+X',
-                },
-                {
-                    role: 'copy',
-                    accelerator: 'CmdOrCtrl+C',
-                },
-                {
-                    role: 'paste',
-                    accelerator: 'CmdOrCtrl+V',
-                },
-                {
-                    role: 'selectall',
-                    accelerator: 'CmdOrCtrl+A',
-                },
-            ],
+            submenu: editSubmenu,
         },
         {
             label: 'View',
@@ -173,7 +165,7 @@ export function createMenu(
                 switchAccount(a);
             },
         }));
-        template.splice(1, 0, {
+        template.splice(template.length - 1, 0, {
             label: 'Accounts',
             submenu: accountSubmenu,
         });
