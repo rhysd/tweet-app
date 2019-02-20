@@ -246,11 +246,14 @@ export default class TweetWindow {
             // - 'https://api.twitter.com/2/timeline/home.json?*',
             // - 'https://api.twitter.com/1.1/client_event.json',
             const filter = {
-                urls: ['https://www.google-analytics.com/r/*'],
+                urls: ['https://www.google-analytics.com/r/*', 'https://api.twitter.com/1.1/statuses/update.json'],
             };
             win.webContents.session.webRequest.onBeforeRequest(filter, (details: any, callback) => {
-                // XXX: TENTATIVE: detect login from google-analitics requests
-                if ((details as any).referrer === 'https://mobile.twitter.com/login') {
+                if (details.url === 'https://api.twitter.com/1.1/statuses/update.json') {
+                    // Tweet was posted. It means that user has already logged in.
+                    win.webContents.session.webRequest.onBeforeRequest(null as any);
+                } else if ((details as any).referrer === 'https://mobile.twitter.com/login') {
+                    // XXX: TENTATIVE: detect login from google-analitics requests
                     log.debug('Login detected from URL', details.url);
                     this.ipc.send('tweetapp:login');
                     // Remove listener anymore
