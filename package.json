@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build:tsc": "tsc -p . && chmod +x ./bin/cli.js",
-    "build:parcel": "parcel build -o preload.js -d renderer/ --target electron renderer/index.js",
+    "build:parcel": "parcel build -o preload.js -d renderer/ --target electron renderer/index.js --no-source-maps",
     "build": "npm-run-all build:tsc build:parcel",
     "watch:tsc": "tsc -p . --watch",
     "watch:parcel": "parcel -o preload.js -d renderer/ --target electron renderer/index.js --no-source-maps",
@@ -20,7 +20,9 @@
     "prod": "node ./bin/cli.js",
     "pack": "electron-builder",
     "dist": "npm-run-all build 'pack -- --mac --linux --win'",
-    "test": "mocha ./test/"
+    "test:integ": "mocha ./test/integ",
+    "test:unit": "mocha ./test/unit",
+    "test": "npm-run-all test:unit test:integ"
   },
   "repository": {
     "type": "git",
@@ -36,13 +38,17 @@
     "@types/commander": "^2.12.2",
     "@types/electron-window-state": "^2.0.33",
     "@types/mocha": "^5.2.6",
+    "@types/mock-require": "^2.0.0",
     "@types/node": "^10.12.23",
+    "@types/sinon": "^7.0.6",
     "@types/webdriverio": "^4.13.3",
     "electron": "^4.0.4",
     "electron-builder": "^20.38.5",
     "mocha": "^5.2.0",
+    "mock-require": "^3.0.3",
     "npm-run-all": "^4.1.5",
     "parcel-bundler": "^1.11.0",
+    "sinon": "^7.2.4",
     "spectron": "^5.0.0",
     "typescript": "^3.3.3"
   },
