@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, dialog } from 'electron';
 import contextMenu = require('electron-context-menu');
 import { Lifecycle } from './lifecycle';
 import log from './log';
@@ -55,6 +55,12 @@ async function go() {
     } catch (err) {
         log.error('App quits due to error:', err.message);
         exitStatus = 1;
+        dialog.showMessageBox({
+            type: 'error',
+            title: 'Error',
+            message: `Tweet app has stopped due to an error: ${err.message}`,
+            detail: err.stack,
+        });
     } finally {
         app.quit();
         log.info('App quits with exit status', exitStatus);
