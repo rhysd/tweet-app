@@ -1,11 +1,12 @@
 import * as querystring from 'querystring';
 import * as assert from 'assert';
-import { BrowserWindow, Menu } from 'electron';
+import { BrowserWindow, Menu, dialog, nativeImage } from 'electron';
 import windowState = require('electron-window-state');
 import log from './log';
 import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
 import Ipc from './ipc';
 import { touchBar } from './menu';
+import { openConfig } from './config';
 
 // XXX: TENTATIVE: detect back button by aria label
 const CSS_REMOVE_BACK =
@@ -57,6 +58,30 @@ export default class TweetWindow {
         }
     }
 
+    requireConfigWithDialog() {
+        return new Promise<void>(resolve => {
+            const buttons = ['Edit Config', 'OK'];
+            dialog.showMessageBox(
+                {
+                    type: 'info',
+                    title: 'Config is required',
+                    message: 'Configuration is required to reply to previous tweet',
+                    detail:
+                        "Please click 'Edit Config', enter your @screen_name at 'default_account' field, restart app",
+                    icon: nativeImage.createFromPath(ICON_PATH),
+                    buttons,
+                },
+                idx => {
+                    const label = buttons[idx];
+                    if (label === 'Edit Config') {
+                        openConfig();
+                    }
+                    resolve();
+                },
+            );
+        });
+    }
+
     composeNewTweetUrl(text?: string): string {
         let queries = [];
         if (text !== undefined && text !== '') {
@@ -74,6 +99,10 @@ export default class TweetWindow {
     }
 
     composeReplyUrl(text?: string): string {
+        if (this.screenName === undefined) {
+            this.requireConfigWithDialog();
+        }
+
         let url = this.composeNewTweetUrl(text);
         if (this.prevTweetId === null) {
             log.warn(
