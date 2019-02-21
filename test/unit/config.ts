@@ -1,11 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { deepStrictEqual as eq, ok } from 'assert';
-import sinon = require('sinon');
-import { SinonSpy } from 'sinon';
-import { appDir } from './mock';
+import { appDir, reset } from './mock';
 import { loadConfig, openConfig, DEFAULT_CONFIG } from '../../main/config';
-import { shell } from 'electron'; // mocked
+
+const { shell } = require('electron') as any; // mocked
 
 const ConfigPath = path.join(appDir, 'config.json');
 
@@ -53,17 +52,8 @@ describe('config.ts', function() {
     });
 
     describe('openConfig()', function() {
-        let saved: any;
-        let openItem: SinonSpy;
-
         beforeEach(function() {
-            saved = shell.openItem;
-            openItem = sinon.fake();
-            shell.openItem = openItem as any;
-        });
-
-        afterEach(function() {
-            shell.openItem = saved;
+            reset();
         });
 
         it('opens config with openItem()', async function() {
@@ -77,14 +67,14 @@ describe('config.ts', function() {
             fs.writeFileSync(ConfigPath, JSON.stringify(config));
 
             await openConfig();
-            ok(openItem.calledOnce);
-            eq(openItem.getCall(0).args, [ConfigPath]);
+            ok(shell.openItem.calledOnce);
+            eq(shell.openItem.getCall(0).args, [ConfigPath]);
         });
 
         it('opens config after writing default config to file when no config found', async function() {
             await openConfig();
-            ok(openItem.calledOnce);
-            eq(openItem.getCall(0).args, [ConfigPath]);
+            ok(shell.openItem.calledOnce);
+            eq(shell.openItem.getCall(0).args, [ConfigPath]);
         });
     });
 });

@@ -1,23 +1,26 @@
 import * as path from 'path';
-import * as A from 'assert';
+import sinon = require('sinon');
 import mock = require('mock-require');
+import merge = require('lodash.merge');
 
 export const appDir = path.join(__dirname, 'appDir');
 
-const electron = {
-    app: {
-        getPath(kind: string) {
-            A.strictEqual(kind, 'userData');
-            return appDir;
+const electron: any = {};
+
+export function reset() {
+    merge(electron, {
+        app: {
+            getPath: sinon.fake.returns(appDir),
         },
-    },
-    shell: {
-        openItem(_path: string) {},
-    },
-    ipcMain: {
-        on(_chan: string, _listener: Function) {},
-        removeListener(_chan: string, _listener: Function) {},
-    },
-};
+        shell: {
+            openItem: sinon.fake(),
+        },
+        ipcMain: {
+            on: sinon.fake(),
+            removeListener: sinon.fake(),
+        },
+    });
+}
+reset();
 
 mock('electron', electron);
