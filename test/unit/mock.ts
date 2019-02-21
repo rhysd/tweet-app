@@ -14,6 +14,10 @@ const electron = {
     shell: {
         openItem(_path: string) {},
     },
+    ipcMain: {
+        on(_chan: string, _listener: Function) {},
+        removeListener(_chan: string, _listener: Function) {},
+    },
 };
 
 mock('electron', electron);
