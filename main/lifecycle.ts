@@ -7,15 +7,15 @@ import { ON_DARWIN, ON_WINDOWS } from './constants';
 
 export class Lifecycle {
     // Use Promise for representing quit() is called only once in lifecycle.
-    public didQuit: Promise<void>;
-    private currentWin: TweetWindow;
-    private ipc: Ipc;
+    public readonly didQuit: Promise<void>;
+    private readonly ipc: Ipc;
+    private readonly accounts: string[];
+    private readonly menu: Menu;
     private resolveQuit: () => void;
-    private accounts: string[];
+    private currentWin: TweetWindow;
     private switchingAccount: boolean;
-    private menu: Menu;
 
-    constructor(private config: Config, private opts: CommandLineOptions) {
+    constructor(private readonly config: Config, private opts: CommandLineOptions) {
         this.didQuit = new Promise(resolve => {
             this.resolveQuit = resolve;
         });

@@ -14,22 +14,22 @@ const CSS_REMOVE_BACK =
     ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
 
 export default class TweetWindow {
-    public didClose: Promise<void>;
     public readonly screenName: string | undefined;
+    public readonly wantToQuit: Promise<void>;
+    public didClose: Promise<void>;
     public prevTweetId: string | null;
-    public wantToQuit: Promise<void>;
+    private readonly partition: string | undefined;
     private win: BrowserWindow | null;
     private hashtags: string;
-    private partition: string | undefined;
     private resolveWantToQuit: () => void;
     private actionAfterTweet: ConfigAfterTweet | undefined;
 
     constructor(
         screenName: string | undefined,
-        private config: Config,
-        private ipc: Ipc,
+        private readonly config: Config,
+        private readonly ipc: Ipc,
         opts: CommandLineOptions,
-        private menu: Menu,
+        private readonly menu: Menu,
     ) {
         this.updateOptions(opts);
 

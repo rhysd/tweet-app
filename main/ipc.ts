@@ -5,7 +5,7 @@ export type Listener = (event: Event, ...args: any[]) => void;
 
 export default class Ipc {
     private sender: Electron.WebContents | null;
-    private listeners: Map<Listener, IPC.Chan>;
+    private readonly listeners: Map<Listener, IPC.Chan>;
 
     constructor() {
         this.sender = null;
