@@ -44,7 +44,6 @@ class DummyWebContents extends EventEmitter {
 }
 
 class DummyBrowserWindow extends EventEmitter {
-    close = sinon.fake();
     restore = sinon.fake();
     focus = sinon.fake();
     show = sinon.fake();
@@ -62,6 +61,11 @@ class DummyBrowserWindow extends EventEmitter {
         this.emit('ready-to-show');
         this.webContents.url = url;
         process.nextTick(() => this.webContents.emit('dom-ready'));
+    }
+
+    close() {
+        this.emit('close');
+        this.emit('closed');
     }
 }
 

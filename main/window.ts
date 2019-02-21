@@ -17,8 +17,8 @@ export default class TweetWindow {
     public readonly screenName: string | undefined;
     public readonly wantToQuit: Promise<void>;
     public didClose: Promise<void>;
-    public prevTweetId: string | null;
     private readonly partition: string | undefined;
+    private prevTweetId: string | null;
     private win: BrowserWindow | null;
     private hashtags: string;
     private resolveWantToQuit: () => void;
@@ -268,17 +268,18 @@ export default class TweetWindow {
                         return;
                     }
 
-                    const tweetUrl = this.composeTweetUrl(false);
-                    log.info('Posted tweet:', details.url, 'Next URL:', tweetUrl);
-
                     switch (this.actionAfterTweet) {
                         case 'close':
+                            log.info("Will close window since action after tweet is 'close'");
                             this.close();
                             break;
                         case 'quit':
+                            log.info("Will quit since action after tweet is 'quit'");
                             this.resolveWantToQuit();
                             break;
                         default:
+                            const tweetUrl = this.composeTweetUrl(false);
+                            log.info('Posted tweet:', details.url, 'Next URL:', tweetUrl);
                             this.ipc.send('tweetapp:sent-tweet', tweetUrl);
                             break;
                     }

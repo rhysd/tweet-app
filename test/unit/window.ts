@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { deepStrictEqual as eq, notDeepStrictEqual as neq, ok, fail } from 'assert';
+import sinon = require('sinon');
 import TweetWindow from '../../main/window';
 import Ipc from '../../main/ipc';
 import { appDir, reset } from './mock';
@@ -94,7 +95,7 @@ describe('TweetWindow', function() {
     it('opens window for reply to previous tweet', async function() {
         const ipc = new Ipc();
         const w = new TweetWindow('@foo', {}, ipc, { text: '' }, {} as any);
-        await w.openNewTweet('this is test');
+        await w.openNewTweet();
         const win = (w as any).win;
         neq(win, null);
         const contents = win.webContents;
@@ -137,6 +138,10 @@ describe('TweetWindow', function() {
         }
 
         eq(url, 'https://mobile.twitter.com/compose/tweet?in_reply_to=114514');
+
+        // Open tweet window again
+        await w.openNewTweet();
+        eq(contents.url, 'https://mobile.twitter.com/compose/tweet');
     });
 
     it('shows dialog to require default_account config when no screen name is set and reply is requested', async function() {
@@ -159,7 +164,102 @@ describe('TweetWindow', function() {
         ok(file.endsWith('config.json'), file);
     });
 
-    // TODO: close
-    // TODO: action after tweet (including wantToQuit)
+    it('closes window and cleanup IPC receiver', async function() {
+        const ipc: any = new Ipc();
+        ipc.detach = sinon.fake();
+        ipc.forget = sinon.fake();
+        const w = new TweetWindow('@foo', {}, ipc, { text: '' }, {} as any);
+        await w.openNewTweet();
+        const contents = (w as any).win.webContents;
+        await w.close();
+        eq((w as any).win, null);
+
+        ok(ipc.detach.called);
+        ok(ipc.forget.calledOnce);
+
+        eq(ipc.detach.lastCall.args[0], contents);
+        eq(ipc.forget.lastCall.args[0], 'tweetapp:prev-tweet-id');
+        await w.didClose;
+
+        await w.close();
+    });
+
+    it('prepare next tweet when action after tweet is tweet or reply', async function() {
+        for (const action of ['new tweet' as 'new tweet', 'reply previous' as 'reply previous']) {
+            const config = {
+                after_tweet: action,
+            };
+            const ipc = new Ipc();
+            const w = new TweetWindow('foo', config, ipc, { text: '' }, {} as any);
+            await w.openNewTweet();
+
+            const contents = (w as any).win.webContents;
+            const call = contents.send.getCalls().find((c: any) => c.args[0] === 'tweetapp:action-after-tweet');
+            ok(call);
+            eq(call.args[1], action);
+
+            ok(contents.session.webRequest.onCompleted.called);
+            const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
+            callback({
+                statusCode: 200,
+                method: 'POST',
+                fromCache: false,
+            });
+
+            const ipcCall = contents.send.getCalls().find((c: any) => c.args[0] === 'tweetapp:sent-tweet');
+            ok(ipcCall);
+            eq(ipcCall.args[1], 'https://mobile.twitter.com/compose/tweet');
+        }
+    });
+
+    it('closes window when action after tweet is close', async function() {
+        const config = {
+            after_tweet: 'close' as 'close',
+        };
+        const ipc = new Ipc();
+        const w = new TweetWindow('foo', config, ipc, { text: '' }, {} as any);
+        await w.openNewTweet();
+
+        const contents = (w as any).win.webContents;
+        const call = contents.send.getCalls().find((c: any) => c.args[0] === 'tweetapp:action-after-tweet');
+        ok(call);
+        eq(call.args[1], 'close');
+
+        ok(contents.session.webRequest.onCompleted.called);
+        const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
+        callback({
+            statusCode: 200,
+            method: 'POST',
+            fromCache: false,
+        });
+
+        eq((w as any).win, null);
+        await w.didClose;
+    });
+
+    it('quits when action after tweet is quit', async function() {
+        const config = {
+            after_tweet: 'quit' as 'quit',
+        };
+        const ipc = new Ipc();
+        const w = new TweetWindow('foo', config, ipc, { text: '' }, {} as any);
+        await w.openNewTweet();
+
+        const contents = (w as any).win.webContents;
+        const call = contents.send.getCalls().find((c: any) => c.args[0] === 'tweetapp:action-after-tweet');
+        ok(call);
+        eq(call.args[1], 'quit');
+
+        ok(contents.session.webRequest.onCompleted.called);
+        const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
+        callback({
+            statusCode: 200,
+            method: 'POST',
+            fromCache: false,
+        });
+
+        await w.wantToQuit;
+    });
+
     // TODO: switch account
 });
