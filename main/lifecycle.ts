@@ -80,7 +80,7 @@ export class Lifecycle {
 
         // Constraint: Only one window should be open at the same time because IPC channel
         // from renderer process is broadcast.
-        await this.currentWin.open(false, this.opts.text);
+        await this.currentWin.openNewTweet(this.opts.text);
         log.info('App has started');
 
         // Only on macOS, closing window does not mean finishing app.
@@ -99,11 +99,15 @@ export class Lifecycle {
     async restart(newOpts?: CommandLineOptions): Promise<void> {
         log.info('Reopen window content for options', newOpts);
         if (newOpts === undefined) {
-            return this.currentWin.open();
+            return this.currentWin.openNewTweet();
         }
         this.currentWin.updateOptions(newOpts);
         this.opts = newOpts;
-        return this.currentWin.open(!!newOpts.reply, newOpts.text);
+        if (newOpts.reply) {
+            return this.currentWin.openReply(newOpts.text);
+        } else {
+            return this.currentWin.openNewTweet(newOpts.text);
+        }
     }
 
     // Actions
@@ -120,11 +124,11 @@ export class Lifecycle {
     };
 
     newTweet = () => {
-        this.currentWin.open(false);
+        this.currentWin.openNewTweet();
     };
 
     replyToPrevTweet = () => {
-        this.currentWin.open(true);
+        this.currentWin.openReply();
     };
 
     openProfilePageForDebug = () => {
@@ -147,7 +151,7 @@ export class Lifecycle {
         try {
             await this.currentWin.close();
             this.currentWin = this.newWindow(screenName);
-            await this.currentWin.open();
+            await this.currentWin.openNewTweet();
         } finally {
             this.switchingAccount = false;
         }

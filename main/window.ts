@@ -82,7 +82,25 @@ export default class TweetWindow {
         });
     }
 
-    composeNewTweetUrl(text?: string): string {
+    openNewTweet(text?: string): Promise<void> {
+        return this.open(false, text);
+    }
+
+    openReply(text?: string): Promise<void> {
+        return this.open(true, text);
+    }
+
+    close(): Promise<void> {
+        if (this.win !== null) {
+            log.debug('Will close window');
+            this.win.close();
+        } else {
+            log.debug('Window was already closed');
+        }
+        return this.didClose;
+    }
+
+    private composeNewTweetUrl(text?: string): string {
         let queries = [];
         if (text !== undefined && text !== '') {
             queries.push('text=' + querystring.escape(text));
@@ -98,7 +116,7 @@ export default class TweetWindow {
         return url;
     }
 
-    composeReplyUrl(text?: string): string {
+    private composeReplyUrl(text?: string): string {
         if (this.screenName === undefined) {
             this.requireConfigWithDialog();
         }
@@ -118,7 +136,7 @@ export default class TweetWindow {
         return url;
     }
 
-    composeTweetUrl(reply?: boolean, text?: string): string {
+    private composeTweetUrl(reply: boolean, text?: string): string {
         if (reply) {
             return this.composeReplyUrl(text);
         } else {
@@ -126,7 +144,7 @@ export default class TweetWindow {
         }
     }
 
-    open(reply?: boolean, text?: string) {
+    private open(reply: boolean, text?: string) {
         if (this.win !== null) {
             if (this.win.isMinimized()) {
                 this.win.restore();
@@ -249,7 +267,7 @@ export default class TweetWindow {
                         return;
                     }
 
-                    const tweetUrl = this.composeTweetUrl();
+                    const tweetUrl = this.composeTweetUrl(false);
                     log.info('Posted tweet:', details.url, 'Next URL:', tweetUrl);
 
                     switch (this.actionAfterTweet) {
@@ -305,16 +323,6 @@ export default class TweetWindow {
             log.info('Created window for', this.screenName);
             this.win = win;
         });
-    }
-
-    close(): Promise<void> {
-        if (this.win !== null) {
-            log.debug('Will close window');
-            this.win.close();
-        } else {
-            log.debug('Window was already closed');
-        }
-        return this.didClose;
     }
 
     private onPrevTweetIdReceived(_: Event, id: string) {
