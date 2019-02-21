@@ -38,6 +38,7 @@ export class Lifecycle {
             this.newTweet,
             this.replyToPrevTweet,
             this.clickTweetButton,
+            this.openAccountSettings,
             this.switchAccount,
             this.openProfilePageForDebug,
         );
@@ -137,6 +138,10 @@ export class Lifecycle {
             url = `https://mobile.twitter.com/${this.currentWin.screenName}`;
         }
         this.ipc.send('tweetapp:open', url);
+    };
+
+    openAccountSettings = () => {
+        this.ipc.send('tweetapp:open', 'https://mobile.twitter.com/settings/account');
     };
 
     switchAccount = async (screenName: string) => {

@@ -9,6 +9,7 @@ const DefaultKeyMaps: Required<KeyMapConfig> = {
     'New Tweet': 'CmdOrCtrl+N',
     'Reply to Previous Tweet': 'CmdOrCtrl+R',
     'Click Tweet Button': 'CmdOrCtrl+Enter',
+    'Account Settings': 'CmdOrCtrl+,',
     'Edit Config': null,
 };
 
@@ -20,6 +21,7 @@ export function createMenu(
     tweet: A,
     reply: A,
     tweetButton: A,
+    accountSettings: A,
     switchAccount: (s: string) => Promise<void>,
     debug: A,
 ): Menu {
@@ -83,6 +85,7 @@ export function createMenu(
         actionMenuItem('New Tweet', tweet),
         actionMenuItem('Reply to Previous Tweet', reply),
         actionMenuItem('Click Tweet Button', tweetButton),
+        actionMenuItem('Account Settings', accountSettings),
         actionMenuItem('Edit Config', openConfig),
     ];
     if (IS_DEV) {
@@ -108,8 +111,11 @@ export function createMenu(
                 {
                     role: 'reload',
                     click(_, focusedWindow) {
-                        if (focusedWindow) focusedWindow.reload();
+                        if (focusedWindow) {
+                            focusedWindow.reload();
+                        }
                     },
+                    accelerator: '', // Disable shortcut
                 },
                 {
                     role: 'toggledevtools',

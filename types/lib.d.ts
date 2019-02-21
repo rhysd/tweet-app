@@ -4,6 +4,7 @@ interface KeyMapConfig {
     'New Tweet'?: string | null;
     'Reply to Previous Tweet'?: string | null;
     'Click Tweet Button'?: string | null;
+    'Account Settings'?: string | null;
     'Edit Config'?: string | null;
 }
 
