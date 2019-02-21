@@ -58,30 +58,6 @@ export default class TweetWindow {
         }
     }
 
-    requireConfigWithDialog() {
-        return new Promise<void>(resolve => {
-            const buttons = ['Edit Config', 'OK'];
-            dialog.showMessageBox(
-                {
-                    type: 'info',
-                    title: 'Config is required',
-                    message: 'Configuration is required to reply to previous tweet',
-                    detail:
-                        "Please click 'Edit Config', enter your @screen_name at 'default_account' field, restart app",
-                    icon: nativeImage.createFromPath(ICON_PATH),
-                    buttons,
-                },
-                idx => {
-                    const label = buttons[idx];
-                    if (label === 'Edit Config') {
-                        openConfig();
-                    }
-                    resolve();
-                },
-            );
-        });
-    }
-
     openNewTweet(text?: string): Promise<void> {
         return this.open(false, text);
     }
@@ -98,6 +74,31 @@ export default class TweetWindow {
             log.debug('Window was already closed');
         }
         return this.didClose;
+    }
+
+    private requireConfigWithDialog() {
+        return new Promise<void>(resolve => {
+            const buttons = ['Edit Config', 'OK'];
+            dialog.showMessageBox(
+                {
+                    type: 'info',
+                    title: 'Config is required',
+                    message: 'Configuration is required to reply to previous tweet',
+                    detail:
+                        "Please click 'Edit Config', enter your @screen_name at 'default_account' field, restart app",
+                    icon: nativeImage.createFromPath(ICON_PATH),
+                    buttons,
+                },
+                idx => {
+                    const label = buttons[idx];
+                    if (label === 'Edit Config') {
+                        openConfig().then(resolve);
+                    } else {
+                        resolve();
+                    }
+                },
+            );
+        });
     }
 
     private composeNewTweetUrl(text?: string): string {
@@ -117,10 +118,6 @@ export default class TweetWindow {
     }
 
     private composeReplyUrl(text?: string): string {
-        if (this.screenName === undefined) {
-            this.requireConfigWithDialog();
-        }
-
         let url = this.composeNewTweetUrl(text);
         if (this.prevTweetId === null) {
             log.warn(
@@ -144,7 +141,11 @@ export default class TweetWindow {
         }
     }
 
-    private open(reply: boolean, text?: string) {
+    private async open(reply: boolean, text?: string) {
+        if (reply && this.screenName === undefined) {
+            await this.requireConfigWithDialog();
+        }
+
         if (this.win !== null) {
             if (this.win.isMinimized()) {
                 this.win.restore();

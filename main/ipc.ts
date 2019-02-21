@@ -37,6 +37,7 @@ export default class Ipc {
     on(chan: IPC.Chan, listener: Listener) {
         ipcMain.on(chan, listener);
         this.listeners.set(listener, chan);
+        log.debug('Listen IPC channel', chan, listener.name);
     }
 
     forget(chan: IPC.Chan, listener: Listener) {
@@ -46,6 +47,7 @@ export default class Ipc {
             return;
         }
         ipcMain.removeListener(chan, listener);
+        log.debug('Forget IPC channel', chan, listener.name);
     }
 
     dispose() {
@@ -53,5 +55,6 @@ export default class Ipc {
             ipcMain.removeListener(chan, listener);
         }
         this.listeners.clear();
+        log.debug('remove all IPC channel listeners');
     }
 }

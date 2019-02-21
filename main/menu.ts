@@ -6,7 +6,7 @@ import log from './log';
 const { TouchBarLabel, TouchBarButton, TouchBarSpacer } = TouchBar;
 
 const DefaultKeyMaps: Required<KeyMapConfig> = {
-    'New Tweet': 'CmdOrCtrl+T',
+    'New Tweet': 'CmdOrCtrl+N',
     'Reply to Previous Tweet': 'CmdOrCtrl+R',
     'Click Tweet Button': 'CmdOrCtrl+Enter',
     'Edit Config': null,
@@ -184,7 +184,6 @@ export function createMenu(
                 },
                 {
                     role: 'services',
-                    // submenu: [],
                 },
                 {
                     type: 'separator',
@@ -260,7 +259,7 @@ export function touchBar(screenName: string | undefined, tweet: A, reply: A) {
         }),
         smallSpacer,
         new TouchBarButton({
-            label: 'Reply To Previous',
+            label: 'Reply to Previous',
             backgroundColor: '#1da1f2',
             click: reply,
         }),

@@ -25,7 +25,7 @@ export async function openConfig() {
     try {
         await fs.access(DATA_DIR);
     } catch (err) {
-        log.error('Cannot access to data directory', DATA_DIR, 'does not exist:', err.message);
+        log.error('Cannot access to data directory.', DATA_DIR, 'does not exist:', err.message);
         return;
     }
 
