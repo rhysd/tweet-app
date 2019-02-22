@@ -7,16 +7,20 @@ import commander = require('commander');
 const AfterTweetActions: ConfigAfterTweet[] = ['new tweet', 'reply previous', 'close', 'quit'];
 
 const { hashtags, args, afterTweet, detach, reply } = commander
+    .command('tweet')
     .version('0.0.5')
     .usage('[options] [text]')
-    .option('-t --hashtags <list>', 'Comma-separated list of hashtags', s => s.split(','))
+    .description('Desktop application for tweeting. Timeline never shows up.')
+    .option('-t --hashtags <list>', 'comma-separated list of hashtags (e.g. "js,react,node")', s =>
+        s.split(',').map((t: string) => t.trim()),
+    )
     .option(
         '-a --after-tweet <action>',
-        'What to do after sending tweet. One of ' + AfterTweetActions.map(a => `'${a}'`).join(', '),
+        'what to do after posting tweet. One of ' + AfterTweetActions.map(a => `'${a}'`).join(', '),
         (s: string) => s.toLowerCase(),
     )
-    .option('--no-detach', 'Do not detach process from shell', false)
-    .option('--reply', 'Reply to previous tweet. This option is only effective when app is already running')
+    .option('--no-detach', 'do not detach process from shell', false)
+    .option('-r --reply', 'reply to tweet sent previously. This option is only effective when app is already running')
     .parse(process.argv);
 
 // Verify --after-tweet
