@@ -5,6 +5,7 @@ export type Listener = (event: Event, ...args: any[]) => void;
 
 export default class Ipc {
     private sender: Electron.WebContents | null;
+    // XXX: Using Map<T, U> does not work when the same listener is used for multiple channels.
     private readonly listeners: Map<Listener, IPC.Chan>;
 
     constructor() {

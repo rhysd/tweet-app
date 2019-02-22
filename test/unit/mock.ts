@@ -101,6 +101,12 @@ export function reset() {
         nativeImage: {
             createFromPath: sinon.fake(),
         },
+        ipcRenderer: {
+            send: sinon.fake(),
+            on: sinon.fake(),
+            removeListener: sinon.fake(),
+            removeAllListeners: sinon.fake(),
+        },
     });
 }
 reset();
