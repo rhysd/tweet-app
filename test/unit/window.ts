@@ -261,5 +261,31 @@ describe('TweetWindow', function() {
         await w.wantToQuit;
     });
 
-    // TODO: switch account
+    it('can update options for second instance', async function() {
+        const config = {
+            after_tweet: 'quit' as 'quit',
+        };
+        const opts = {
+            hashtags: ['foo', 'bar'],
+            text: '',
+        };
+        const ipc = new Ipc();
+        const w = new TweetWindow('foo', config, ipc, opts, {} as any);
+        w.updateOptions({
+            afterTweet: 'quit',
+            hashtags: ['aaa'],
+            text: '',
+        });
+
+        await w.openNewTweet();
+        const contents = (w as any).win.webContents;
+
+        // hashtags was updated
+        eq(contents.url, 'https://mobile.twitter.com/compose/tweet?hashtags=aaa');
+
+        // action after tweet was updated
+        const call = contents.send.getCalls().find((c: any) => c.args[0] === 'tweetapp:action-after-tweet');
+        ok(call);
+        eq(call.args[1], 'quit');
+    });
 });

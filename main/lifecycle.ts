@@ -5,7 +5,7 @@ import log from './log';
 import { createMenu, dockMenu } from './menu';
 import { ON_DARWIN, ON_WINDOWS } from './constants';
 
-export class Lifecycle {
+export default class Lifecycle {
     // Use Promise for representing quit() is called only once in lifecycle.
     public readonly didQuit: Promise<void>;
     private readonly ipc: Ipc;
@@ -42,8 +42,6 @@ export class Lifecycle {
             this.switchAccount,
             this.openProfilePageForDebug,
         );
-        Menu.setApplicationMenu(this.menu);
-
         this.currentWin = this.newWindow(config.default_account);
     }
 
@@ -54,6 +52,8 @@ export class Lifecycle {
     }
 
     async runUntilQuit(): Promise<void> {
+        Menu.setApplicationMenu(this.menu);
+
         if (ON_DARWIN) {
             app.dock.setMenu(dockMenu(this.newTweet, this.replyToPrevTweet));
         }

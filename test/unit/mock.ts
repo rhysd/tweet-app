@@ -73,6 +73,10 @@ export function reset() {
     merge(electron, {
         app: {
             getPath: sinon.fake.returns(appDir),
+            dock: {
+                setMenu: sinon.fake(),
+            },
+            setUserTasks: sinon.fake(),
         },
         shell: {
             openItem: sinon.fake(),

@@ -1,6 +1,6 @@
 import { app, dialog } from 'electron';
 import contextMenu = require('electron-context-menu');
-import { Lifecycle } from './lifecycle';
+import Lifecycle from './lifecycle';
 import log from './log';
 import { loadConfig } from './config';
 import { ON_DARWIN, ICON_PATH } from './constants';
@@ -22,7 +22,11 @@ async function go() {
         if (idx === 0 || idx >= args.length) {
             return { text: '' };
         }
-        return JSON.parse(args[idx]);
+        try {
+            return JSON.parse(args[idx]);
+        } catch (e) {
+            throw new Error(`Cannot parse command line options in main process: ${e}`);
+        }
     }
 
     contextMenu();
