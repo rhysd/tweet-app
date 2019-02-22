@@ -87,6 +87,7 @@ export function reset() {
         },
         Menu: {
             buildFromTemplate: sinon.stub().returnsArg(0),
+            setApplicationMenu: sinon.fake(),
         },
         TouchBar: ctorSpy({
             TouchBarLabel: ctorSpy(),

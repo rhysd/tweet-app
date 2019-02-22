@@ -278,9 +278,9 @@ export default class TweetWindow {
                             this.resolveWantToQuit();
                             break;
                         default:
-                            const tweetUrl = this.composeTweetUrl(false);
-                            log.info('Posted tweet:', details.url, 'Next URL:', tweetUrl);
-                            this.ipc.send('tweetapp:sent-tweet', tweetUrl);
+                            const url = this.composeTweetUrl(false);
+                            log.info('Posted tweet:', details.url, 'Next URL:', url);
+                            this.ipc.send('tweetapp:sent-tweet', url);
                             break;
                     }
                 });
