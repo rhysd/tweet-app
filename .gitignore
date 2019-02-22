@@ -10,3 +10,5 @@
 /.cache
 /config.json
 /dist
+/.nyc_output
+/coverage

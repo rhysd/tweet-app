@@ -1,3 +1,4 @@
+import * as assert from 'assert';
 import { ipcMain } from 'electron';
 import log from './log';
 
@@ -36,6 +37,7 @@ export default class Ipc {
     }
 
     on(chan: IPC.Chan, listener: Listener) {
+        assert.ok(!this.listeners.has(listener));
         ipcMain.on(chan, listener);
         this.listeners.set(listener, chan);
         log.debug('Listen IPC channel', chan, listener.name);
