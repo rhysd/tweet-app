@@ -12,3 +12,4 @@ export const PRELOAD_JS = path.join(__dirname, '..', 'renderer', 'preload.js');
 export const ON_DARWIN = process.platform === 'darwin';
 export const ON_WINDOWS = process.platform === 'win32';
 export const ICON_PATH = path.join(__dirname, '..', 'assets', 'icon', 'icon.png');
+export const ON_INTEG_TEST = process.argv.includes('--integration-test-running');

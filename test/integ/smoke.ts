@@ -7,13 +7,13 @@ const electronPath = require('electron') as any;
 describe('Smoke', function() {
     this.timeout(10000);
 
-    const appDir = path.join(__dirname, '..');
+    const appDir = path.join(__dirname, '..', '..');
     let app: Application;
 
     before(async function() {
         app = new Application({
             path: electronPath,
-            args: [appDir],
+            args: [appDir, '--integration-test-running'],
         });
         await app.start();
     });
