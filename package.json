@@ -1,8 +1,8 @@
 {
   "name": "tweet-app",
   "productName": "Tweet",
-  "version": "0.0.5",
-  "description": "Desktop app only for tweeting. Timeline is never shown",
+  "version": "0.0.6",
+  "description": "Desktop app only for tweeting. Timeline never shows up",
   "main": "main/index.js",
   "bin": {
     "tweet": "./bin/cli.js"
