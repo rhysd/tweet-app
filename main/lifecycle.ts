@@ -3,7 +3,7 @@ import TweetWindow from './window';
 import Ipc from './ipc';
 import log from './log';
 import { createMenu, dockMenu } from './menu';
-import { ON_DARWIN, ON_WINDOWS } from './constants';
+import { ON_DARWIN, ON_WINDOWS, ON_INTEG_TEST } from './constants';
 
 export default class Lifecycle {
     // Use Promise for representing quit() is called only once in lifecycle.
@@ -86,7 +86,18 @@ export default class Lifecycle {
 
         // Only on macOS, closing window does not mean finishing app.
         // Otherwise, quit on the main window is closing.
-        if (!ON_DARWIN) {
+        //
+        // Note:
+        // On integration test, app should quit after window is closed even on macOS.
+        // When BrowserWindow disables Node integration, there is no way to communicate with main
+        // process by renderer process via WebDriver protocol anymore.
+        // Though Spectron provides window.electronRequire interface, we cannot
+        // expose require() to renderer context since we open Twitter website directly in
+        // BrowserWindow.
+        // In the case, What Spectron can do is only calling window.close(). It closes the window,
+        // but it does not make app quit on macOS. To ensure to make app quit after integration test,
+        // flag for integration test is necessary.
+        if (!ON_DARWIN || ON_INTEG_TEST) {
             // Ignore closing window while switching account
             do {
                 await this.currentWin.didClose;
