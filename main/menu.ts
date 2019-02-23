@@ -147,7 +147,7 @@ export function createMenu(
                 {
                     label: 'Learn More',
                     click() {
-                        shell.openExternal('http://github.com/rhysd/tweet-app#readme');
+                        shell.openExternal('https://github.com/rhysd/tweet-app#readme');
                     },
                 },
                 {

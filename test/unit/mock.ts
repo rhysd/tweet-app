@@ -80,6 +80,7 @@ export function reset() {
         },
         shell: {
             openItem: sinon.fake(),
+            openExternal: sinon.fake(),
         },
         ipcMain: {
             on: sinon.fake(),

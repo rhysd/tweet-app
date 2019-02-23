@@ -3,6 +3,8 @@ import sinon = require('sinon');
 import { createMenu, dockMenu, touchBar } from '../../main/menu';
 import { reset } from './mock';
 
+const { shell } = require('electron') as any; // mocked
+
 describe('Menu', function() {
     beforeEach(reset);
 
@@ -162,6 +164,28 @@ describe('Menu', function() {
                     eq(item.accelerator, map);
                 }
             }
+        });
+
+        describe('Help menu', function() {
+            let menu: any[];
+            let help: any[];
+
+            beforeEach(function() {
+                menu = createMenu({}, ['foo'], noop, noop, noop, noop, noop, noop, noop) as any;
+                help = menu.find((m: any) => m.role === 'help').submenu;
+            });
+
+            it('opens README on "Learn More"', function() {
+                help[0].click();
+                ok(shell.openExternal.calledOnce);
+                eq(shell.openExternal.lastCall.args[0], 'https://github.com/rhysd/tweet-app#readme');
+            });
+
+            it('opens Issues page on "Search Issues"', function() {
+                help[1].click();
+                ok(shell.openExternal.calledOnce);
+                eq(shell.openExternal.lastCall.args[0], 'https://github.com/rhysd/tweet-app/issues');
+            });
         });
     });
 });

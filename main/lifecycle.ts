@@ -136,11 +136,11 @@ export default class Lifecycle {
     };
 
     newTweet = () => {
-        this.currentWin.openNewTweet();
+        return this.currentWin.openNewTweet();
     };
 
     replyToPrevTweet = () => {
-        this.currentWin.openReply();
+        return this.currentWin.openReply();
     };
 
     openProfilePageForDebug = () => {

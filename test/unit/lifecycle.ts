@@ -4,9 +4,7 @@ import Lifecycle from '../../main/lifecycle';
 import { reset } from './mock';
 
 describe('Lifecycle', function() {
-    beforeEach(function() {
-        reset();
-    });
+    beforeEach(reset);
 
     function waitForWindowOpen(lifecycle: Lifecycle) {
         return new Promise(resolve => {
@@ -83,38 +81,6 @@ describe('Lifecycle', function() {
         await life.didQuit;
     });
 
-    it('switches account reopens window for next account', async function() {
-        const cfg = { default_account: 'foo', other_accounts: ['bar', 'piyo'] };
-        const opts = { text: '' };
-        const life = new Lifecycle(cfg, opts);
-        life.runUntilQuit();
-        await waitForWindowOpen(life);
-
-        for (const name of ['bar', 'piyo', 'foo']) {
-            let prevWindowClosed = false;
-            (life as any).currentWin.win.once('closed', () => {
-                prevWindowClosed = true;
-            });
-
-            await life.switchAccount(name);
-
-            ok(prevWindowClosed, name);
-            neq((life as any).currentWin.win, null, name);
-            eq((life as any).currentWin.screenName, name);
-        }
-
-        // switching to the same account should cause nothing
-        let prevWindowClosed = false;
-        (life as any).currentWin.win.once('closed', () => {
-            prevWindowClosed = true;
-        });
-        await life.switchAccount('foo');
-        ok(!prevWindowClosed);
-
-        await life.quit();
-        await life.didQuit;
-    });
-
     it('restarts window without new options', async function() {
         const cfg = { default_account: 'foo' };
         const opts = { text: '' };
@@ -181,5 +147,104 @@ describe('Lifecycle', function() {
 
         await life.quit();
         await life.didQuit;
+    });
+
+    describe('Actions', function() {
+        it('switches account reopens window for next account', async function() {
+            const cfg = { default_account: 'foo', other_accounts: ['bar', 'piyo'] };
+            const opts = { text: '' };
+            const life = new Lifecycle(cfg, opts);
+            life.runUntilQuit();
+            await waitForWindowOpen(life);
+
+            for (let name of ['bar', '@piyo', 'foo']) {
+                let prevWindowClosed = false;
+                (life as any).currentWin.win.once('closed', () => {
+                    prevWindowClosed = true;
+                });
+
+                await life.switchAccount(name);
+
+                if (name.startsWith('@')) {
+                    name = name.slice(1); // Omit @
+                }
+                ok(prevWindowClosed, name);
+                neq((life as any).currentWin.win, null, name);
+                eq((life as any).currentWin.screenName, name);
+            }
+
+            // switching to the same account should cause nothing
+            let prevWindowClosed = false;
+            (life as any).currentWin.win.once('closed', () => {
+                prevWindowClosed = true;
+            });
+            await life.switchAccount('foo');
+            ok(!prevWindowClosed);
+
+            await life.quit();
+            await life.didQuit;
+        });
+
+        it('clicks tweet button via IPC', async function() {
+            const life = new Lifecycle({}, { text: '' });
+            life.runUntilQuit();
+            await waitForWindowOpen(life);
+            life.clickTweetButton();
+            const { send } = (life as any).currentWin.win.webContents;
+            ok(send.called);
+            eq(send.lastCall.args[0], 'tweetapp:click-tweet-button');
+        });
+
+        it('shows "new tweet" window', async function() {
+            const life = new Lifecycle({}, { text: '' });
+            life.runUntilQuit();
+            await waitForWindowOpen(life);
+            await (life as any).currentWin.close();
+
+            const opened = life.newTweet();
+            (life as any).currentWin.win.webContents.emit('dom-ready');
+            await opened;
+
+            eq((life as any).currentWin.win.webContents.url, 'https://mobile.twitter.com/compose/tweet');
+        });
+
+        it('shows "reply to previous" window', async function() {
+            const life = new Lifecycle({ default_account: 'foo' }, { text: '' });
+            life.runUntilQuit();
+            await waitForWindowOpen(life);
+            (life as any).currentWin.prevTweetId = '114514';
+            await (life as any).currentWin.close();
+
+            const opened = life.replyToPrevTweet();
+            (life as any).currentWin.win.webContents.emit('dom-ready');
+            await opened;
+
+            eq(
+                (life as any).currentWin.win.webContents.url,
+                'https://mobile.twitter.com/compose/tweet?in_reply_to=114514',
+            );
+        });
+
+        it('opens account settings page', async function() {
+            const life = new Lifecycle({}, { text: '' });
+            life.runUntilQuit();
+            await waitForWindowOpen(life);
+
+            life.openAccountSettings();
+            const { send } = (life as any).currentWin.win.webContents;
+            ok(send.called);
+            eq(send.lastCall.args, ['tweetapp:open', 'https://mobile.twitter.com/settings/account']);
+        });
+
+        it('opens profile page for debugging', async function() {
+            const life = new Lifecycle({ default_account: 'foo' }, { text: '' });
+            life.runUntilQuit();
+            await waitForWindowOpen(life);
+
+            life.openProfilePageForDebug();
+            const { send } = (life as any).currentWin.win.webContents;
+            ok(send.called);
+            eq(send.lastCall.args, ['tweetapp:open', 'https://mobile.twitter.com/foo']);
+        });
     });
 });
