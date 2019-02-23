@@ -4,9 +4,7 @@ import { createMenu, dockMenu, touchBar } from '../../main/menu';
 import { reset } from './mock';
 
 describe('Menu', function() {
-    beforeEach(function() {
-        reset();
-    });
+    beforeEach(reset);
 
     describe('dockMenu', function() {
         it('calls callbacks on click', function() {

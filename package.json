@@ -23,8 +23,8 @@
     "test:integ": "mocha ./test/integ",
     "test:unit": "mocha ./test/unit",
     "test": "npm-run-all test:unit test:integ",
-    "coverage": "nyc mocha ./test/unit",
-    "cov": "npm run coverage && nyc report --reporter html && open ./coverage/index.html"
+    "nyc": "nyc mocha ./test/unit",
+    "cov": "npm run nyc && nyc report --reporter html && open ./coverage/index.html"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
   "devDependencies": {
     "@types/commander": "^2.12.2",
     "@types/electron-window-state": "^2.0.33",
+    "@types/jsdom": "^12.2.2",
     "@types/lodash.merge": "^4.6.5",
     "@types/mocha": "^5.2.6",
     "@types/mock-require": "^2.0.0",
@@ -47,6 +48,7 @@
     "@types/webdriverio": "^4.13.3",
     "electron": "^4.0.5",
     "electron-builder": "^20.38.5",
+    "jsdom": "^13.2.0",
     "lodash.merge": "^4.6.1",
     "mocha": "^6.0.0",
     "mock-require": "^3.0.3",

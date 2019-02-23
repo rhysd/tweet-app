@@ -9,9 +9,7 @@ import { appDir, reset } from './mock';
 const { ipcMain, dialog, shell } = require('electron') as any; // mocked
 
 describe('TweetWindow', function() {
-    beforeEach(function() {
-        reset();
-    });
+    beforeEach(reset);
 
     after(function() {
         const config = path.join(appDir, 'config.json');
