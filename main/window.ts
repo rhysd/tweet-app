@@ -76,6 +76,22 @@ export default class TweetWindow {
         return this.didClose;
     }
 
+    private notifyReplyUnavailableUntilTweet() {
+        return new Promise<void>(resolve => {
+            dialog.showMessageBox(
+                {
+                    type: 'info',
+                    title: 'Post a new tweet before reply',
+                    message: 'To reply to previous tweet, please post a new tweet at first',
+                    detail: '"Reply to Previous" is a feature to reply to your previous tweet posted by this app',
+                    icon: nativeImage.createFromPath(ICON_PATH),
+                    buttons: ['OK'],
+                },
+                () => resolve(),
+            );
+        });
+    }
+
     private requireConfigWithDialog() {
         return new Promise<void>(resolve => {
             const buttons = ['Edit Config', 'OK'];
@@ -142,8 +158,12 @@ export default class TweetWindow {
     }
 
     private async open(reply: boolean, text?: string) {
-        if (reply && this.screenName === undefined) {
-            await this.requireConfigWithDialog();
+        if (reply) {
+            if (this.screenName === undefined) {
+                await this.requireConfigWithDialog();
+            } else if (this.prevTweetId === null) {
+                await this.notifyReplyUnavailableUntilTweet();
+            }
         }
 
         if (this.win !== null) {

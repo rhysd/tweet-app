@@ -162,6 +162,21 @@ describe('TweetWindow', function() {
         ok(file.endsWith('config.json'), file);
     });
 
+    it('shows dialog to notify a new tweet must be posted before reply', async function() {
+        const ipc = new Ipc();
+        const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
+        const willOpenAfterDialogClosed = w.openReply();
+
+        ok(dialog.showMessageBox.calledOnce);
+        const call = dialog.showMessageBox.lastCall;
+
+        const [opts, callback] = call.args;
+        eq(opts.title, 'Post a new tweet before reply');
+        callback(0);
+
+        await willOpenAfterDialogClosed;
+    });
+
     it('closes window and cleanup IPC receiver', async function() {
         const ipc: any = new Ipc();
         ipc.detach = sinon.fake();
