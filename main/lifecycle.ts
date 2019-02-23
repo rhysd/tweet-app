@@ -101,7 +101,7 @@ export default class Lifecycle {
         // In the case, What Spectron can do is only calling window.close(). It closes the window,
         // but it does not make app quit on macOS. To ensure to make app quit after integration test,
         // flag for integration test is necessary.
-        if (!ON_DARWIN || ON_INTEG_TEST) {
+        if (this.config.quit_on_close || ON_INTEG_TEST) {
             // Ignore closing window while switching account
             do {
                 await this.currentWin.didClose;

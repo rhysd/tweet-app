@@ -23,6 +23,7 @@ describe('config.ts', function() {
                 keymaps: {
                     'do something': 'Ctrl+X',
                 },
+                quit_on_close: true,
             };
             fs.writeFileSync(ConfigPath, JSON.stringify(config));
 
@@ -41,6 +42,7 @@ describe('config.ts', function() {
             // Insert default values
             config['other_accounts'] = [];
             config['keymaps'] = {};
+            config['quit_on_close'] = process.platform !== 'darwin';
 
             eq(loaded, config);
         });

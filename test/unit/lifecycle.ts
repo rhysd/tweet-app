@@ -83,6 +83,26 @@ describe('Lifecycle', function() {
         await life.didQuit;
     });
 
+    it('quits when window is closed if quit_on_close is set to true', async function() {
+        const cfg = {
+            default_account: 'foo',
+            other_accounts: ['bar'],
+            after_tweet: 'quit' as 'quit',
+            quit_on_close: true,
+        };
+        const opts = { text: '' };
+        const life = new Lifecycle(cfg, opts);
+
+        const onQuit = life.runUntilQuit();
+        await waitForWindowOpen(life);
+
+        await (life as any).currentWin.close();
+
+        // App quits
+        await onQuit;
+        await life.didQuit;
+    });
+
     it('restarts window without new options', async function() {
         const cfg = { default_account: 'foo' };
         const opts = { text: '' };

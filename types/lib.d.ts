@@ -15,6 +15,7 @@ interface Config {
     keymaps?: KeyMapConfig;
     after_tweet?: ConfigAfterTweet;
     hotkey?: string;
+    quit_on_close?: boolean;
 }
 
 interface CommandLineOptions {

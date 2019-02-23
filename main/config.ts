@@ -1,12 +1,13 @@
 import { promises as fs } from 'fs';
 import { shell } from 'electron';
-import { CONFIG_FILE, DATA_DIR } from './constants';
+import { CONFIG_FILE, DATA_DIR, ON_DARWIN } from './constants';
 import log from './log';
 
 export const DEFAULT_CONFIG: Config = {
     default_account: '',
     other_accounts: [],
     keymaps: {},
+    quit_on_close: !ON_DARWIN,
 };
 
 export async function loadConfig(): Promise<Config> {
