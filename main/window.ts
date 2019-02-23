@@ -331,6 +331,29 @@ export default class TweetWindow {
                 callback({});
             });
 
+            win.webContents.session.setPermissionRequestHandler((webContents, perm, callback, details) => {
+                const url = webContents.getURL();
+                if (!url.startsWith('https://mobile.twitter.com/')) {
+                    log.info('Blocked permission request', perm, 'from', url, 'Details:', details);
+                    callback(false);
+                    return;
+                }
+                const allowed = ['media', 'geolocation'];
+                if (!allowed.includes(perm)) {
+                    log.info(
+                        'Blocked not allowed permission',
+                        perm,
+                        '. Allowed permissions are:',
+                        allowed,
+                        'Details:',
+                        details,
+                    );
+                    callback(false);
+                    return;
+                }
+                callback(true);
+            });
+
             this.ipc.on('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
 
             const url = this.composeTweetUrl(reply, text);

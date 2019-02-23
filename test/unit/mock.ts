@@ -29,6 +29,7 @@ class DummyWebContents extends EventEmitter {
             onBeforeRequest: sinon.fake(),
             onCompleted: sinon.fake(),
         },
+        setPermissionRequestHandler: sinon.fake(),
     };
     openDevTools = sinon.fake();
     send = sinon.fake();
