@@ -3,6 +3,8 @@ import sinon = require('sinon');
 import Lifecycle from '../../main/lifecycle';
 import { reset } from './mock';
 
+const { globalShortcut } = require('electron') as any; // mocked
+
 describe('Lifecycle', function() {
     beforeEach(reset);
 
@@ -149,6 +151,22 @@ describe('Lifecycle', function() {
         await life.didQuit;
     });
 
+    it('registers and unregisters hot key as global shortcut', async function() {
+        const hotkey = 'CmdOrCtrl+Shift+X';
+        const cfg = { hotkey };
+        const life = new Lifecycle(cfg, { text: '' });
+        life.runUntilQuit();
+        await waitForWindowOpen(life);
+
+        ok(globalShortcut.register.calledOnce);
+        eq(globalShortcut.register.lastCall.args[0], hotkey);
+
+        await life.quit();
+        await life.didQuit;
+
+        ok(globalShortcut.unregisterAll.calledOnce);
+    });
+
     describe('Actions', function() {
         it('switches account reopens window for next account', async function() {
             const cfg = { default_account: 'foo', other_accounts: ['bar', 'piyo'] };
@@ -245,6 +263,20 @@ describe('Lifecycle', function() {
             const { send } = (life as any).currentWin.win.webContents;
             ok(send.called);
             eq(send.lastCall.args, ['tweetapp:open', 'https://mobile.twitter.com/foo']);
+        });
+
+        it('toggles window', async function() {
+            const life = new Lifecycle({ default_account: 'foo' }, { text: '' });
+            life.runUntilQuit();
+            await waitForWindowOpen(life);
+
+            const w = (life as any).currentWin;
+
+            ok(w.isOpen());
+            await life.toggleWindow();
+            ok(!w.isOpen());
+            await life.toggleWindow();
+            ok(w.isOpen());
         });
     });
 });

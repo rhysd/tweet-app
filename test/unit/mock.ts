@@ -109,6 +109,10 @@ export function reset() {
             removeListener: sinon.fake(),
             removeAllListeners: sinon.fake(),
         },
+        globalShortcut: {
+            register: sinon.fake(),
+            unregisterAll: sinon.fake(),
+        },
     });
 }
 reset();

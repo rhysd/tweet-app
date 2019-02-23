@@ -1,4 +1,4 @@
-import { app, Menu } from 'electron';
+import { app, Menu, globalShortcut } from 'electron';
 import TweetWindow from './window';
 import Ipc from './ipc';
 import log from './log';
@@ -53,6 +53,10 @@ export default class Lifecycle {
 
     async runUntilQuit(): Promise<void> {
         Menu.setApplicationMenu(this.menu);
+
+        if (this.config.hotkey) {
+            globalShortcut.register(this.config.hotkey, this.toggleWindow);
+        }
 
         if (ON_DARWIN) {
             app.dock.setMenu(dockMenu(this.newTweet, this.replyToPrevTweet));
@@ -132,6 +136,9 @@ export default class Lifecycle {
         log.debug('Will close window and quit');
         await this.currentWin.close();
         this.ipc.dispose();
+        if (this.config.hotkey) {
+            globalShortcut.unregisterAll();
+        }
         this.resolveQuit();
     };
 
@@ -170,6 +177,16 @@ export default class Lifecycle {
             await this.currentWin.openNewTweet();
         } finally {
             this.switchingAccount = false;
+        }
+    };
+
+    toggleWindow = () => {
+        const opened = this.currentWin.isOpen();
+        log.debug('Toggle window. Window is open:', opened);
+        if (opened) {
+            return this.currentWin.close();
+        } else {
+            return this.currentWin.openNewTweet();
         }
     };
 }

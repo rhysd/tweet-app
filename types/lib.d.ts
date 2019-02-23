@@ -14,6 +14,7 @@ interface Config {
     other_accounts?: string[];
     keymaps?: KeyMapConfig;
     after_tweet?: ConfigAfterTweet;
+    hotkey?: string;
 }
 
 interface CommandLineOptions {

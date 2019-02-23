@@ -76,6 +76,10 @@ export default class TweetWindow {
         return this.didClose;
     }
 
+    isOpen(): boolean {
+        return this.win !== null;
+    }
+
     private notifyReplyUnavailableUntilTweet() {
         return new Promise<void>(resolve => {
             dialog.showMessageBox(
