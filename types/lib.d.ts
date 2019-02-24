@@ -16,6 +16,11 @@ interface Config {
     after_tweet?: ConfigAfterTweet;
     hotkey?: string;
     quit_on_close?: boolean;
+    window?: {
+        width?: number;
+        height?: number;
+        zoom?: number;
+    };
 }
 
 interface CommandLineOptions {

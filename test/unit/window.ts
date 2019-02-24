@@ -301,4 +301,21 @@ describe('TweetWindow', function() {
         ok(call);
         eq(call.args[1], 'quit');
     });
+
+    it('reflects window configuration to BrowserWindow options', async function() {
+        const config = {
+            window: {
+                width: 400,
+                height: 380,
+                zoom: 0.7,
+            },
+        };
+        const w = new TweetWindow('foo', config, new Ipc(), { text: '' }, {} as any);
+        await w.openNewTweet();
+        const opts = (w as any).win.opts;
+
+        eq(opts.width, 400);
+        eq(opts.height, 380);
+        eq(opts.webPreferences.zoomFactor, 0.7);
+    });
 });

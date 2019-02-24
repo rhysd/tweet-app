@@ -196,16 +196,20 @@ export default class TweetWindow {
         return new Promise<void>(resolve => {
             log.debug('Start application');
 
+            const width = (this.config.window && this.config.window.width) || 600;
+            const height = (this.config.window && this.config.window.height) || 600;
+            const zoomFactor = (this.config.window && this.config.window.zoom) || 1.0;
             const state = windowState({});
-            const win = new BrowserWindow({
-                width: 600,
-                height: 600,
+
+            const winOpts = {
+                width,
+                height,
                 resizable: false,
                 x: state.x,
                 y: state.y,
                 icon: ICON_PATH,
                 show: false,
-                titleBarStyle: 'hiddenInset',
+                titleBarStyle: 'hiddenInset' as 'hiddenInset',
                 frame: false,
                 fullscreenable: false,
                 useContentSize: true,
@@ -217,8 +221,11 @@ export default class TweetWindow {
                     contextIsolation: true,
                     webviewTag: false,
                     partition: this.partition,
+                    zoomFactor,
                 },
-            });
+            };
+            log.debug('Create BrowserWindow with options:', winOpts);
+            const win = new BrowserWindow(winOpts);
             state.manage(win);
 
             if (!ON_DARWIN) {
