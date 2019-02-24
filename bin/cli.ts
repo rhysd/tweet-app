@@ -1,8 +1,42 @@
 #! /usr/bin/env node
 
 import * as cp from 'child_process';
+import * as path from 'path';
 import { join } from 'path';
 import commander = require('commander');
+
+let electron: string | undefined;
+switch (process.platform) {
+    case 'darwin':
+        if (__dirname.endsWith(path.join('Resources', 'bin'))) {
+            electron = path.join(__dirname, '..', '..', 'MacOS', 'Tweet');
+        }
+        break;
+    case 'linux':
+        if (__dirname.endsWith(path.join('resources', 'bin'))) {
+            electron = path.join(__dirname, '..', '..', 'tweet-app');
+        }
+        break;
+    case 'win32':
+        if (__dirname.endsWith(path.join('resources', 'bin'))) {
+            electron = path.join(__dirname, '..', '..', 'Tweet.exe');
+        }
+        break;
+    default:
+        break;
+}
+
+if (electron === undefined) {
+    try {
+        // XXX: In node context, require('electron') returns a string which represents path to electron
+        // binary in electron npm package.
+        electron = require('electron') as any;
+    } catch (e) {
+        throw new Error(
+            `Cannot find Electron executable. Please run \`npm install -g electron\` or install Tweet app from https://github.com/rhysd/tweet-app/releases: ${e}`,
+        );
+    }
+}
 
 const AfterTweetActions: ConfigAfterTweet[] = ['new tweet', 'reply previous', 'close', 'quit'];
 
@@ -36,21 +70,17 @@ const opts: CommandLineOptions = {
     reply,
 };
 
-// XXX: In node context, require('electron') returns a string which represents path to electron
-// binary in electron npm package.
-const electron = require('electron') as any;
-
 // First argument is path to `node`, second argument is path to script
 const argv = [join(__dirname, '..'), '--', JSON.stringify(opts)];
 
 if (detach) {
     // TODO?: Output stderr to $DATA_DIR/log.txt
-    cp.spawn(electron, argv, {
+    cp.spawn(electron!, argv, {
         stdio: 'ignore',
         detached: true,
     }).unref();
 } else {
-    const app = cp.spawn(electron, argv, {
+    const app = cp.spawn(electron!, argv, {
         stdio: 'inherit',
     });
     app.on('exit', code => {

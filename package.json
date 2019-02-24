@@ -76,7 +76,11 @@
       "renderer/*.js"
     ],
     "extraResources": [
-      "bin/cli.js"
+      "bin/cli.js",
+      {
+        "from": "assets/icon",
+        "to": "app/assets/icon"
+      }
     ],
     "mac": {
       "identity": null,
@@ -88,7 +92,8 @@
     },
     "linux": {
       "target": "AppImage",
-      "icon": "assets/icon/icon.png"
+      "icon": "assets/icon/icon.png",
+      "category": "Network"
     }
   }
 }
