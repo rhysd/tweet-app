@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { Application } from 'spectron';
-import { deepEqual as eq, ok } from 'assert';
+import { deepEqual as eq, ok, rejects } from 'assert';
 
 const electronPath = require('electron') as any;
 
@@ -28,5 +28,12 @@ describe('Smoke', function() {
         eq(await app.client.getWindowCount(), 1);
         const url = await app.client.getUrl();
         ok(url.startsWith('https://mobile.twitter.com'), url);
+    });
+
+    it('disables Node integration', async function() {
+        const expected = {
+            message: 'unknown error: require is not defined',
+        };
+        await rejects(() => app.client.execute(() => require('electron')), expected);
     });
 });
