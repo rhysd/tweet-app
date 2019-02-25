@@ -72,11 +72,11 @@
     "asar": false,
     "forceCodeSigning": false,
     "files": [
+      "bin/*.js",
       "main/*.js",
       "renderer/*.js"
     ],
     "extraResources": [
-      "bin/cli.js",
       {
         "from": "assets/icon",
         "to": "app/assets/icon"

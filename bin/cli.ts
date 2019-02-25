@@ -24,23 +24,23 @@ function electronExePath(opts: string | undefined): string {
     switch (process.platform) {
         case 'darwin':
             // Tweet.app/Contents/Resource/bin
-            if (__dirname.endsWith(path.join('Resources', 'bin'))) {
+            if (__dirname.endsWith(path.join('Resources', 'app', 'bin'))) {
                 // Tweet.app/Contents/MacOS/Tweet
-                return path.join(__dirname, '..', '..', 'MacOS', 'Tweet');
+                return path.join(__dirname, '..', '..', '..', 'MacOS', 'Tweet');
             }
             break;
         case 'linux':
             // tweet-app/resources/bin
-            if (__dirname.endsWith(path.join('resources', 'bin'))) {
+            if (__dirname.endsWith(path.join('resources', 'app', 'bin'))) {
                 // tweet-app/tweet-app
-                return path.join(__dirname, '..', '..', 'tweet-app');
+                return path.join(__dirname, '..', '..', '..', 'tweet-app');
             }
             break;
         case 'win32':
             // tweet-app/resources/bin
-            if (__dirname.endsWith(path.join('resources', 'bin'))) {
+            if (__dirname.endsWith(path.join('resources', 'app', 'bin'))) {
                 // tweet-app/Tweet.exe
-                return path.join(__dirname, '..', '..', 'Tweet.exe');
+                return path.join(__dirname, '..', '..', '..', 'Tweet.exe');
             }
             break;
         default:
