@@ -2,35 +2,52 @@
 
 import * as cp from 'child_process';
 import * as path from 'path';
+import * as fs from 'fs';
 import { join } from 'path';
 import commander = require('commander');
 
-let electron: string | undefined;
-switch (process.platform) {
-    case 'darwin':
-        if (__dirname.endsWith(path.join('Resources', 'bin'))) {
-            electron = path.join(__dirname, '..', '..', 'MacOS', 'Tweet');
+function electronExePath(): string {
+    const env = process.env.TWEET_APP_ELECTRON_EXECUTABLE;
+    if (env !== undefined) {
+        try {
+            fs.accessSync(env);
+            // Now the path exists
+            return env;
+        } catch (e) {
+            throw new Error(`Executable '${env}' specified by $TWEET_APP_ELECTRON_EXECUTABLE does not exist: ${e}`);
         }
-        break;
-    case 'linux':
-        if (__dirname.endsWith(path.join('resources', 'bin'))) {
-            electron = path.join(__dirname, '..', '..', 'tweet-app');
-        }
-        break;
-    case 'win32':
-        if (__dirname.endsWith(path.join('resources', 'bin'))) {
-            electron = path.join(__dirname, '..', '..', 'Tweet.exe');
-        }
-        break;
-    default:
-        break;
-}
+    }
 
-if (electron === undefined) {
+    switch (process.platform) {
+        case 'darwin':
+            // Tweet.app/Contents/Resource/bin
+            if (__dirname.endsWith(path.join('Resources', 'bin'))) {
+                // Tweet.app/Contents/MacOS/Tweet
+                return path.join(__dirname, '..', '..', 'MacOS', 'Tweet');
+            }
+            break;
+        case 'linux':
+            // tweet-app/resources/bin
+            if (__dirname.endsWith(path.join('resources', 'bin'))) {
+                // tweet-app/tweet-app
+                return path.join(__dirname, '..', '..', 'tweet-app');
+            }
+            break;
+        case 'win32':
+            // tweet-app/resources/bin
+            if (__dirname.endsWith(path.join('resources', 'bin'))) {
+                // tweet-app/Tweet.exe
+                return path.join(__dirname, '..', '..', 'Tweet.exe');
+            }
+            break;
+        default:
+            break;
+    }
+
     try {
         // XXX: In node context, require('electron') returns a string which represents path to electron
         // binary in electron npm package.
-        electron = require('electron') as any;
+        return require('electron') as any;
     } catch (e) {
         throw new Error(
             `Cannot find Electron executable. Please run \`npm install -g electron\` or install Tweet app from https://github.com/rhysd/tweet-app/releases: ${e}`,
@@ -75,12 +92,12 @@ const argv = [join(__dirname, '..'), '--', JSON.stringify(opts)];
 
 if (detach) {
     // TODO?: Output stderr to $DATA_DIR/log.txt
-    cp.spawn(electron!, argv, {
+    cp.spawn(electronExePath(), argv, {
         stdio: 'ignore',
         detached: true,
     }).unref();
 } else {
-    const app = cp.spawn(electron!, argv, {
+    const app = cp.spawn(electronExePath(), argv, {
         stdio: 'inherit',
     });
     app.on('exit', code => {
