@@ -250,6 +250,17 @@ Here is my own configuration:
 }
 ```
 
+## FAQ
+
+### How can I enable dark mode?
+
+1. Choose 'Toggle Developer Tools' from 'View' menu
+2. Move to 'console' tab in DevTools
+3. Enter JavaScript `location.href = 'https://mobile.twitter.com'`
+4. Click your icon at top left of the window to open account menu
+5. Click toggle switch of dark mode
+6. Close DevTools and click 'New Tweet' from 'Edit' menu to back
+
 ## Performance
 
 While a window is closed, renderer process is shutdown and there are only main process and GPU process.
