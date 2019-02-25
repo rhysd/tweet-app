@@ -245,6 +245,9 @@ export default class TweetWindow {
                 this.ipc.detach(this.win!.webContents);
                 this.ipc.forget('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
                 this.win!.webContents.removeAllListeners();
+                this.win!.webContents.session.setPermissionRequestHandler(null);
+                this.win!.webContents.session.webRequest.onBeforeRequest(null as any);
+                this.win!.webContents.session.webRequest.onCompleted(null as any);
             });
 
             this.didClose = new Promise<void>(resolve => {
