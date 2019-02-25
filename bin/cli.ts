@@ -6,15 +6,18 @@ import * as fs from 'fs';
 import { join } from 'path';
 import commander = require('commander');
 
-function electronExePath(): string {
-    const env = process.env.TWEET_APP_ELECTRON_EXECUTABLE;
-    if (env !== undefined) {
+function electronExePath(opts: string | undefined): string {
+    const specified = opts || process.env.TWEET_APP_ELECTRON_EXECUTABLE;
+    if (specified !== undefined) {
         try {
-            fs.accessSync(env);
+            const { X_OK, R_OK } = fs.constants;
+            fs.accessSync(specified, R_OK | X_OK);
             // Now the path exists
-            return env;
+            return specified;
         } catch (e) {
-            throw new Error(`Executable '${env}' specified by $TWEET_APP_ELECTRON_EXECUTABLE does not exist: ${e}`);
+            throw new Error(
+                `Executable '${specified}' specified by $TWEET_APP_ELECTRON_EXECUTABLE does not exist: ${e}`,
+            );
         }
     }
 
@@ -57,7 +60,7 @@ function electronExePath(): string {
 
 const AfterTweetActions: ConfigAfterTweet[] = ['new tweet', 'reply previous', 'close', 'quit'];
 
-const { hashtags, args, afterTweet, detach, reply } = commander
+const { hashtags, args, afterTweet, detach, reply, electronPath } = commander
     .command('tweet')
     .version('0.0.5')
     .usage('[options] [text]')
@@ -72,6 +75,7 @@ const { hashtags, args, afterTweet, detach, reply } = commander
     )
     .option('--no-detach', 'do not detach process from shell', false)
     .option('-r --reply', 'reply to tweet sent previously. This option is only effective when app is already running')
+    .option('--electron-path <path>', 'file path to Electron executable to run app')
     .parse(process.argv);
 
 // Verify --after-tweet
@@ -92,12 +96,12 @@ const argv = [join(__dirname, '..'), '--', JSON.stringify(opts)];
 
 if (detach) {
     // TODO?: Output stderr to $DATA_DIR/log.txt
-    cp.spawn(electronExePath(), argv, {
+    cp.spawn(electronExePath(electronPath), argv, {
         stdio: 'ignore',
         detached: true,
     }).unref();
 } else {
-    const app = cp.spawn(electronExePath(), argv, {
+    const app = cp.spawn(electronExePath(electronPath), argv, {
         stdio: 'inherit',
     });
     app.on('exit', code => {
