@@ -1,6 +1,6 @@
 import * as querystring from 'querystring';
 import * as assert from 'assert';
-import { BrowserWindow, Menu, dialog, nativeImage } from 'electron';
+import { BrowserWindow, Menu, dialog, nativeImage, app } from 'electron';
 import windowState = require('electron-window-state');
 import log from './log';
 import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
@@ -306,6 +306,9 @@ export default class TweetWindow {
                         case 'close':
                             log.info("Will close window since action after tweet is 'close'");
                             this.close();
+                            if (ON_DARWIN) {
+                                app.hide();
+                            }
                             break;
                         case 'quit':
                             log.info("Will quit since action after tweet is 'quit'");
