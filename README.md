@@ -10,7 +10,7 @@ a tweets timeline. It's built on [Twitter Lite][twitter-lite] and [Electron][ele
 - After posting a tweet, the input form is shown again immediately. Timeline never shows up in this app
 - Replying to a previously posted tweet is supported
 - Multi-account support
-- Terminal is a first citizen. A `tweet` command is provided to access to the app
+- Terminal is first class. A `tweet` command is provided to access to the app
 - Customizable. Keyboard shortcuts and lifecycle of the application can be configured
 
 ## Screenshot
