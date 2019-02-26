@@ -78,6 +78,7 @@ export function reset() {
                 setMenu: sinon.fake(),
             },
             setUserTasks: sinon.fake(),
+            hide: sinon.fake(),
         },
         shell: {
             openItem: sinon.fake(),
