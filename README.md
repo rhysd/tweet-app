@@ -61,7 +61,7 @@ export TWEET_APP_ELECTRON_EXECUTABLE=/Applications/Tweet.app/Contents/MacOS/Twee
 
 # or
 
-alias tweet='tweet --electron-path=/Applications/Tweet.app/Contents/MacOS/Tweet
+alias tweet='tweet --electron-path=/Applications/Tweet.app/Contents/MacOS/Tweet'
 ```
 
 ### From [release page][release]
@@ -84,6 +84,9 @@ $ ln -s /path/to/Tweet.app/Contents/Resources/app/bin/cli.js /usr/local/bin/twee
 
 Note: On macOS, trying to install app may be rejected by OS at first since this app is not signed
 with code signing. In the case, please install from 'Preferences -> Security'.
+
+Note: Please do not move `cli.js` to other directory since it locates Electron binary depending on
+its file path. Otherwise, you need to pass `--electron-path` option.
 
 ## Usage
 
