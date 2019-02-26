@@ -1,6 +1,8 @@
 <img src="assets/images/icon128x128.png" width="64" height="64" alt="icon"/> Tweet.app
 ======================================================================================
 [![npm version][]][npm]
+[![codecov badge][]][codecov]
+[![travis badge][]][travis]
 
 [Tweet app][repo] is a small desktop application for tweeting on [Twitter][twitter], but never shows
 a tweets timeline. It's built on [Twitter Lite][twitter-lite] and [Electron][electron].
@@ -288,6 +290,10 @@ Distributed under [the MIT License](./LICENSE.txt).
 
 [npm version]: https://badge.fury.io/js/tweet-app.svg
 [npm]: https://www.npmjs.com/package/tweet-app
+[travis badge]: https://travis-ci.org/rhysd/tweet-app.svg?branch=master
+[travis]: https://travis-ci.org/rhysd/tweet-app
+[codecov badge]: https://codecov.io/gh/rhysd/tweet-app/branch/master/graph/badge.svg
+[codecov]: https://codecov.io/gh/rhysd/tweet-app
 [repo]: https://github.com/rhysd/tweet-app
 [twitter]: https://twitter.com
 [twitter-lite]: https://play.google.com/store/apps/details?id=com.twitter.android.lite
