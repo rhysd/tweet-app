@@ -6,9 +6,10 @@ import { reset } from './mock';
 const { ipcRenderer } = require('electron') as any; // mocked
 
 describe('Ipc on renderer', function() {
+    beforeEach(reset);
+
     afterEach(function() {
         Ipc.dispose();
-        reset();
     });
 
     it('sends IPC message with send() method', function() {

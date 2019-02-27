@@ -303,6 +303,51 @@ describe('TweetWindow', function() {
     });
 
     it('shows "Network unavailable" page on offline and reopens page again when it is back to online', async function() {
-        throw new Error('TODO');
+        const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
+        await w.openNewTweet();
+        const call = ipcMain.on.getCalls().find((c: any) => c.args[0] === 'tweetapp:online-status');
+        ok(call);
+        const callback = call.args[1];
+        callback('tweetapp:online-status', 'offline');
+
+        let url = (w as any).win.webContents.url;
+        ok(url.endsWith('offline.html'), url);
+
+        callback('tweetapp:online-status', 'online');
+
+        url = (w as any).win.webContents.url;
+        eq(url, 'https://mobile.twitter.com/compose/tweet');
+    });
+
+    it('does nothing when online status does not change on tweetapp:online-status message', async function() {
+        const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
+        await w.openNewTweet();
+        const call = ipcMain.on.getCalls().find((c: any) => c.args[0] === 'tweetapp:online-status');
+        ok(call);
+        const callback = call.args[1];
+
+        let prevUrl = (w as any).win.webContents.url;
+        callback('tweetapp:online-status', 'online');
+        eq((w as any).win.webContents.url, prevUrl);
+
+        callback('tweetapp:online-status', 'offline');
+
+        prevUrl = (w as any).win.webContents.url;
+        callback('tweetapp:online-status', 'offline');
+        eq((w as any).win.webContents.url, prevUrl);
+    });
+
+    it('does nothing when no window is opened on online status change', async function() {
+        const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
+        await w.openNewTweet();
+        const call = ipcMain.on.getCalls().find((c: any) => c.args[0] === 'tweetapp:online-status');
+        ok(call);
+        const callback = call.args[1];
+
+        await w.close();
+        eq((w as any).win, null);
+
+        callback('tweetapp:online-status', 'offline');
+        eq((w as any).win, null);
     });
 });

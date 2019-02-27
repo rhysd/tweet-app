@@ -189,4 +189,21 @@ describe('App', function() {
         emulateSend('tweetapp:click-tweet-button');
         ok(!click.called);
     });
+
+    it('sends IPC message to main process when online status changed', function() {
+        (window as any).navigator = { onLine: true };
+        const calls = (window as any).addEventListener.getCalls();
+        const onOnline = calls.find((c: any) => c.args[0] === 'online').args[1];
+        const onOffline = calls.find((c: any) => c.args[0] === 'offline').args[1];
+        const onLoad = calls.find((c: any) => c.args[0] === 'load').args[1];
+
+        onLoad();
+        eq(ipcRenderer.send.lastCall.args, ['tweetapp:online-status', 'online']);
+
+        onOffline();
+        eq(ipcRenderer.send.lastCall.args, ['tweetapp:online-status', 'offline']);
+
+        onOnline();
+        eq(ipcRenderer.send.lastCall.args, ['tweetapp:online-status', 'online']);
+    });
 });
