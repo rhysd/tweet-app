@@ -48,6 +48,7 @@
     "@types/webdriverio": "^4.13.3",
     "electron": "^4.0.5",
     "electron-builder": "^20.38.5",
+    "husky": "^1.3.1",
     "jsdom": "^13.2.0",
     "lodash.merge": "^4.6.1",
     "mocha": "^6.0.0",
@@ -94,6 +95,11 @@
       "target": "AppImage",
       "icon": "assets/icon/icon.png",
       "category": "Network"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run test:unit -- --invert --grep 'searches tweet button with 4s timeout'"
     }
   }
 }
