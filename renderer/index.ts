@@ -1,6 +1,11 @@
 import App from './app';
 
-document.addEventListener('dragover', e => e.preventDefault());
-document.addEventListener('drop', e => e.preventDefault());
+function cancel(e: Event) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+document.addEventListener('dragover', cancel);
+document.addEventListener('drop', cancel);
 
 new App().start();

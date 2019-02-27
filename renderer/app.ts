@@ -96,6 +96,16 @@ export default class App {
                 btn.click();
             }
         });
+
+        window.addEventListener('online', this.sendOnlineStatus.bind(this, true), { passive: true });
+        window.addEventListener('offline', this.sendOnlineStatus.bind(this, false), { passive: true });
+        window.addEventListener('load', () => this.sendOnlineStatus(window.navigator.onLine), { passive: true });
+    }
+
+    private sendOnlineStatus(isOnline: boolean) {
+        const s = isOnline ? 'online' : 'offline';
+        console.log('Online status:', s);
+        Ipc.send('tweetapp:online-status', s);
     }
 
     private async inReplyTo(url: string, screenName: string, retry: number) {
@@ -120,20 +130,14 @@ export default class App {
 
         Ipc.send('tweetapp:prev-tweet-id', statusId);
 
-        switch (this.afterTweet) {
-            case 'reply previous':
-                if (url.includes('?')) {
-                    url += '&in_reply_to=' + statusId;
-                } else {
-                    url += '?in_reply_to=' + statusId;
-                }
-                break;
-            case 'new tweet':
-                /* do nothing */
-                break;
-            default:
-                console.log("Do nothing for 'after_tweet' configuration value:", this.afterTweet);
-                break;
+        if (this.afterTweet === 'reply previous') {
+            if (url.includes('?')) {
+                url += '&in_reply_to=' + statusId;
+            } else {
+                url += '?in_reply_to=' + statusId;
+            }
+        } else {
+            console.log("Do nothing for 'after_tweet' configuration value:", this.afterTweet);
         }
 
         window.location.href = url;

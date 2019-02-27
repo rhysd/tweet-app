@@ -11,6 +11,9 @@ describe('App', function() {
 
     beforeEach(function() {
         reset();
+        (global as any).window = {
+            addEventListener: sinon.spy(),
+        };
         app = new App();
         app.start();
     });
@@ -19,19 +22,6 @@ describe('App', function() {
         delete (global as any).window;
         delete (global as any).document;
     });
-
-    /*
-    function getListeners() {
-        ok(ipcRenderer.on.called);
-        const map = new Map<IPC.Chan, Function>();
-        for (const call of ipcRenderer.on.getCalls()) {
-            const ch = call.args[0];
-            ok(!map.has(ch));
-            map.set(ch, call.args[1]);
-        }
-        return map;
-    }
-    */
 
     function emulateSend(chan: IPC.Chan, ...args: any[]) {
         ok(ipcRenderer.on.called);
@@ -56,10 +46,8 @@ describe('App', function() {
     });
 
     it('reopens given URL when no screen name is set on tweetapp:sent-tweet', function() {
-        (global as any).window = {
-            // Navigation is not implemented in jsdom
-            location: {},
-        };
+        // Navigation is not implemented in jsdom
+        (global as any).window.location = {};
         const url = 'https://mobile.twitter.com/compose/tweet';
         emulateSend('tweetapp:sent-tweet', url);
         eq(window.location.href, url);
@@ -72,12 +60,10 @@ describe('App', function() {
         let url: string | undefined;
         function setHrefSpy() {
             return new Promise(resolve => {
-                (global as any).window = {
-                    location: {
-                        set href(u: string) {
-                            url = u;
-                            resolve();
-                        },
+                (global as any).window.location = {
+                    set href(u: string) {
+                        url = u;
+                        resolve();
                     },
                 };
             });
@@ -117,12 +103,10 @@ describe('App', function() {
         let url: string | undefined;
         function setHrefSpy() {
             return new Promise(resolve => {
-                (global as any).window = {
-                    location: {
-                        set href(u: string) {
-                            url = u;
-                            resolve();
-                        },
+                (global as any).window.location = {
+                    set href(u: string) {
+                        url = u;
+                        resolve();
                     },
                 };
             });
@@ -141,10 +125,8 @@ describe('App', function() {
     });
 
     it('opens given URL on tweetapp:open', function() {
-        (global as any).window = {
-            // Navigation is not implemented in jsdom
-            location: {},
-        };
+        // Navigation is not implemented in jsdom
+        (global as any).window.location = {};
         const url = 'https://mobile.twitter.com/compose/tweet?text=hello';
         emulateSend('tweetapp:open', url);
         eq(window.location.href, url);

@@ -288,6 +288,8 @@ and some functionality such as emoji picker.
 
 Distributed under [the MIT License](./LICENSE.txt).
 
+Some icon was provided by [feather icons][feathericons] (`Copyright (c) 2013-2017 Cole Bemis`).
+
 [npm version]: https://badge.fury.io/js/tweet-app.svg
 [npm]: https://www.npmjs.com/package/tweet-app
 [travis badge]: https://travis-ci.org/rhysd/tweet-app.svg?branch=master
@@ -300,3 +302,4 @@ Distributed under [the MIT License](./LICENSE.txt).
 [electron]: https://electronjs.org
 [release]: https://github.com/rhysd/tweet-app/releases
 [accelerator]: https://electronjs.org/docs/api/accelerator
+[feathericons]: https://feathericons.com/

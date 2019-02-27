@@ -1,5 +1,6 @@
 import * as querystring from 'querystring';
 import * as assert from 'assert';
+import * as path from 'path';
 import { BrowserWindow, Menu, dialog, nativeImage, app } from 'electron';
 import windowState = require('electron-window-state');
 import log from './log';
@@ -23,6 +24,7 @@ export default class TweetWindow {
     private hashtags: string;
     private resolveWantToQuit: () => void;
     private actionAfterTweet: ConfigAfterTweet | undefined;
+    private onlineStatus: OnlineStatus;
 
     constructor(
         screenName: string | undefined,
@@ -44,10 +46,12 @@ export default class TweetWindow {
         this.win = null;
         this.prevTweetId = null;
         this.onPrevTweetIdReceived = this.onPrevTweetIdReceived.bind(this);
+        this.onOnlineStatusChange = this.onOnlineStatusChange.bind(this);
         this.wantToQuit = new Promise<void>(resolve => {
             this.resolveWantToQuit = resolve;
         });
         this.didClose = Promise.resolve();
+        this.onlineStatus = 'online'; // Assume network is available at start
     }
 
     updateOptions(opts: CommandLineOptions) {
@@ -244,6 +248,7 @@ export default class TweetWindow {
                 assert.ok(this.win !== null);
                 this.ipc.detach(this.win!.webContents);
                 this.ipc.forget('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
+                this.ipc.forget('tweetapp:online-status', this.onOnlineStatusChange);
                 this.win!.webContents.removeAllListeners();
                 this.win!.webContents.session.setPermissionRequestHandler(null);
                 this.win!.webContents.session.webRequest.onBeforeRequest(null as any);
@@ -292,12 +297,17 @@ export default class TweetWindow {
             });
 
             win.webContents.once('dom-ready', () => {
-                const req = win.webContents.session.webRequest;
-                const filter = {
-                    urls: ['https://api.twitter.com/1.1/statuses/update.json'],
-                };
+                if (IS_DEBUG) {
+                    win.webContents.openDevTools({ mode: 'detach' });
+                }
+                resolve();
+            });
 
-                req.onCompleted(filter, details => {
+            win.webContents.session.webRequest.onCompleted(
+                {
+                    urls: ['https://api.twitter.com/1.1/statuses/update.json'],
+                },
+                details => {
                     if (details.statusCode !== 200 || details.method !== 'POST' || details.fromCache) {
                         return;
                     }
@@ -320,33 +330,31 @@ export default class TweetWindow {
                             this.ipc.send('tweetapp:sent-tweet', url);
                             break;
                     }
-                });
-                if (IS_DEBUG) {
-                    win.webContents.openDevTools({ mode: 'detach' });
-                }
-                resolve();
-            });
+                },
+            );
 
             // TODO?: May be blocked for better performance?
             // - 'https://api.twitter.com/2/notifications/all.json?*',
             // - 'https://api.twitter.com/2/timeline/home.json?*',
             // - 'https://api.twitter.com/1.1/client_event.json',
-            const filter = {
-                urls: ['https://www.google-analytics.com/r/*', 'https://api.twitter.com/1.1/statuses/update.json'],
-            };
-            win.webContents.session.webRequest.onBeforeRequest(filter, (details: any, callback) => {
-                if (details.url === 'https://api.twitter.com/1.1/statuses/update.json') {
-                    // Tweet was posted. It means that user has already logged in.
-                    win.webContents.session.webRequest.onBeforeRequest(null as any);
-                } else if ((details as any).referrer === 'https://mobile.twitter.com/login') {
-                    // XXX: TENTATIVE: detect login from google-analitics requests
-                    log.debug('Login detected from URL', details.url);
-                    this.ipc.send('tweetapp:login');
-                    // Remove listener anymore
-                    win.webContents.session.webRequest.onBeforeRequest(null as any);
-                }
-                callback({});
-            });
+            win.webContents.session.webRequest.onBeforeRequest(
+                {
+                    urls: ['https://www.google-analytics.com/r/*', 'https://api.twitter.com/1.1/statuses/update.json'],
+                },
+                (details: any, callback) => {
+                    if (details.url === 'https://api.twitter.com/1.1/statuses/update.json') {
+                        // Tweet was posted. It means that user has already logged in.
+                        win.webContents.session.webRequest.onBeforeRequest(null as any);
+                    } else if ((details as any).referrer === 'https://mobile.twitter.com/login') {
+                        // XXX: TENTATIVE: detect login from google-analitics requests
+                        log.debug('Login detected from URL', details.url);
+                        this.ipc.send('tweetapp:login');
+                        // Remove listener anymore
+                        win.webContents.session.webRequest.onBeforeRequest(null as any);
+                    }
+                    callback({});
+                },
+            );
 
             win.webContents.session.setPermissionRequestHandler((webContents, perm, callback, details) => {
                 const url = webContents.getURL();
@@ -372,6 +380,7 @@ export default class TweetWindow {
             });
 
             this.ipc.on('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
+            this.ipc.on('tweetapp:online-status', this.onOnlineStatusChange);
 
             const url = this.composeTweetUrl(reply, text);
             log.info('Opening', url);
@@ -390,5 +399,34 @@ export default class TweetWindow {
     private onPrevTweetIdReceived(_: Event, id: string) {
         log.info('Previous tweet:', id);
         this.prevTweetId = id;
+    }
+
+    private onOnlineStatusChange(_: Event, status: OnlineStatus) {
+        log.info('Online status changed:', status, 'Previous status:', this.onlineStatus);
+
+        if (this.onlineStatus === status) {
+            log.debug('Do nothing for online status change');
+            return;
+        }
+        this.onlineStatus = status;
+
+        if (this.win === null) {
+            log.info('Do nothing on online status change since no window is shown');
+            return;
+        }
+
+        if (status === 'online') {
+            const url = this.composeTweetUrl(false);
+            log.info('Reopen window since network is now online:', url);
+            this.win!.loadURL(url);
+            // setTimeout(() => this.win!.loadURL(url), 1000);
+            return;
+        }
+
+        // When offline
+
+        const html = `file://${path.join(__dirname, 'offline.html')}`;
+        this.win.loadURL(html);
+        log.debug('Open offline page:', html);
     }
 }

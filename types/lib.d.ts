@@ -30,6 +30,8 @@ interface CommandLineOptions {
     text: string;
 }
 
+type OnlineStatus = 'online' | 'offline';
+
 declare namespace IPC {
     type Chan =
         | 'tweetapp:action-after-tweet'
@@ -39,5 +41,6 @@ declare namespace IPC {
         | 'tweetapp:open'
         | 'tweetapp:click-tweet-button'
         | 'tweetapp:login'
+        | 'tweetapp:online-status'
         | 'tweetapp:exit-app';
 }

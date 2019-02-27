@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { deepStrictEqual as eq, notDeepStrictEqual as neq, ok, fail } from 'assert';
+import { deepStrictEqual as eq, notDeepStrictEqual as neq, ok } from 'assert';
 import sinon = require('sinon');
 import TweetWindow from '../../main/window';
 import Ipc from '../../main/ipc';
@@ -99,20 +99,10 @@ describe('TweetWindow', function() {
         const contents = win.webContents;
 
         // Get IPC listener for 'tweetapp:prev-tweet-id'
-        let listener: Function | undefined;
-        {
-            const calls = ipcMain.on.getCalls();
-            for (const call of calls) {
-                if (call.args[0] === 'tweetapp:prev-tweet-id') {
-                    listener = call.args[1];
-                    break;
-                }
-            }
-            if (listener === undefined) {
-                fail(JSON.stringify(calls));
-                return;
-            }
-        }
+        let calls = ipcMain.on.getCalls();
+        let call = calls.find((c: any) => c.args[0] === 'tweetapp:prev-tweet-id');
+        ok(call, JSON.stringify(calls));
+        const listener = call.args[1];
 
         listener(null, '114514');
         const opened = w.openReply();
@@ -121,19 +111,10 @@ describe('TweetWindow', function() {
 
         ok(contents.send.called);
 
-        let url: string | undefined;
-        {
-            const calls = contents.send.getCalls();
-            for (const call of calls.reverse()) {
-                if (call.args[0] === 'tweetapp:open') {
-                    url = call.args[1];
-                    break;
-                }
-            }
-            if (url === undefined) {
-                fail(JSON.stringify(calls, null, 2));
-            }
-        }
+        calls = contents.send.getCalls();
+        call = calls.find((c: any) => c.args[0] === 'tweetapp:open');
+        ok(call, JSON.stringify(calls));
+        const url = call.args[1];
 
         eq(url, 'https://mobile.twitter.com/compose/tweet?in_reply_to=114514');
 
@@ -188,10 +169,12 @@ describe('TweetWindow', function() {
         eq((w as any).win, null);
 
         ok(ipc.detach.called);
-        ok(ipc.forget.calledOnce);
+        ok(ipc.forget.called);
 
         eq(ipc.detach.lastCall.args[0], contents);
-        eq(ipc.forget.lastCall.args[0], 'tweetapp:prev-tweet-id');
+        const calls = ipc.forget.getCalls();
+        ok(calls.some((c: any) => c.args[0] === 'tweetapp:prev-tweet-id'));
+        ok(calls.some((c: any) => c.args[0] === 'tweetapp:online-status'));
         await w.didClose;
 
         await w.close();
@@ -317,5 +300,9 @@ describe('TweetWindow', function() {
         eq(opts.width, 400);
         eq(opts.height, 380);
         eq(opts.webPreferences.zoomFactor, 0.7);
+    });
+
+    it('shows "Network unavailable" page on offline and reopens page again when it is back to online', async function() {
+        throw new Error('TODO');
     });
 });

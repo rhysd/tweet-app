@@ -81,6 +81,10 @@
       {
         "from": "assets/icon",
         "to": "app/assets/icon"
+      },
+      {
+        "from": "assets/images/wifi-off.svg",
+        "to": "app/assets/images/wifi-off.svg"
       }
     ],
     "mac": {
