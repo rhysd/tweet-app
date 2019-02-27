@@ -15,6 +15,8 @@ a tweets timeline. It's built on [Twitter Lite][twitter-lite] and [Electron][ele
 - Terminal is first class. A `tweet` command is provided to access to the app
 - Customizable. Keyboard shortcuts and lifecycle of the application can be configured
 
+
+
 ## Screenshot
 
 - New tweet
@@ -24,6 +26,8 @@ a tweets timeline. It's built on [Twitter Lite][twitter-lite] and [Electron][ele
 - Reply to previously posted tweet
 
 <img src="https://github.com/rhysd/ss/blob/master/tweet-app/reply.png?raw=true" width="712" height="712"/>
+
+
 
 ## The Problem
 
@@ -37,6 +41,8 @@ that reducing times to see a timeline and actively determine the timing to see i
 avoid SNS addiction.
 
 To achieve the separation, this app only provides the functionality to post tweets.
+
+
 
 ## Installation
 
@@ -72,8 +78,8 @@ Installers for each platforms are ready at [releases page][release].
 Please download it for your platform and double click it to install.
 
 - **macOS**: `Tweet-x.y.z.dmg`
-- **Linux**: `Tweet.x.y.z.AppImage`
-- **Windows**: `Tweet.Setup.x.y.z.exe`
+- **Linux**: `Tweet.x.y.z.AppImage` (in [AppImage][appimage] format)
+- **Windows**: `Tweet.Setup.x.y.z.exe` (as [NSIS][nsis] installer)
 
 For setting up `tweet` command, please make a symbolic link to `app/bin/cli.js` in resources
 directory. It requires `node` executable to run.
@@ -84,11 +90,13 @@ For example, on macOS:
 $ ln -s /path/to/Tweet.app/Contents/Resources/app/bin/cli.js /usr/local/bin/tweet
 ```
 
-Note: On macOS, trying to install app may be rejected by OS at first since this app is not signed
-with code signing. In the case, please install from 'Preferences -> Security'.
+Note: On macOS, trying to install app may be rejected by OS at first time since this app is not
+signed with code signing. In the case, please install from it 'Preferences -> Security'.
 
 Note: Please do not move `cli.js` to other directory since it locates Electron binary depending on
 its file path. Otherwise, you need to pass `--electron-path` option.
+
+
 
 ## Usage
 
@@ -157,6 +165,8 @@ This app supports configuring multiple accounts. By setting additional accounts 
 in configuration, you can switch accounts from 'Accounts' menu. When switching accounts, the window
 is created again to switch login session. For configuration, please read following 'Customization'
 section.
+
+
 
 ## Customization
 
@@ -255,6 +265,8 @@ Here is my own configuration:
 }
 ```
 
+
+
 ## FAQ
 
 ### How can I enable dark mode?
@@ -266,6 +278,8 @@ Here is my own configuration:
 5. Click toggle switch of dark mode
 6. Close DevTools and click 'New Tweet' from 'Edit' menu to back
 
+
+
 ## Performance
 
 While a window is closed, renderer process is shutdown and there are only main process and GPU process.
@@ -273,16 +287,22 @@ Total memory footprint is around 70MB and CPU usage is 0.0%.
 When opening a window, a renderer process is created. Memory usage and CPU usage of the renderer
 process are depending on rendered contents https://mobile.twitter.com .
 
+
+
 ## Feedback
 
 If you're facing some bug or having any feature request, please report it from
 [Issues page](https://github.com/rhysd/tweet-app/issues). Pull requests are more than welcome.
+
+
 
 ## Alternatives
 
 [tweet-tray](https://github.com/jonathontoon/tweet-tray) is a nice application created with the same
 motivation as this app. However it does not support chaining tweets by replying to previous tweet
 and some functionality such as emoji picker.
+
+
 
 ## License
 
@@ -303,3 +323,5 @@ Some icon was provided by [feather icons][feathericons] (`Copyright (c) 2013-201
 [release]: https://github.com/rhysd/tweet-app/releases
 [accelerator]: https://electronjs.org/docs/api/accelerator
 [feathericons]: https://feathericons.com/
+[appimage]: https://appimage.org/
+[nsis]: https://sourceforge.net/projects/nsis/
