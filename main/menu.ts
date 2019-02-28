@@ -10,6 +10,7 @@ const DefaultKeyMaps: Required<KeyMapConfig> = {
     'Reply to Previous Tweet': 'CmdOrCtrl+R',
     'Click Tweet Button': 'CmdOrCtrl+Enter',
     'Account Settings': 'CmdOrCtrl+,',
+    'Open Previous Tweet': 'CmdOrCtrl+Shift+O',
     'Edit Config': null,
 };
 
@@ -23,6 +24,7 @@ export function createMenu(
     tweetButton: A,
     accountSettings: A,
     switchAccount: (s: string) => Promise<void>,
+    openPrevTweet: A,
     debug: A,
 ): Menu {
     const keymaps = Object.assign({}, DefaultKeyMaps, userKeyMaps);
@@ -85,6 +87,7 @@ export function createMenu(
         actionMenuItem('New Tweet', tweet),
         actionMenuItem('Reply to Previous Tweet', reply),
         actionMenuItem('Click Tweet Button', tweetButton),
+        actionMenuItem('Open Previous Tweet', openPrevTweet),
         actionMenuItem('Account Settings', accountSettings),
         actionMenuItem('Edit Config', openConfig),
     ];

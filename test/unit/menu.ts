@@ -65,7 +65,7 @@ describe('Menu', function() {
         const noop = (..._: any[]): any => {};
 
         it('creates menu items', function() {
-            const menu: any = createMenu({}, ['foo'], noop, noop, noop, noop, noop, noop, noop);
+            const menu: any = createMenu({}, ['foo'], noop, noop, noop, noop, noop, noop, noop, noop);
             ok(Array.isArray(menu));
             menu.every((i: any) => i.label !== undefined || i.roke !== undefined);
         });
@@ -76,6 +76,7 @@ describe('Menu', function() {
             const reply = sinon.fake();
             const tweetButton = sinon.fake();
             const accountSettings = sinon.fake();
+            const openPrev = sinon.fake();
 
             const menu = (createMenu(
                 {},
@@ -86,6 +87,7 @@ describe('Menu', function() {
                 tweetButton,
                 accountSettings,
                 noop,
+                openPrev,
                 noop,
             ) as any) as any[];
 
@@ -112,6 +114,11 @@ describe('Menu', function() {
             settings.click();
             ok(accountSettings.calledOnce);
 
+            const open = edit.submenu.find((i: any) => i.label === 'Open Previous Tweet');
+            ok(open);
+            open.click();
+            ok(openPrev.calledOnce);
+
             const q = menu[0].submenu.find((i: any) => i.label === 'Quit Tweet App');
             ok(q);
             q.click();
@@ -121,16 +128,39 @@ describe('Menu', function() {
             ok(reply.calledOnce);
             ok(tweetButton.calledOnce);
             ok(accountSettings.calledOnce);
+            ok(openPrev.calledOnce);
         });
 
         it('puts switch account menu for multiple accounts', function() {
             const switchAccount = sinon.fake();
-            let menu = (createMenu({}, ['foo'], noop, noop, noop, noop, noop, switchAccount, noop) as any) as any[];
+            let menu = (createMenu(
+                {},
+                ['foo'],
+                noop,
+                noop,
+                noop,
+                noop,
+                noop,
+                switchAccount,
+                noop,
+                noop,
+            ) as any) as any[];
 
             let accountMenu = menu.find((i: any) => i.label === 'Accounts');
             eq(accountMenu, undefined);
 
-            menu = (createMenu({}, ['foo', '@bar'], noop, noop, noop, noop, noop, switchAccount, noop) as any) as any[];
+            menu = (createMenu(
+                {},
+                ['foo', '@bar'],
+                noop,
+                noop,
+                noop,
+                noop,
+                noop,
+                switchAccount,
+                noop,
+                noop,
+            ) as any) as any[];
             accountMenu = menu.find((i: any) => i.label === 'Accounts');
             ok(menu);
 
@@ -153,7 +183,7 @@ describe('Menu', function() {
                 'Edit Config': null,
             };
 
-            const menu = (createMenu(keymaps, ['foo'], noop, noop, noop, noop, noop, noop, noop) as any) as any[];
+            const menu = (createMenu(keymaps, ['foo'], noop, noop, noop, noop, noop, noop, noop, noop) as any) as any[];
             const edit = menu.find((i: any) => i.label === 'Edit');
             for (const name of Object.keys(keymaps)) {
                 const item = edit.submenu.find((i: any) => i.label === name);
@@ -171,7 +201,7 @@ describe('Menu', function() {
             let help: any[];
 
             beforeEach(function() {
-                menu = createMenu({}, ['foo'], noop, noop, noop, noop, noop, noop, noop) as any;
+                menu = createMenu({}, ['foo'], noop, noop, noop, noop, noop, noop, noop, noop) as any;
                 help = menu.find((m: any) => m.role === 'help').submenu;
             });
 

@@ -74,6 +74,7 @@ describe('Lifecycle', function() {
         const callback = (life as any).currentWin.win.webContents.session.webRequest.onCompleted.lastCall.args[1];
 
         callback({
+            url: 'https://api.twitter.com/1.1/statuses/update.json',
             statusCode: 200,
             method: 'POST',
             fromCache: false,

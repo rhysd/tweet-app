@@ -194,7 +194,7 @@ describe('TweetWindow', function() {
         const call = dialog.showMessageBox.lastCall;
 
         const [opts, callback] = call.args;
-        eq(opts.title, 'Post a new tweet before reply');
+        eq(opts.title, 'Cannot reply to previous tweet');
         callback(0);
 
         await willOpenAfterDialogClosed;
@@ -239,6 +239,7 @@ describe('TweetWindow', function() {
             ok(contents.session.webRequest.onCompleted.called);
             const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
             callback({
+                url: 'https://api.twitter.com/1.1/statuses/update.json',
                 statusCode: 200,
                 method: 'POST',
                 fromCache: false,
@@ -266,6 +267,7 @@ describe('TweetWindow', function() {
         ok(contents.session.webRequest.onCompleted.called);
         const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
         callback({
+            url: 'https://api.twitter.com/1.1/statuses/update.json',
             statusCode: 200,
             method: 'POST',
             fromCache: false,
@@ -291,6 +293,7 @@ describe('TweetWindow', function() {
         ok(contents.session.webRequest.onCompleted.called);
         const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
         callback({
+            url: 'https://api.twitter.com/1.1/statuses/update.json',
             statusCode: 200,
             method: 'POST',
             fromCache: false,

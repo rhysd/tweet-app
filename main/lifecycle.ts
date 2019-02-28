@@ -42,6 +42,7 @@ export default class Lifecycle {
             this.clickTweetButton,
             this.openAccountSettings,
             this.switchAccount,
+            this.openPreviousTweet,
             this.openProfilePageForDebug,
         );
         this.currentWin = this.newWindow(config.default_account);
@@ -197,5 +198,9 @@ export default class Lifecycle {
         } else {
             return this.currentWin.openNewTweet();
         }
+    };
+
+    openPreviousTweet = () => {
+        return this.currentWin.openPreviousTweet();
     };
 }

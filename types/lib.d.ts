@@ -6,6 +6,7 @@ interface KeyMapConfig {
     'Click Tweet Button'?: string | null;
     'Account Settings'?: string | null;
     'Edit Config'?: string | null;
+    'Open Previous Tweet'?: string | null;
 }
 
 type ConfigAfterTweet = 'new tweet' | 'reply previous' | 'close' | 'quit';

@@ -11,7 +11,9 @@ import { openConfig } from './config';
 
 // XXX: TENTATIVE: detect back button by aria label
 const CSS_REMOVE_BACK =
-    'body {-webkit-app-region: drag;}' +
+    'body {-webkit-app-region: drag;}\n' +
+    'a[href="/"] { display: none !important; }\n' +
+    'a[href="/home"] { display: none !important; }\n' +
     ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
 
 export default class TweetWindow {
@@ -84,14 +86,39 @@ export default class TweetWindow {
         return this.win !== null;
     }
 
-    private notifyReplyUnavailableUntilTweet() {
+    async openPreviousTweet() {
+        log.info('Open previous tweet', this.screenName, this.prevTweetId);
+
+        if (this.screenName === undefined) {
+            return this.requireConfigWithDialog('reply to previous tweet');
+        } else if (this.prevTweetId === null) {
+            return this.notifyReplyUnavailableUntilTweet('reply to previous tweet');
+        }
+
+        if (this.win === null) {
+            await this.openNewTweet();
+        } else if (this.win!.isMinimized()) {
+            this.win!.restore();
+        }
+
+        const url = `https://mobile.twitter.com/${this.screenName}/status/${this.prevTweetId}`;
+        return new Promise<void>(resolve => {
+            this.ipc.send('tweetapp:open', url);
+            this.win!.webContents.once('dom-ready', () => {
+                log.debug('Opened previous tweet:', url);
+                resolve();
+            });
+        });
+    }
+
+    private notifyReplyUnavailableUntilTweet(doSomething: string) {
         return new Promise<void>(resolve => {
             dialog.showMessageBox(
                 {
                     type: 'info',
-                    title: 'Post a new tweet before reply',
-                    message: 'To reply to previous tweet, please post a new tweet at first',
-                    detail: '"Reply to Previous" is a feature to reply to your previous tweet posted by this app',
+                    title: `Cannot ${doSomething}`,
+                    message: `To ${doSomething}, at least one tweet must be posted before`,
+                    detail: `Please choose "New Tweet" from menu and post a new tweet at first`,
                     icon: nativeImage.createFromPath(ICON_PATH),
                     buttons: ['OK'],
                 },
@@ -100,14 +127,14 @@ export default class TweetWindow {
         });
     }
 
-    private requireConfigWithDialog() {
+    private requireConfigWithDialog(doSomething: string) {
         return new Promise<void>(resolve => {
             const buttons = ['Edit Config', 'OK'];
             dialog.showMessageBox(
                 {
                     type: 'info',
                     title: 'Config is required',
-                    message: 'Configuration is required to reply to previous tweet',
+                    message: `Configuration is required to ${doSomething}`,
                     detail:
                         "Please click 'Edit Config', enter your @screen_name at 'default_account' field, restart app",
                     icon: nativeImage.createFromPath(ICON_PATH),
@@ -168,9 +195,9 @@ export default class TweetWindow {
     private async open(reply: boolean, text?: string) {
         if (reply) {
             if (this.screenName === undefined) {
-                await this.requireConfigWithDialog();
+                await this.requireConfigWithDialog('reply to previous tweet');
             } else if (this.prevTweetId === null) {
-                await this.notifyReplyUnavailableUntilTweet();
+                await this.notifyReplyUnavailableUntilTweet('reply to previous tweet');
             }
         }
 
@@ -285,7 +312,11 @@ export default class TweetWindow {
 
             win.webContents.on('did-finish-load', () => {
                 log.debug('Event: did-finish-load');
-                win.webContents.insertCSS(CSS_REMOVE_BACK);
+                let css = CSS_REMOVE_BACK;
+                if (this.screenName !== undefined) {
+                    css += `\na[href="/${this.screenName}"] { display: none !important; }`;
+                }
+                win.webContents.insertCSS(css);
             });
 
             win.webContents.on('dom-ready', () => {
@@ -305,10 +336,20 @@ export default class TweetWindow {
 
             win.webContents.session.webRequest.onCompleted(
                 {
-                    urls: ['https://api.twitter.com/1.1/statuses/update.json'],
+                    urls: [
+                        'https://api.twitter.com/1.1/statuses/update.json',
+                        'https://api.twitter.com/1.1/statuses/destroy.json',
+                    ],
                 },
                 details => {
-                    if (details.statusCode !== 200 || details.method !== 'POST' || details.fromCache) {
+                    if (details.statusCode !== 200 || details.fromCache) {
+                        return;
+                    }
+
+                    if (details.url.endsWith('/destroy.json')) {
+                        const url = this.composeTweetUrl(false);
+                        log.info('Destroyed tweet:', details.url, 'Next URL:', url);
+                        this.ipc.send('tweetapp:open', url);
                         return;
                     }
 
