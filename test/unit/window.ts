@@ -123,6 +123,30 @@ describe('TweetWindow', function() {
         eq(contents.url, 'https://mobile.twitter.com/compose/tweet');
     });
 
+    it('opens window for reply to previous tweet with text', async function() {
+        const ipc = new Ipc();
+        const w = new TweetWindow('@foo', {}, ipc, { text: '' }, {} as any);
+        await w.openNewTweet();
+        const win = (w as any).win;
+        neq(win, null);
+        const contents = win.webContents;
+
+        w.prevTweetId = '114514';
+
+        const opened = w.openReply('this is text');
+        contents.emit('dom-ready');
+        await opened;
+
+        ok(contents.send.called);
+
+        const calls = contents.send.getCalls();
+        const call = calls.find((c: any) => c.args[0] === 'tweetapp:open');
+        ok(call, JSON.stringify(calls));
+        const url = call.args[1];
+
+        eq(url, 'https://mobile.twitter.com/compose/tweet?text=this%20is%20text&in_reply_to=114514');
+    });
+
     it('shows dialog to require default_account config when no screen name is set and reply is requested', async function() {
         const ipc = new Ipc();
         const w = new TweetWindow(undefined, {}, ipc, { text: '' }, {} as any);
@@ -141,6 +165,24 @@ describe('TweetWindow', function() {
         eq(shell.openItem.callCount, 1);
         const file = shell.openItem.lastCall.args[0];
         ok(file.endsWith('config.json'), file);
+    });
+
+    it('shows dialog to require default_account config and do nothing when clicking OK', async function() {
+        const ipc = new Ipc();
+        const w = new TweetWindow(undefined, {}, ipc, { text: '' }, {} as any);
+        eq(w.screenName, undefined);
+        const willOpenAfterDialogClosed = w.openReply();
+
+        ok(dialog.showMessageBox.calledOnce);
+        const call = dialog.showMessageBox.lastCall;
+
+        const [opts, callback] = call.args;
+        eq(opts.title, 'Config is required');
+        callback(1 /*: index of buttons. emulate 'OK' button was pressed*/);
+
+        await willOpenAfterDialogClosed;
+
+        eq(shell.openItem.callCount, 0);
     });
 
     it('shows dialog to notify a new tweet must be posted before reply', async function() {
