@@ -18,8 +18,8 @@ export default class TweetWindow {
     public readonly screenName: string | undefined;
     public readonly wantToQuit: Promise<void>;
     public didClose: Promise<void>;
+    public prevTweetId: string | null;
     private readonly partition: string | undefined;
-    private prevTweetId: string | null;
     private win: BrowserWindow | null;
     private hashtags: string;
     private resolveWantToQuit: () => void;

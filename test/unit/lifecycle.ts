@@ -195,6 +195,7 @@ describe('Lifecycle', function() {
             life.runUntilQuit();
             await waitForWindowOpen(life);
 
+            let previous = (life as any).currentWin;
             for (let name of ['bar', '@piyo', 'foo']) {
                 let prevWindowClosed = false;
                 (life as any).currentWin.win.once('closed', () => {
@@ -207,8 +208,11 @@ describe('Lifecycle', function() {
                     name = name.slice(1); // Omit @
                 }
                 ok(prevWindowClosed, name);
-                neq((life as any).currentWin.win, null, name);
-                eq((life as any).currentWin.screenName, name);
+                const current = (life as any).currentWin;
+                neq(current, previous);
+                neq(current.win, null, name);
+                eq(current.screenName, name);
+                previous = current;
             }
 
             // switching to the same account should cause nothing
@@ -218,6 +222,31 @@ describe('Lifecycle', function() {
             });
             await life.switchAccount('foo');
             ok(!prevWindowClosed);
+
+            await life.quit();
+            await life.didQuit;
+        });
+
+        it('maintains previous tweet ID even after account switch', async function() {
+            const cfg = { default_account: 'foo', other_accounts: ['bar', 'piyo'] };
+            const opts = { text: '' };
+            const life = new Lifecycle(cfg, opts);
+            life.runUntilQuit();
+            await waitForWindowOpen(life);
+
+            eq((life as any).currentWin.prevTweetId, null);
+            (life as any).currentWin.prevTweetId = '114514';
+
+            await life.switchAccount('bar');
+
+            eq((life as any).currentWin.prevTweetId, null);
+            (life as any).currentWin.prevTweetId = '530000';
+
+            await life.switchAccount('foo');
+            eq((life as any).currentWin.prevTweetId, '114514');
+
+            await life.switchAccount('bar');
+            eq((life as any).currentWin.prevTweetId, '530000');
 
             await life.quit();
             await life.didQuit;
