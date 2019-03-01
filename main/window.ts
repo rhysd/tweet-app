@@ -424,7 +424,20 @@ export default class TweetWindow {
                     callback(false);
                     return;
                 }
-                callback(true);
+
+                dialog.showMessageBox(
+                    {
+                        type: 'info',
+                        title: 'Permission was requested',
+                        message: `Permission '${perm}' was requested from ${url}`,
+                        detail: "Please click 'Accept' to allow the request or 'Reject' to reject it",
+                        icon: nativeImage.createFromPath(ICON_PATH),
+                        buttons: ['Accept', 'Reject'],
+                    },
+                    idx => {
+                        callback(idx === 0);
+                    },
+                );
             });
 
             this.ipc.on('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
