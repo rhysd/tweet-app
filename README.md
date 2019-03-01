@@ -278,6 +278,13 @@ Here is my own configuration:
 5. Click toggle switch of dark mode
 6. Close DevTools and click 'New Tweet' from 'Edit' menu to back
 
+### How can I delete a tweet previously posted?
+
+1. Click 'Open Previous Tweet' item in 'Edit' menu
+2. Find a dropdown menu at top right
+3. Click 'Delete' item in the dropdown menu
+4. After deleting the tweet, automatically redirect to 'New Tweet' page
+
 
 
 ## Performance
