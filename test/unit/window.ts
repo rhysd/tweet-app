@@ -468,5 +468,6 @@ describe('TweetWindow', function() {
         const ipcCall = contents.send.getCalls().find((c: any) => c.args[0] === 'tweetapp:open');
         ok(ipcCall);
         eq(ipcCall.args[1], 'https://mobile.twitter.com/compose/tweet');
+        eq(w.prevTweetId, null);
     });
 });

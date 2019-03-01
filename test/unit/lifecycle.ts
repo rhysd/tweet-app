@@ -196,6 +196,9 @@ describe('Lifecycle', function() {
             life.runUntilQuit();
             await waitForWindowOpen(life);
 
+            // Assume it posted a tweet
+            (life as any).currentWin.prevTweetId = '114514';
+
             let previous = (life as any).currentWin;
             for (let name of ['bar', '@piyo', 'foo']) {
                 let prevWindowClosed = false;
@@ -216,6 +219,13 @@ describe('Lifecycle', function() {
                 previous = current;
             }
 
+            ok((life as any).prevTweetIds.has('foo'));
+            ok((life as any).prevTweetIds.has('bar'));
+            ok((life as any).prevTweetIds.has('piyo'));
+
+            eq((life as any).prevTweetIds.get('foo'), '114514');
+            eq((life as any).currentWin.prevTweetId, '114514');
+
             // switching to the same account should cause nothing
             let prevWindowClosed = false;
             (life as any).currentWin.win.once('closed', () => {
@@ -223,6 +233,14 @@ describe('Lifecycle', function() {
             });
             await life.switchAccount('foo');
             ok(!prevWindowClosed);
+
+            // Previous tweet ID is cleared when the tweet is deleted from this app
+            (life as any).currentWin.prevTweetId = null;
+
+            await life.switchAccount('bar');
+
+            // Previous tweet ID cache should also be updated
+            eq((life as any).prevTweetIds.get('foo'), null);
 
             await life.quit();
             await life.didQuit;

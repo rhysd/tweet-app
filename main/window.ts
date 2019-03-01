@@ -349,6 +349,7 @@ export default class TweetWindow {
                     if (details.url.endsWith('/destroy.json')) {
                         const url = this.composeTweetUrl(false);
                         log.info('Destroyed tweet:', details.url, 'Next URL:', url);
+                        this.prevTweetId = null; // Clear previous tweet ID since it would no longer exist
                         this.ipc.send('tweetapp:open', url);
                         return;
                     }

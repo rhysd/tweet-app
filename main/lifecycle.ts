@@ -14,7 +14,7 @@ export default class Lifecycle {
     private resolveQuit: () => void;
     private currentWin: TweetWindow;
     private switchingAccount: boolean;
-    private prevTweetIds: Map<string, string>; // Screen name -> Tweet ID
+    private prevTweetIds: Map<string, string | null>; // Screen name -> Maybe Tweet ID
 
     constructor(private readonly config: Config, private opts: CommandLineOptions) {
         this.didQuit = new Promise(resolve => {
@@ -180,7 +180,7 @@ export default class Lifecycle {
         this.switchingAccount = true;
         try {
             await this.currentWin.close();
-            if (this.currentWin.screenName !== undefined && this.currentWin.prevTweetId !== null) {
+            if (this.currentWin.screenName !== undefined) {
                 this.prevTweetIds.set(this.currentWin.screenName, this.currentWin.prevTweetId);
             }
             this.currentWin = this.newWindow(screenName);
