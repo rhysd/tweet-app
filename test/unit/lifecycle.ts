@@ -328,5 +328,24 @@ describe('Lifecycle', function() {
             await life.toggleWindow();
             ok(w.isOpen());
         });
+
+        it('opens previous tweet page', async function() {
+            const life = new Lifecycle({ default_account: 'foo' }, { text: '' });
+            life.runUntilQuit();
+            await waitForWindowOpen(life);
+            const w = (life as any).currentWin;
+            w.prevTweetId = '114514';
+
+            const opened = life.openPreviousTweet();
+            w.win.webContents.emit('dom-ready');
+            await opened;
+
+            const call = w.win.webContents.send
+                .getCalls()
+                .reverse()
+                .find((c: any) => c.args[0] === 'tweetapp:open');
+            ok(call);
+            eq(call.args[1], 'https://mobile.twitter.com/foo/status/114514');
+        });
     });
 });

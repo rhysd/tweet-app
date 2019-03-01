@@ -395,4 +395,78 @@ describe('TweetWindow', function() {
         callback('tweetapp:online-status', 'offline');
         eq((w as any).win, null);
     });
+
+    it('shows dialog to require default_account config when no screen name is set and showing previous tweet is requested', async function() {
+        const ipc = new Ipc();
+        const w = new TweetWindow(undefined, {}, ipc, { text: '' }, {} as any);
+        eq(w.screenName, undefined);
+
+        const dialogClosed = w.openPreviousTweet();
+        ok(dialog.showMessageBox.calledOnce);
+        const call = dialog.showMessageBox.lastCall;
+        const [opts, callback] = call.args;
+        eq(opts.title, 'Config is required');
+        ok(opts.message.includes('open previous tweet page'), opts.message);
+        callback(0 /*: index of buttons. emulate 'Edit Config' button was pressed*/);
+
+        await dialogClosed;
+    });
+
+    it('shows dialog to notify a new tweet must be posted before opening previous tweet', async function() {
+        const ipc = new Ipc();
+        const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
+        const dialogClosed = w.openPreviousTweet();
+
+        ok(dialog.showMessageBox.calledOnce);
+        const call = dialog.showMessageBox.lastCall;
+
+        const [opts, callback] = call.args;
+        eq(opts.title, 'Cannot open previous tweet page');
+        callback(0);
+
+        await dialogClosed;
+    });
+
+    it('opens previous tweet page if screen name and previous tweet ID is set', async function() {
+        const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
+        await w.openNewTweet();
+        const win = (w as any).win;
+        const contents = win.webContents;
+
+        win.isMinimized = sinon.fake.returns(true);
+        w.prevTweetId = '114514';
+
+        const opened = w.openPreviousTweet();
+        contents.emit('dom-ready');
+        await opened;
+
+        ok(contents.send.called);
+        const call = contents.send
+            .getCalls()
+            .reverse()
+            .find((c: any) => c.args[0] === 'tweetapp:open');
+        eq(call.args, ['tweetapp:open', 'https://mobile.twitter.com/foo/status/114514']);
+        ok(win.restore.called);
+    });
+
+    it('opens "New Tweet" page again after deleting a tweet to prevent back to home timeline', async function() {
+        const ipc = new Ipc();
+        const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
+        await w.openNewTweet();
+
+        const contents = (w as any).win.webContents;
+
+        ok(contents.session.webRequest.onCompleted.called);
+        const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
+        callback({
+            url: 'https://api.twitter.com/1.1/statuses/destroy.json',
+            statusCode: 200,
+            method: 'OPTIONS',
+            fromCache: false,
+        });
+
+        const ipcCall = contents.send.getCalls().find((c: any) => c.args[0] === 'tweetapp:open');
+        ok(ipcCall);
+        eq(ipcCall.args[1], 'https://mobile.twitter.com/compose/tweet');
+    });
 });

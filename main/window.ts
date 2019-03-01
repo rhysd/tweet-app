@@ -90,15 +90,15 @@ export default class TweetWindow {
         log.info('Open previous tweet', this.screenName, this.prevTweetId);
 
         if (this.screenName === undefined) {
-            return this.requireConfigWithDialog('reply to previous tweet');
+            return this.requireConfigWithDialog('open previous tweet page');
         } else if (this.prevTweetId === null) {
-            return this.notifyReplyUnavailableUntilTweet('reply to previous tweet');
+            return this.notifyReplyUnavailableUntilTweet('open previous tweet page');
         }
 
         if (this.win === null) {
             await this.openNewTweet();
-        } else if (this.win!.isMinimized()) {
-            this.win!.restore();
+        } else if (this.win.isMinimized()) {
+            this.win.restore();
         }
 
         const url = `https://mobile.twitter.com/${this.screenName}/status/${this.prevTweetId}`;
