@@ -4,14 +4,13 @@ import * as path from 'path';
 import { BrowserWindow, Menu, dialog, nativeImage, app } from 'electron';
 import windowState = require('electron-window-state');
 import log from './log';
-import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
+import { ON_DARWIN, ON_WINDOWS, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
 import Ipc from './ipc';
 import { touchBar } from './menu';
 import { openConfig } from './config';
 
 // XXX: TENTATIVE: detect back button by aria label
-const CSS_REMOVE_BACK =
-    'body {-webkit-app-region: drag;}\n' +
+const INJECTED_CSS =
     'a[href="/"] { display: none !important; }\n' +
     'a[href="/home"] { display: none !important; }\n' +
     ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
@@ -240,8 +239,9 @@ export default class TweetWindow {
                 y: state.y,
                 icon: ICON_PATH,
                 show: false,
+                title: 'Tweet',
                 titleBarStyle: 'hiddenInset' as 'hiddenInset',
-                frame: false,
+                frame: ON_WINDOWS,
                 fullscreenable: false,
                 useContentSize: true,
                 autoHideMenuBar: true,
@@ -270,7 +270,7 @@ export default class TweetWindow {
                 win.show();
             });
 
-            win.once('close', (_: Event) => {
+            win.once('close', _ => {
                 log.debug('Event: close');
                 assert.ok(this.win !== null);
                 this.ipc.detach(this.win!.webContents);
@@ -281,6 +281,8 @@ export default class TweetWindow {
                 this.win!.webContents.session.webRequest.onBeforeRequest(null as any);
                 this.win!.webContents.session.webRequest.onCompleted(null as any);
             });
+
+            win.on('page-title-updated', e => e.preventDefault());
 
             this.didClose = new Promise<void>(resolve => {
                 win.once('closed', (_: Event) => {
@@ -312,7 +314,10 @@ export default class TweetWindow {
 
             win.webContents.on('did-finish-load', () => {
                 log.debug('Event: did-finish-load');
-                let css = CSS_REMOVE_BACK;
+                let css = INJECTED_CSS;
+                if (!ON_WINDOWS) {
+                    css += '\nbody {-webkit-app-region: drag;}';
+                }
                 if (this.screenName !== undefined) {
                     css += `\na[href="/${this.screenName}"] { display: none !important; }`;
                 }
@@ -405,6 +410,7 @@ export default class TweetWindow {
                     callback(false);
                     return;
                 }
+
                 const allowed = ['media', 'geolocation'];
                 if (!allowed.includes(perm)) {
                     log.info(
