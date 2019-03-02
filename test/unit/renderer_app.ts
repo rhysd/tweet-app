@@ -206,4 +206,22 @@ describe('App', function() {
         onOnline();
         eq(ipcRenderer.send.lastCall.args, ['tweetapp:online-status', 'online']);
     });
+
+    it('rejects ESC key since it navigates to home timeline at tweet form', function() {
+        const calls = (window as any).addEventListener.getCalls();
+        const onKeydown = calls.find((c: any) => c.args[0] === 'keydown').args[1];
+        const stopPropagation = sinon.fake();
+
+        onKeydown({
+            key: 'A',
+            stopPropagation,
+        });
+        ok(!stopPropagation.called);
+
+        onKeydown({
+            key: 'Escape',
+            stopPropagation,
+        });
+        ok(stopPropagation.called);
+    });
 });

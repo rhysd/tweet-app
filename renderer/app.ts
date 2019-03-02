@@ -97,6 +97,15 @@ export default class App {
             }
         });
 
+        window.addEventListener(
+            'keydown',
+            e => {
+                if (e.key === 'Escape') {
+                    e.stopPropagation();
+                }
+            },
+            { capture: true },
+        );
         window.addEventListener('online', this.sendOnlineStatus.bind(this, true), { passive: true });
         window.addEventListener('offline', this.sendOnlineStatus.bind(this, false), { passive: true });
         window.addEventListener('load', () => this.sendOnlineStatus(window.navigator.onLine), { passive: true });
