@@ -4,7 +4,7 @@ import * as path from 'path';
 import { BrowserWindow, Menu, dialog, nativeImage, app } from 'electron';
 import windowState = require('electron-window-state');
 import log from './log';
-import { ON_DARWIN, ON_WINDOWS, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
+import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
 import Ipc from './ipc';
 import { touchBar } from './menu';
 import { openConfig } from './config';
@@ -241,7 +241,7 @@ export default class TweetWindow {
                 show: false,
                 title: 'Tweet',
                 titleBarStyle: 'hiddenInset' as 'hiddenInset',
-                frame: ON_WINDOWS,
+                frame: !ON_DARWIN,
                 fullscreenable: false,
                 useContentSize: true,
                 autoHideMenuBar: true,
@@ -315,7 +315,7 @@ export default class TweetWindow {
             win.webContents.on('did-finish-load', () => {
                 log.debug('Event: did-finish-load');
                 let css = INJECTED_CSS;
-                if (!ON_WINDOWS) {
+                if (ON_DARWIN) {
                     css += '\nbody {-webkit-app-region: drag;}';
                 }
                 if (this.screenName !== undefined) {
