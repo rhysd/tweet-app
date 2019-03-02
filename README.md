@@ -15,6 +15,7 @@ a tweets timeline. It's built on [Twitter Lite][twitter-lite] and [Electron][ele
 - Multi-account support
 - Terminal is first class. A `tweet` command is provided to access to the app
 - Customizable. Keyboard shortcuts and lifecycle of the application can be configured
+- macOS, Linux and Windows are supported (confirmed with macOS 10.12, Ubuntu 18.04, Windows 10)
 
 
 
