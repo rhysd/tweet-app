@@ -96,7 +96,10 @@
       "icon": "assets/icon/icon.png"
     },
     "linux": {
-      "target": "AppImage",
+      "target": [
+        "zip",
+        "AppImage"
+      ],
       "icon": "assets/icon/icon.png",
       "category": "Network"
     }

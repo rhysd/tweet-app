@@ -79,9 +79,9 @@ alias tweet='tweet --electron-path=/Applications/Tweet.app/Contents/MacOS/Tweet'
 Installers for each platforms are ready at [releases page][release].
 Please download it for your platform and double click it to install.
 
-- **macOS**: `Tweet-x.y.z.dmg`
-- **Linux**: `Tweet.x.y.z.AppImage` (in [AppImage][appimage] format)
-- **Windows**: `Tweet.Setup.x.y.z.exe` (as [NSIS][nsis] installer)
+- **macOS**: `Tweet-x.y.z.dmg` or `Tweet-0.2.0-mac.zip`
+- **Linux**: `Tweet x.y.z.AppImage` (in [AppImage][appimage] format) or `tweet-app-x.y.z-linux.zip`
+- **Windows**: `Tweet Setup.x.y.z.exe` (as [NSIS][nsis] installer)
 
 For setting up `tweet` command, please make a symbolic link to `app/bin/cli.js` in resources
 directory. It requires `node` executable to run.
@@ -114,6 +114,9 @@ necessary to notify this app your screen name. Please see 'Customization' sectio
 The tweet form is exactly the same as the input form of https://mobile.twitter.com/compose/tweet.
 All functionalities like accurate characters count, picture/movie upload, emoji picker, poll are
 available. Clicking '+' chains additional tweets.
+
+Menu items are in menu bar on macOS, and in a window tool bar on Windows and Linux. By default,
+the window hides a tool bar on Windows and Linux. To reveal it, please type <kbd>Alt</kbd>.
 
 By clicking 'Tweet' (or 'Tweet All') button, it sends your tweet(s) to Twitter. And it returns to
 'New Tweet' input form again instead of showing a timeline.
