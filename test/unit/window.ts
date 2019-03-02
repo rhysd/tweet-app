@@ -470,4 +470,187 @@ describe('TweetWindow', function() {
         eq(ipcCall.args[1], 'https://mobile.twitter.com/compose/tweet');
         eq(w.prevTweetId, null);
     });
+
+    it('prevents navigation when the URL is not mobile.twitter.com', async function() {
+        const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
+        await w.openNewTweet();
+
+        const wc = (w as any).win.webContents;
+        let e = {
+            preventDefault: sinon.fake(),
+        };
+
+        wc.emit('will-navigate', e, 'https://example.com');
+        ok(e.preventDefault.called);
+
+        e = {
+            preventDefault: sinon.fake(),
+        };
+
+        wc.emit('will-navigate', e, 'https://mobile.twitter.com/foo/status/114514');
+        ok(!e.preventDefault.called);
+    });
+
+    it('prevents creating a new window', async function() {
+        const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
+        await w.openNewTweet();
+
+        const wc = (w as any).win.webContents;
+        const e = {
+            preventDefault: sinon.fake(),
+        };
+
+        wc.emit('new-window', e, 'https://mobile.twitter.com/foo/status/114514');
+        ok(e.preventDefault.called);
+    });
+
+    it('injects CSS to prevent some links from displaying', async function() {
+        const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
+        await w.openNewTweet();
+
+        const wc = (w as any).win.webContents;
+        let insertCSS = sinon.fake();
+        wc.insertCSS = insertCSS;
+
+        wc.emit('did-finish-load');
+
+        ok(insertCSS.called);
+        let css = insertCSS.lastCall.args[0];
+        ok(css.includes('display: none !important;'), css);
+        ok(css.includes('[href="/"]'), css);
+        ok(css.includes('[aria-label="Back"]'), css);
+        ok(css.includes('[aria-label="戻る"]'), css);
+
+        (w as any).screenName = 'foo';
+        insertCSS = sinon.fake();
+        wc.insertCSS = insertCSS;
+
+        wc.emit('did-finish-load');
+
+        ok(insertCSS.called);
+        css = insertCSS.lastCall.args[0];
+        ok(css.includes('[href="/foo"]'), css);
+    });
+
+    it('detects login at onBeforeRequest hook', async function() {
+        const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
+        await w.openNewTweet();
+
+        const wc = (w as any).win.webContents;
+        const callback = wc.session.webRequest.onBeforeRequest.lastCall.args[1];
+
+        function loginIpcSent() {
+            const called = !!wc.send.getCalls().find((c: any) => c.args[0] === 'tweetapp:login');
+            wc.send = sinon.fake(); // Clear
+            return called;
+        }
+
+        // Do nothing when referrer is not /login URL
+        let cb = sinon.fake();
+        callback(
+            {
+                url: 'https://www.google-analytics.com/r/*',
+                referrer: 'https://mobile.twitter.com/compose/tweet',
+            },
+            cb,
+        );
+        ok(cb.called);
+        ok(!loginIpcSent());
+
+        // Detect referrer is /login URL
+        cb = sinon.fake();
+        callback(
+            {
+                url: 'https://www.google-analytics.com/r/*',
+                referrer: 'https://mobile.twitter.com/login',
+            },
+            cb,
+        );
+        ok(cb.called);
+        ok(loginIpcSent());
+        eq(wc.session.webRequest.onBeforeRequest.lastCall.args[0], null); // listener was removed
+
+        // Tweet is posted, it means it is already in login state
+        wc.session.webRequest.onBeforeRequest = sinon.fake();
+        cb = sinon.fake();
+        callback(
+            {
+                url: 'https://api.twitter.com/1.1/statuses/update.json',
+                referrer: 'https://mobile.twitter.com/compose/tweet',
+            },
+            cb,
+        );
+        ok(cb.called);
+        ok(!loginIpcSent());
+        eq(wc.session.webRequest.onBeforeRequest.lastCall.args[0], null); // listener was removed
+    });
+
+    describe('Permission request handler', function() {
+        let webContents: any;
+        let handler: Function;
+
+        beforeEach(async function() {
+            const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
+            await w.openNewTweet();
+            webContents = (w as any).win.webContents;
+            webContents.url = 'https://mobile.twitter.com/compose/tweet';
+            handler = webContents.session.setPermissionRequestHandler.lastCall.args[0];
+        });
+
+        it('rejects some permissions without asking to user', function() {
+            for (const perm of ['fullscreen', 'notification']) {
+                const cb = sinon.fake();
+                handler(webContents, perm, cb, {});
+                ok(cb.called);
+                ok(!cb.lastCall.args[0]);
+            }
+        });
+
+        it('rejects any permission from outside mobile.twitter.com', function() {
+            webContents.url = 'https:/example.com'; // This changes return value of webContents.getURL()
+            const cb = sinon.fake();
+            handler(webContents, 'media', cb, {});
+            ok(cb.called);
+            ok(!cb.lastCall.args[0]);
+        });
+
+        it('rejects when user clicks "Reject" button of dialog', function() {
+            for (const perm of ['media', 'geolocation']) {
+                const showMessageBox = sinon.fake();
+                dialog.showMessageBox = showMessageBox;
+
+                const cb = sinon.fake();
+                handler(webContents, perm, cb, {});
+
+                ok(dialog.showMessageBox.called);
+                eq(dialog.showMessageBox.lastCall.args[0].title, 'Permission was requested');
+                const msg = dialog.showMessageBox.lastCall.args[0].message;
+                ok(msg.includes(perm), msg);
+                ok(!cb.called);
+
+                const dialogCB = dialog.showMessageBox.lastCall.args[1];
+                dialogCB(1); // 1 means button at index 1 'Reject' was clicked
+                ok(cb.called);
+                ok(!cb.lastCall.args[0]);
+            }
+        });
+
+        it('accepts when user clicks "Accept" button of dialog', function() {
+            for (const perm of ['media', 'geolocation']) {
+                const showMessageBox = sinon.fake();
+                dialog.showMessageBox = showMessageBox;
+
+                const cb = sinon.fake();
+                handler(webContents, perm, cb, {});
+
+                ok(dialog.showMessageBox.called);
+                ok(!cb.called);
+
+                const dialogCB = dialog.showMessageBox.lastCall.args[1];
+                dialogCB(0); // 0 means button at index 0 'Accept' was clicked
+                ok(cb.called);
+                ok(cb.lastCall.args[0]);
+            }
+        });
+    });
 });
