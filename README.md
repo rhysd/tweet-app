@@ -3,6 +3,7 @@
 [![npm version][]][npm]
 [![codecov badge][]][codecov]
 [![travis badge][]][travis]
+[![appveyor badge][]][appveyor]
 
 [Tweet app][repo] is a small desktop application for tweeting on [Twitter][twitter], but never shows
 a tweets timeline. It's built on [Twitter Lite][twitter-lite] and [Electron][electron].
@@ -321,6 +322,8 @@ Some icon was provided by [feather icons][feathericons] (`Copyright (c) 2013-201
 [npm]: https://www.npmjs.com/package/tweet-app
 [travis badge]: https://travis-ci.org/rhysd/tweet-app.svg?branch=master
 [travis]: https://travis-ci.org/rhysd/tweet-app
+[appveyor badge]: https://ci.appveyor.com/api/projects/status/nn6mtwssph025r79?svg=true
+[appveyor]: https://ci.appveyor.com/project/rhysd/tweet-app
 [codecov badge]: https://codecov.io/gh/rhysd/tweet-app/branch/master/graph/badge.svg
 [codecov]: https://codecov.io/gh/rhysd/tweet-app
 [repo]: https://github.com/rhysd/tweet-app
