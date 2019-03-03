@@ -18,7 +18,7 @@ export default class App {
             e.style.width = '100%';
             e.style.height = '100%';
             e.style.zIndex = '530000';
-            e.style.backgroundColor = 'white';
+            e.style.backgroundColor = document.body.style.backgroundColor || 'white';
             return e;
         }
 
