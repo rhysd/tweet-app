@@ -56,7 +56,7 @@ Installers for each platforms are ready at [releases page][release].
 Please download it for your platform and double click it to install.
 
 - **macOS**: `Tweet-x.y.z.dmg` or `Tweet-0.2.0-mac.zip`
-- **Linux**: `Tweet x.y.z.AppImage` (in [AppImage][appimage] format) or `tweet-app-x.y.z-linux.zip`
+- **Linux**: `Tweet x.y.z.AppImage` (in [AppImage][appimage] format) or `tweet-app_x.y.z_amd64.deb`
 - **Windows**: `Tweet Setup.x.y.z.exe` (as [NSIS][nsis] installer)
 
 Note: On macOS, trying to install app may be rejected by OS at first time since this app is not

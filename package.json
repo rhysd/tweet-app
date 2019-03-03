@@ -89,19 +89,21 @@
     ],
     "mac": {
       "identity": null,
-      "icon": "assets/icon/icon.icns"
+      "icon": "assets/icon/icon.icns",
+      "category": "public.app-category.social-networking"
     },
     "win": {
       "target": "nsis",
-      "icon": "assets/icon/icon.png"
+      "icon": "assets/icon/icon.png",
+      "verifyUpdateCodeSignature": false
     },
     "linux": {
       "target": [
-        "zip",
+        "deb",
         "AppImage"
       ],
-      "icon": "assets/icon/icon.png",
-      "category": "Network"
+      "synopsis": "Desktop app only for tweeting. Timeline never shows up",
+      "category": "Network;SNS"
     }
   },
   "husky": {
