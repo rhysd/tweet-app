@@ -94,6 +94,9 @@ const opts: CommandLineOptions = {
 // First argument is path to `node`, second argument is path to script
 const argv = [join(__dirname, '..'), '--', JSON.stringify(opts)];
 
+// Otherwise the electron process will exit immediately since the executable is run as node.
+delete process.env.ELECTRON_RUN_AS_NODE;
+
 if (detach) {
     // TODO?: Output stderr to $DATA_DIR/log.txt
     cp.spawn(electronExePath(electronPath), argv, {

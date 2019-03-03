@@ -8,9 +8,9 @@
 [Tweet app][repo] is a small desktop application for tweeting on [Twitter][twitter], but never shows
 a tweets timeline. It's built on [Twitter Lite][twitter-lite] and [Electron][electron].
 
-- Tweet form the same as mobile official client is available (accurate characters count, emoji picker,
+- Tweet form is the same as mobile official client (accurate characters count, emoji picker,
   pictures/movies upload, poll, ...)
-- After posting a tweet, the input form is shown again immediately. Timeline never shows up in this app
+- After posting a tweet, it goes back to the tweet form again. Timeline never shows up in this app
 - Replying to a previously posted tweet is supported
 - Multi-account support
 - Terminal is first class. A `tweet` command is provided to access to the app
@@ -48,33 +48,9 @@ To achieve the separation, this app only provides the functionality to post twee
 
 ## Installation
 
-### With `npm` package manager
+### Install App
 
-```
-npm install -g tweet-app
-```
-
-`electron` package is a peer-dependency so it is not installed automatically. If you have not
-installed the package yet. Please install it additionally.
-
-```
-npm install -g electron
-```
-
-If you have already installed the app from [release page][release], setting the environment variable
-or passing the path via command line option will use the installed app.
-
-For example (on macOS):
-
-```
-export TWEET_APP_ELECTRON_EXECUTABLE=/Applications/Tweet.app/Contents/MacOS/Tweet
-
-# or
-
-alias tweet='tweet --electron-path=/Applications/Tweet.app/Contents/MacOS/Tweet'
-```
-
-### From [release page][release]
+#### From [release page][release]
 
 Installers for each platforms are ready at [releases page][release].
 Please download it for your platform and double click it to install.
@@ -83,20 +59,82 @@ Please download it for your platform and double click it to install.
 - **Linux**: `Tweet x.y.z.AppImage` (in [AppImage][appimage] format) or `tweet-app-x.y.z-linux.zip`
 - **Windows**: `Tweet Setup.x.y.z.exe` (as [NSIS][nsis] installer)
 
-For setting up `tweet` command, please make a symbolic link to `app/bin/cli.js` in resources
-directory. It requires `node` executable to run.
-
-For example, on macOS:
-
-```
-$ ln -s /path/to/Tweet.app/Contents/Resources/app/bin/cli.js /usr/local/bin/tweet
-```
-
 Note: On macOS, trying to install app may be rejected by OS at first time since this app is not
 signed with code signing. In the case, please install from it 'Preferences -> Security'.
 
+### With `npm` package manager
+
+```sh
+npm install -g tweet-app
+```
+
+`electron` package is a peer-dependency so it is not installed automatically. If you have not
+installed the package yet. Please install it additionally.
+
+```sh
+npm install -g electron
+```
+
+### CLI Setup
+
+This app can be accessed from command line. As optional, this section describes how to setup it.
+
+#### Using installed app
+
+If you have installed the app from [release page][release], `tweet` command can be setup as a symbolic
+link. Please make a symbolic link to `app/bin/cli.js` in resources directory.
+
+For example, on macOS:
+
+```sh
+ln -s /path/to/Tweet.app/Contents/Resources/app/bin/cli.js /usr/local/bin/tweet
+```
+
+It requires `node` executable to run the `cli.js` script with this configuration.
+
 Note: Please do not move `cli.js` to other directory since it locates Electron binary depending on
 its file path. Otherwise, you need to pass `--electron-path` option.
+
+Even if you don't want to install `node` executable, it's ok since Electron app executable can run
+as `node` executable as well. Please set [`$ELECTRON_RUN_AS_NODE`][ELECTRON_RUN_AS_NODE]
+environment variable.
+
+`tweet` command can be setup as an alias of shell or small ShellScript (on Linux or macOS) or batch
+(on Windows) which sets the environment variable and run the script by forwarding all commandline
+options.
+
+For example, on macOS:
+
+```sh
+alias tweet='ELECTRON_RUN_AS_NODE=true /Applications/Tweet.app/Contents/MacOS/Tweet /Applications/Tweet.app/Contents/Resources/app/bin/cli.js'
+```
+
+#### With `npm`
+
+If you installed this app via `npm` by installing `tweet-app` and `electron` package, everything
+has been done. `npm` should put `tweet` command in `$PATH` directory.
+
+If you have installed the app from [release page][release], installing only `tweet-app`
+package should work as follows.
+
+Install it via `npm`.
+
+```sh
+npm install -g tweet-app
+```
+
+And set the installed app's executable path to `$TWEET_APP_ELECTRON_EXECUTABLE` environment variable
+or pass it to `--electron-path` option.
+
+For example (on macOS):
+
+```sh
+export TWEET_APP_ELECTRON_EXECUTABLE=/Applications/Tweet.app/Contents/MacOS/Tweet
+
+# or
+
+alias tweet='tweet --electron-path=/Applications/Tweet.app/Contents/MacOS/Tweet'
+```
 
 
 
@@ -339,3 +377,4 @@ Some icon was provided by [feather icons][feathericons] (`Copyright (c) 2013-201
 [feathericons]: https://feathericons.com/
 [appimage]: https://appimage.org/
 [nsis]: https://sourceforge.net/projects/nsis/
+[ELECTRON_RUN_AS_NODE]: https://electronjs.org/docs/api/environment-variables#electron_run_as_node
