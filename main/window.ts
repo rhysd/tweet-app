@@ -448,7 +448,14 @@ export default class TweetWindow {
             win.loadURL(url);
 
             if (ON_DARWIN) {
-                win.setTouchBar(touchBar(this.screenName, this.open.bind(this, false), this.open.bind(this, true)));
+                win.setTouchBar(
+                    touchBar(
+                        this.screenName,
+                        this.open.bind(this, false),
+                        this.open.bind(this, true),
+                        this.openPreviousTweet.bind(this),
+                    ),
+                );
                 log.debug('Touch bar was set');
             }
 

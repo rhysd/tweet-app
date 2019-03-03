@@ -186,10 +186,13 @@ Options:
   -h, --help                 output usage information
 ```
 
-The command opens GUI window and a tweet form. At first, you need to login as
-normal mobile.twitter.com.
+The command `tweet` opens GUI window and a tweet form. When running the command, 
 
-Please see `tweet --help` for command line options.
+- if this app is not running yet, it starts GUI app
+- if this app is running in background, it reopens a window
+- if this app is running, it gives focus on application's window
+
+In any case of above, the command line options passed to `tweet` are reflected.
 
 ### Run This App as Background App
 
@@ -208,6 +211,10 @@ This app supports configuring multiple accounts. By setting additional accounts 
 in configuration, you can switch accounts from 'Accounts' menu. When switching accounts, the window
 is created again to switch login session. For configuration, please read following 'Customization'
 section.
+
+### Touch Bar Support
+
+For recent MacBook Pro, this app supports a touch bar.
 
 
 

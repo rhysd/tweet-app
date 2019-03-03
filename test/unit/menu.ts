@@ -32,25 +32,35 @@ describe('Menu', function() {
         it('calls callbacks on button clicks', function() {
             const tweet = sinon.fake();
             const reply = sinon.fake();
-            const items = (touchBar('screen_name', tweet, reply) as any).args[0].items;
+            const openPrev = sinon.fake();
+            const items = (touchBar('screen_name', tweet, reply, openPrev) as any).args[0].items;
 
             let item = items.find((i: any) => i.args[0].label === 'New Tweet').args[0];
             ok(item, `${item}`);
             item.click();
             ok(tweet.calledOnce);
             ok(!reply.called);
+            ok(!openPrev.called);
 
             item = items.find((i: any) => i.args[0].label === 'Reply to Previous').args[0];
             ok(item, `${item}`);
             item.click();
             ok(tweet.calledOnce);
             ok(reply.calledOnce);
+            ok(!openPrev.called);
+
+            item = items.find((i: any) => i.args[0].label === 'Open Previous Tweet').args[0];
+            ok(item, `${item}`);
+            item.click();
+            ok(tweet.calledOnce);
+            ok(reply.calledOnce);
+            ok(openPrev.called);
         });
 
         it('sets screen name as label if available', function() {
             const noop = () => {};
             for (const name of ['name', '@name', undefined]) {
-                const items = (touchBar(name, noop, noop) as any).args[0].items;
+                const items = (touchBar(name, noop, noop, noop) as any).args[0].items;
                 const item = items.find((i: any) => i.args[0].label === '@name');
                 if (name !== undefined) {
                     ok(item, item);

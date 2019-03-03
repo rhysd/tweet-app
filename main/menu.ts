@@ -257,7 +257,7 @@ export function dockMenu(tweet: A, reply: A) {
     return Menu.buildFromTemplate(template);
 }
 
-export function touchBar(screenName: string | undefined, tweet: A, reply: A) {
+export function touchBar(screenName: string | undefined, tweet: A, reply: A, openPrev: A) {
     const smallSpacer = new TouchBarSpacer({ size: 'small' });
     const items = [
         smallSpacer,
@@ -271,6 +271,12 @@ export function touchBar(screenName: string | undefined, tweet: A, reply: A) {
             label: 'Reply to Previous',
             backgroundColor: '#1da1f2',
             click: reply,
+        }),
+        smallSpacer,
+        new TouchBarButton({
+            label: 'Open Previous Tweet',
+            backgroundColor: '#1da1f2',
+            click: openPrev,
         }),
     ];
 
