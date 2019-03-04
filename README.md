@@ -62,6 +62,18 @@ Please download it for your platform and double click it to install.
 Note: On macOS, trying to install app may be rejected by OS at first time since this app is not
 signed with code signing. In the case, please install from it 'Preferences -> Security'.
 
+#### From [homebrew-cask][]
+
+If you're macOS user and using [homebrew-cask][], this app can be installed via it.
+Please tap the repository URL and install this app via `brew cask` as follows.
+
+```
+brew tap rhysd/tweet-app https://github.com/rhysd/tweet-app
+brew cask install tweet
+```
+
+It's easiest way to install and manage this app on macOS.
+
 #### With `npm` package manager
 
 ```sh
@@ -80,6 +92,9 @@ npm install -g electron
 This app can be accessed from command line. As optional, this section describes how to setup it.
 
 #### Using installed app
+
+When you have installed this app via [homebrew-cask][], you need to do nothing here. `tweet` command
+was already setup at `/usr/local/bin` (it requires `node`).
 
 If you have installed the app from [release page][release], `tweet` command can be setup as a symbolic
 link. Please make a symbolic link to `app/bin/cli.js` in resources directory.
@@ -403,3 +418,4 @@ Some icon was provided by [feather icons][feathericons] (`Copyright (c) 2013-201
 [appimage]: https://appimage.org/
 [nsis]: https://sourceforge.net/projects/nsis/
 [ELECTRON_RUN_AS_NODE]: https://electronjs.org/docs/api/environment-variables#electron_run_as_node
+[homebrew-cask]: https://github.com/Homebrew/homebrew-cask
