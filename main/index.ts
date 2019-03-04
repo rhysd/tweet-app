@@ -5,13 +5,6 @@ import log from './log';
 import { loadConfig } from './config';
 import { ON_DARWIN, ICON_PATH } from './constants';
 
-const locked = app.requestSingleInstanceLock();
-if (!locked) {
-    app.quit();
-} else {
-    go();
-}
-
 async function go() {
     // default_app sets app.on('all-window-closed', () => app.quit()) before
     // loading this application. We need to disable the callback.
@@ -37,6 +30,9 @@ async function go() {
         const cmdOpts = parseCmdlineOptions(process.argv);
         const [config] = await Promise.all([loadConfig(), app.whenReady()]);
 
+        log.info('App is starting with config', config, 'and cmdOpts', cmdOpts);
+        const lifecycle = new Lifecycle(config, cmdOpts);
+
         if (ON_DARWIN) {
             app.dock.setIcon(ICON_PATH);
             app.on('activate', async () => {
@@ -44,9 +40,6 @@ async function go() {
                 await lifecycle.restart();
             });
         }
-
-        log.info('App is starting with config', config, 'and cmdOpts', cmdOpts);
-        const lifecycle = new Lifecycle(config, cmdOpts);
 
         app.on('second-instance', async (_: Event, cmdline: string[], _cwd: string) => {
             const newOpts = parseCmdlineOptions(cmdline);
@@ -70,4 +63,11 @@ async function go() {
         log.info('App quits with exit status', exitStatus);
         process.exit(exitStatus);
     }
+}
+
+const locked = app.requestSingleInstanceLock();
+if (!locked) {
+    app.quit();
+} else {
+    go();
 }

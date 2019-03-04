@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import { deepStrictEqual as eq, ok, fail } from 'assert';
 import { JSDOM } from 'jsdom';
 import sinon = require('sinon');

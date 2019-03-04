@@ -9,18 +9,20 @@ export const appDir = path.join(__dirname, 'appDir');
 const electron: any = {};
 
 function ctorSpy(statics?: { [n: string]: Function }) {
-    const klass = class {
+    class Spy {
         args: any[];
         constructor(...args: any[]) {
             this.args = args;
         }
-    };
+    }
+
     if (statics !== undefined) {
         for (const s of Object.keys(statics)) {
-            Object.defineProperty(klass, s, { value: statics[s] });
+            Object.defineProperty(Spy, s, { value: statics[s] });
         }
     }
-    return klass;
+
+    return Spy;
 }
 
 class DummyWebContents extends EventEmitter {

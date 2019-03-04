@@ -12,7 +12,9 @@ describe('config.ts', function() {
     afterEach(function() {
         try {
             fs.unlinkSync(ConfigPath);
-        } catch (e) {}
+        } catch (e) {
+            // ignore
+        }
     });
 
     describe('loadConfig()', function() {

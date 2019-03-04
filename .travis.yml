@@ -8,6 +8,7 @@ install:
 script:
     - npm run build
     - npm run nyc
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run lint; fi
     - |
         if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
             npm run test:integ

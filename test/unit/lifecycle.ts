@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import { deepStrictEqual as eq, notDeepStrictEqual as neq, ok } from 'assert';
 import sinon = require('sinon');
 import Lifecycle from '../../main/lifecycle';

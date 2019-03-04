@@ -99,10 +99,12 @@ export default class TweetWindow {
         } else if (this.win.isMinimized()) {
             this.win.restore();
         }
+        assert.ok(this.win !== null);
 
         const url = `https://mobile.twitter.com/${this.screenName}/status/${this.prevTweetId}`;
         return new Promise<void>(resolve => {
             this.ipc.send('tweetapp:open', url);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.win!.webContents.once('dom-ready', () => {
                 log.debug('Opened previous tweet:', url);
                 resolve();
@@ -226,6 +228,7 @@ export default class TweetWindow {
 
             return new Promise<void>(resolve => {
                 this.ipc.send('tweetapp:open', url);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 this.win!.webContents.once('dom-ready', () => {
                     log.debug('Reopened content:', url);
                     resolve();
@@ -284,6 +287,7 @@ export default class TweetWindow {
             win.once('close', _ => {
                 log.debug('Event: close');
                 assert.ok(this.win !== null);
+                /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 this.ipc.detach(this.win!.webContents);
                 this.ipc.forget('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
                 this.ipc.forget('tweetapp:online-status', this.onOnlineStatusChange);
@@ -291,6 +295,7 @@ export default class TweetWindow {
                 this.win!.webContents.session.setPermissionRequestHandler(null);
                 this.win!.webContents.session.webRequest.onBeforeRequest(null as any);
                 this.win!.webContents.session.webRequest.onCompleted(null as any);
+                /* eslint-enable @typescript-eslint/no-non-null-assertion */
             });
 
             win.on('page-title-updated', e => e.preventDefault());
@@ -299,6 +304,7 @@ export default class TweetWindow {
                 win.once('closed', (_: Event) => {
                     log.debug('Event: closed');
                     assert.ok(this.win !== null);
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     this.win!.removeAllListeners();
                     this.win = null;
                     if (ON_DARWIN) {
@@ -384,11 +390,12 @@ export default class TweetWindow {
                             log.info("Will quit since action after tweet is 'quit'");
                             this.resolveWantToQuit();
                             break;
-                        default:
+                        default: {
                             const url = this.composeTweetUrl(false);
                             log.info('Posted tweet:', details.url, 'Next URL:', url);
                             this.ipc.send('tweetapp:sent-tweet', url);
                             break;
+                        }
                     }
                 },
             );
@@ -499,8 +506,7 @@ export default class TweetWindow {
         if (status === 'online') {
             const url = this.composeTweetUrl(false);
             log.info('Reopen window since network is now online:', url);
-            this.win!.loadURL(url);
-            // setTimeout(() => this.win!.loadURL(url), 1000);
+            this.win.loadURL(url);
             return;
         }
 

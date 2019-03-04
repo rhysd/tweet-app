@@ -15,7 +15,9 @@ describe('TweetWindow', function() {
         const config = path.join(appDir, 'config.json');
         try {
             fs.unlinkSync(config);
-        } catch (e) {}
+        } catch (e) {
+            // ignore
+        }
     });
 
     it('initializes screen name at constructor', function() {
