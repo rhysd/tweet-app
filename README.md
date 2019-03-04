@@ -62,7 +62,7 @@ Please download it for your platform and double click it to install.
 Note: On macOS, trying to install app may be rejected by OS at first time since this app is not
 signed with code signing. In the case, please install from it 'Preferences -> Security'.
 
-### With `npm` package manager
+#### With `npm` package manager
 
 ```sh
 npm install -g tweet-app
@@ -287,13 +287,31 @@ When `false`, this app does not quit. It means that main process does not die, b
 ends when closing the window. It means that this app goes to background apps after closing a window.
 Please read 'Performance' about background app performance. This is a default behavior on macOS.
 
-### `window` (`Object<Number>`)
+### `window` (`Object<Any>`)
 
-Window's properties as key-values of object. Key-values are as follows:
+`window` is an object containing configuration for window properties. Each properties are described
+as follows.
 
-- `width`: Width of window in pixels
-- `height`: Height of window in pixels
-- `zoom`: Zoom factor of font size in float number. `1.0` means `100%`
+### `window.width` (`Number`)
+
+Width of window in pixels. Default value is `600`.
+
+### `window.height` (`Number`)
+
+Height of window in pixels. Default value is `600`.
+
+### `window.zoom` (`Number`)
+
+Zoom factor of font size in float number. `1.0` means `100%`.
+
+### `window.auto_hide_menu_bar` (`Boolean`)
+
+This config value is effective only on Linux or Windows.  Default value is `true`.
+
+When this value is set to `true`, a tool bar menu in window is hidden automatically. Typing
+<kbd>Alt</kbd> reveals the menu temporarily.
+
+When this value is set to `false`, a tool bar menu is always shown in window.
 
 ### Configuration Example
 

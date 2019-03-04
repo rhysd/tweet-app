@@ -10,6 +10,12 @@ interface KeyMapConfig {
 }
 
 type ConfigAfterTweet = 'new tweet' | 'reply previous' | 'close' | 'quit';
+interface WindowConfig {
+    width?: number;
+    height?: number;
+    zoom?: number;
+    auto_hide_menu_bar?: boolean;
+}
 interface Config {
     default_account?: string;
     other_accounts?: string[];
@@ -17,11 +23,7 @@ interface Config {
     after_tweet?: ConfigAfterTweet;
     hotkey?: string;
     quit_on_close?: boolean;
-    window?: {
-        width?: number;
-        height?: number;
-        zoom?: number;
-    };
+    window?: WindowConfig;
 }
 
 interface CommandLineOptions {

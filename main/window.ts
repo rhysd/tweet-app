@@ -191,6 +191,16 @@ export default class TweetWindow {
         }
     }
 
+    private windowConfig<T extends number | boolean>(name: keyof WindowConfig, defaultVal: T): T {
+        if (this.config.window === undefined) {
+            return defaultVal;
+        }
+        if (this.config.window[name] === undefined) {
+            return defaultVal;
+        }
+        return this.config.window[name] as T;
+    }
+
     private async open(reply: boolean, text?: string) {
         if (reply) {
             if (this.screenName === undefined) {
@@ -226,9 +236,10 @@ export default class TweetWindow {
         return new Promise<void>(resolve => {
             log.debug('Start application');
 
-            const width = (this.config.window && this.config.window.width) || 600;
-            const height = (this.config.window && this.config.window.height) || 600;
-            const zoomFactor = (this.config.window && this.config.window.zoom) || 1.0;
+            const width = this.windowConfig('width', 600);
+            const height = this.windowConfig('height', 600);
+            const zoomFactor = this.windowConfig('zoom', 1.0);
+            const autoHideMenuBar = this.windowConfig('auto_hide_menu_bar', true);
             const state = windowState({});
 
             const winOpts = {
@@ -244,7 +255,7 @@ export default class TweetWindow {
                 frame: !ON_DARWIN,
                 fullscreenable: false,
                 useContentSize: true,
-                autoHideMenuBar: true,
+                autoHideMenuBar,
                 webPreferences: {
                     nodeIntegration: false,
                     sandbox: true,

@@ -34,6 +34,11 @@ describe('TweetWindow', function() {
         const win = (w as any).win;
         neq(win, null);
 
+        // Default properties
+        eq(win.opts.width, 600);
+        eq(win.opts.height, 600);
+        eq(win.opts.autoHideMenuBar, true);
+
         const contents = win.webContents;
         eq(contents.url, 'https://mobile.twitter.com/compose/tweet');
         eq(contents.send.getCall(0).args, ['tweetapp:screen-name', 'foo']);
@@ -336,6 +341,7 @@ describe('TweetWindow', function() {
                 width: 400,
                 height: 380,
                 zoom: 0.7,
+                auto_hide_menu_bar: false,
             },
         };
         const w = new TweetWindow('foo', config, new Ipc(), { text: '' }, {} as any);
@@ -344,6 +350,7 @@ describe('TweetWindow', function() {
 
         eq(opts.width, 400);
         eq(opts.height, 380);
+        eq(opts.autoHideMenuBar, false);
         eq(opts.webPreferences.zoomFactor, 0.7);
     });
 
