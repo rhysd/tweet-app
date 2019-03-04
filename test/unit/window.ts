@@ -6,7 +6,7 @@ import TweetWindow from '../../main/window';
 import Ipc from '../../main/ipc';
 import { appDir, reset } from './mock';
 
-const { ipcMain, dialog, shell } = require('electron') as any; // mocked
+const { ipcMain, dialog, shell, app } = require('electron') as any; // mocked
 
 describe('TweetWindow', function() {
     beforeEach(reset);
@@ -217,6 +217,10 @@ describe('TweetWindow', function() {
 
         ok(ipc.detach.called);
         ok(ipc.forget.called);
+
+        if (process.platform === 'darwin') {
+            ok(app.hide.called);
+        }
 
         eq(ipc.detach.lastCall.args[0], contents);
         const calls = ipc.forget.getCalls();

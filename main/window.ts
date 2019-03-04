@@ -301,6 +301,9 @@ export default class TweetWindow {
                     assert.ok(this.win !== null);
                     this.win!.removeAllListeners();
                     this.win = null;
+                    if (ON_DARWIN) {
+                        app.hide();
+                    }
                     resolve();
                 });
             });
@@ -376,9 +379,6 @@ export default class TweetWindow {
                         case 'close':
                             log.info("Will close window since action after tweet is 'close'");
                             this.close();
-                            if (ON_DARWIN) {
-                                app.hide();
-                            }
                             break;
                         case 'quit':
                             log.info("Will quit since action after tweet is 'quit'");
