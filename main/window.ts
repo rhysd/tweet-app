@@ -316,7 +316,9 @@ export default class TweetWindow {
                 log.debug('Event: did-finish-load');
                 let css = INJECTED_CSS;
                 if (ON_DARWIN) {
-                    css += '\nbody {-webkit-app-region: drag;}';
+                    // Allow to move window by dragging any part of the window. Exception is a tweet
+                    // form since it prevents text selection
+                    css += '\nbody {-webkit-app-region: drag;}\n.DraftEditor-root {-webkit-app-region: no-drag;}';
                 }
                 if (this.screenName !== undefined) {
                     css += `\na[href="/${this.screenName}"] { display: none !important; }`;
