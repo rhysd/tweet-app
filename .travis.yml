@@ -8,7 +8,12 @@ install:
 script:
     - npm run build
     - npm run nyc
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run test:integ; fi
+    - |
+        if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+            npm run test:integ
+        else
+            xvfb-run npm run test:integ
+        fi
 after_success:
     - npm install -g codecov
     - ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov && codecov
