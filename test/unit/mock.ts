@@ -53,6 +53,7 @@ class DummyBrowserWindow extends EventEmitter {
     public setMenu = sinon.fake();
     public setTouchBar = sinon.fake();
     public isMinimized = sinon.fake.returns(false);
+    public setVisibleOnAllWorkspaces = sinon.fake();
     public webContents: DummyWebContents;
 
     public constructor(public opts: any) {

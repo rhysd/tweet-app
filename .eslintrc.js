@@ -33,7 +33,17 @@ module.exports = {
         // Configured
         '@typescript-eslint/camelcase': [
             'error',
-            { allow: ['default_account', 'other_accounts', 'quit_on_close', 'after_tweet', 'auto_hide_menu_bar'] },
+            {
+                allow: [
+                    // Keys in config.json
+                    'default_account',
+                    'other_accounts',
+                    'quit_on_close',
+                    'after_tweet',
+                    'auto_hide_menu_bar',
+                    'visible_on_all_workspaces',
+                ],
+            },
         ],
 
         // Enabled

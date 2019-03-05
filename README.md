@@ -314,6 +314,9 @@ as follows.
   Default value is `true`. When this value is set to `true`, a tool bar menu in window is hidden
   automatically. Typing <kbd>Alt</kbd> reveals the menu temporarily. When this value is set to
   `false`, a tool bar menu is always shown in window.
+- `window.visible_on_all_workspaces` (`Boolean`): If this value is set to `true`, the application
+  window appears in every workspace rather than sticking the workspace the window was opened at
+  first. Default value is `false`.
 
 ### Configuration Example
 

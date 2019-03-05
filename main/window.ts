@@ -479,6 +479,10 @@ export default class TweetWindow {
                 log.debug('Touch bar was set');
             }
 
+            if (this.windowConfig('visible_on_all_workspaces', false)) {
+                win.setVisibleOnAllWorkspaces(true);
+            }
+
             log.info('Created window for', this.screenName);
             this.win = win;
         });

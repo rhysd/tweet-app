@@ -342,12 +342,13 @@ describe('TweetWindow', function() {
     });
 
     it('reflects window configuration to BrowserWindow options', async function() {
-        const config = {
+        const config: Config = {
             window: {
                 width: 400,
                 height: 380,
                 zoom: 0.7,
                 auto_hide_menu_bar: false,
+                visible_on_all_workspaces: true,
             },
         };
         const w = new TweetWindow('foo', config, new Ipc(), { text: '' }, {} as any);
@@ -358,6 +359,7 @@ describe('TweetWindow', function() {
         eq(opts.height, 380);
         eq(opts.autoHideMenuBar, false);
         eq(opts.webPreferences.zoomFactor, 0.7);
+        ok((w as any).win.setVisibleOnAllWorkspaces.lastCall.args[0]);
     });
 
     it('shows "Network unavailable" page on offline and reopens page again when it is back to online', async function() {

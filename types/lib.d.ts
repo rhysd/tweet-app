@@ -15,6 +15,7 @@ interface WindowConfig {
     height?: number;
     zoom?: number;
     auto_hide_menu_bar?: boolean;
+    visible_on_all_workspaces?: boolean;
 }
 interface Config {
     default_account?: string;
