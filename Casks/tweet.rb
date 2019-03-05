@@ -9,5 +9,7 @@ cask 'tweet' do
 
   app 'Tweet.app'
   binary "#{appdir}/Tweet.app/Contents/Resources/app/bin/cli.js", target: 'tweet'
+
+  zap trash: [ '~/Library/Application Support/Tweet', '~/Library/Logs/Tweet' ]
 end
 
