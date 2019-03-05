@@ -1,5 +1,3 @@
-#! /usr/bin/env node
-
 import * as cp from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';

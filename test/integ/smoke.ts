@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { Application } from 'spectron';
-import { deepEqual as eq, ok, rejects } from 'assert';
+import { deepStrictEqual as eq, ok, rejects } from 'assert';
 
 const electronPath = require('electron') as any;
 
