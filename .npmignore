@@ -12,3 +12,5 @@
 /dist
 /.nyc_output
 /coverage
+/Casks
+/.eslintrc.js
