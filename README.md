@@ -5,7 +5,7 @@
 [![travis badge][]][travis]
 [![appveyor badge][]][appveyor]
 
-[Tweet app][repo] is a small desktop application for tweeting on [Twitter][twitter], but never shows
+[Tweet app][repo] is a small Twitter client only for tweeting on [Twitter][twitter], but never shows
 a tweets timeline. It's built on [Twitter Lite][twitter-lite] and [Electron][electron].
 
 - Tweet form is the same as mobile official client (accurate characters count, emoji picker,
@@ -62,7 +62,7 @@ Please download it for your platform and double click it to install.
 Note: On macOS, trying to install app may be rejected by OS at first time since this app is not
 signed with code signing. In the case, please install from it 'Preferences -> Security'.
 
-#### From [homebrew-cask][]
+#### With [homebrew-cask][]
 
 If you're macOS user and using [homebrew-cask][], this app can be installed via it.
 Please tap the repository URL and install this app via `brew cask` as follows.
@@ -307,26 +307,13 @@ Please read 'Performance' about background app performance. This is a default be
 `window` is an object containing configuration for window properties. Each properties are described
 as follows.
 
-### `window.width` (`Number`)
-
-Width of window in pixels. Default value is `600`.
-
-### `window.height` (`Number`)
-
-Height of window in pixels. Default value is `600`.
-
-### `window.zoom` (`Number`)
-
-Zoom factor of font size in float number. `1.0` means `100%`.
-
-### `window.auto_hide_menu_bar` (`Boolean`)
-
-This config value is effective only on Linux or Windows.  Default value is `true`.
-
-When this value is set to `true`, a tool bar menu in window is hidden automatically. Typing
-<kbd>Alt</kbd> reveals the menu temporarily.
-
-When this value is set to `false`, a tool bar menu is always shown in window.
+- `window.width` (`Number`): Width of window in pixels. Default value is `600`.
+- `window.height` (`Number`): Height of window in pixels. Default value is `600`.
+- `window.zoom` (`Number`): Zoom factor of font size in float number. `1.0` means `100%`.
+- `window.auto_hide_menu_bar` (`Boolean`): This config value is effective only on Linux or Windows.
+  Default value is `true`. When this value is set to `true`, a tool bar menu in window is hidden
+  automatically. Typing <kbd>Alt</kbd> reveals the menu temporarily. When this value is set to
+  `false`, a tool bar menu is always shown in window.
 
 ### Configuration Example
 
@@ -335,7 +322,6 @@ Here is my own configuration:
 ```json
 {
   "default_account": "@Linda_pp",
-  "other_accounts": [],
   "keymaps": {
     "Click Tweet Button": "CmdOrCtrl+Shift+Enter"
   },

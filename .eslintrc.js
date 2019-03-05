@@ -28,6 +28,7 @@ module.exports = {
         'node/no-unsupported-features/es-syntax': 'off', // false positive at import statements
         'security/detect-non-literal-fs-filename': 'off',
         'security/detect-object-injection': 'off', // false positive at array index accesses
+        'node/shebang': 'off', // It complains bin/cli.ts
 
         // Configured
         '@typescript-eslint/camelcase': [
