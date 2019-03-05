@@ -8,7 +8,7 @@ export default class App {
     private afterTweet: ConfigAfterTweet = 'new tweet';
     private screenName: string | null = null;
 
-    start() {
+    public start() {
         function createCoverElement() {
             const e = document.createElement('div');
             e.style.display = 'block';

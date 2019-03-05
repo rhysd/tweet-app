@@ -23,7 +23,6 @@ module.exports = {
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/no-unused-vars': 'off', // Since it is checked by TypeScript compiler
         '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/explicit-member-accessibility': 'off',
         'no-console': 'off', // bin/ and renderer/ is still using console
         'no-process-exit': 'off',
         'node/no-unsupported-features/es-syntax': 'off', // false positive at import statements

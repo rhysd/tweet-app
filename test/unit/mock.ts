@@ -10,8 +10,8 @@ const electron: any = {};
 
 function ctorSpy(statics?: { [n: string]: Function }) {
     class Spy {
-        args: any[];
-        constructor(...args: any[]) {
+        public args: any[];
+        public constructor(...args: any[]) {
             this.args = args;
         }
     }
@@ -26,47 +26,47 @@ function ctorSpy(statics?: { [n: string]: Function }) {
 }
 
 class DummyWebContents extends EventEmitter {
-    session = {
+    public session = {
         webRequest: {
             onBeforeRequest: sinon.fake(),
             onCompleted: sinon.fake(),
         },
         setPermissionRequestHandler: sinon.fake(),
     };
-    openDevTools = sinon.fake();
-    send = sinon.fake();
-    url: string | undefined;
+    public openDevTools = sinon.fake();
+    public send = sinon.fake();
+    public url: string | undefined;
 
-    constructor() {
+    public constructor() {
         super();
     }
 
-    getURL() {
+    public getURL() {
         return this.url;
     }
 }
 
 class DummyBrowserWindow extends EventEmitter {
-    restore = sinon.fake();
-    focus = sinon.fake();
-    show = sinon.fake();
-    setMenu = sinon.fake();
-    setTouchBar = sinon.fake();
-    isMinimized = sinon.fake.returns(false);
-    webContents: DummyWebContents;
+    public restore = sinon.fake();
+    public focus = sinon.fake();
+    public show = sinon.fake();
+    public setMenu = sinon.fake();
+    public setTouchBar = sinon.fake();
+    public isMinimized = sinon.fake.returns(false);
+    public webContents: DummyWebContents;
 
-    constructor(public opts: any) {
+    public constructor(public opts: any) {
         super();
         this.webContents = new DummyWebContents();
     }
 
-    loadURL(url: string) {
+    public loadURL(url: string) {
         this.emit('ready-to-show');
         this.webContents.url = url;
         process.nextTick(() => this.webContents.emit('dom-ready'));
     }
 
-    close() {
+    public close() {
         this.emit('close');
         this.emit('closed');
     }

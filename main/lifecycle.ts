@@ -16,7 +16,7 @@ export default class Lifecycle {
     private switchingAccount: boolean;
     private prevTweetIds: Map<string, string | null>; // Screen name -> Maybe Tweet ID
 
-    constructor(private readonly config: Config, private opts: CommandLineOptions) {
+    public constructor(private readonly config: Config, private opts: CommandLineOptions) {
         this.didQuit = new Promise(resolve => {
             this.resolveQuit = resolve;
         });
@@ -58,7 +58,7 @@ export default class Lifecycle {
         return win;
     }
 
-    async runUntilQuit(): Promise<void> {
+    public async runUntilQuit(): Promise<void> {
         Menu.setApplicationMenu(this.menu);
 
         if (this.config.hotkey) {
@@ -119,7 +119,7 @@ export default class Lifecycle {
         return this.didQuit;
     }
 
-    async restart(newOpts?: CommandLineOptions): Promise<void> {
+    public async restart(newOpts?: CommandLineOptions): Promise<void> {
         log.info('Reopen window content for options', newOpts);
         if (newOpts === undefined) {
             return this.currentWin.openNewTweet();
@@ -135,11 +135,11 @@ export default class Lifecycle {
 
     // Actions
 
-    clickTweetButton = () => {
+    public clickTweetButton = () => {
         this.ipc.send('tweetapp:click-tweet-button');
     };
 
-    quit = async () => {
+    public quit = async () => {
         log.debug('Will close window and quit');
         await this.currentWin.close();
         this.ipc.dispose();
@@ -149,15 +149,15 @@ export default class Lifecycle {
         this.resolveQuit();
     };
 
-    newTweet = () => {
+    public newTweet = () => {
         return this.currentWin.openNewTweet();
     };
 
-    replyToPrevTweet = () => {
+    public replyToPrevTweet = () => {
         return this.currentWin.openReply();
     };
 
-    openProfilePageForDebug = () => {
+    public openProfilePageForDebug = () => {
         let url = 'https://mobile.twitter.com';
         if (this.currentWin.screenName !== undefined) {
             url = `https://mobile.twitter.com/${this.currentWin.screenName}`;
@@ -165,11 +165,11 @@ export default class Lifecycle {
         this.ipc.send('tweetapp:open', url);
     };
 
-    openAccountSettings = () => {
+    public openAccountSettings = () => {
         this.ipc.send('tweetapp:open', 'https://mobile.twitter.com/settings/account');
     };
 
-    switchAccount = async (screenName: string) => {
+    public switchAccount = async (screenName: string) => {
         if (screenName.startsWith('@')) {
             screenName = screenName.slice(1);
         }
@@ -190,7 +190,7 @@ export default class Lifecycle {
         }
     };
 
-    toggleWindow = () => {
+    public toggleWindow = () => {
         const opened = this.currentWin.isOpen();
         log.debug('Toggle window. Window is open:', opened);
         if (opened) {
@@ -200,7 +200,7 @@ export default class Lifecycle {
         }
     };
 
-    openPreviousTweet = () => {
+    public openPreviousTweet = () => {
         return this.currentWin.openPreviousTweet();
     };
 }

@@ -27,7 +27,7 @@ export default class TweetWindow {
     private actionAfterTweet: ConfigAfterTweet | undefined;
     private onlineStatus: OnlineStatus;
 
-    constructor(
+    public constructor(
         screenName: string | undefined,
         private readonly config: Config,
         private readonly ipc: Ipc,
@@ -55,7 +55,7 @@ export default class TweetWindow {
         this.onlineStatus = 'online'; // Assume network is available at start
     }
 
-    updateOptions(opts: CommandLineOptions) {
+    public updateOptions(opts: CommandLineOptions) {
         this.hashtags = (opts.hashtags || []).join(',');
         this.actionAfterTweet = opts.afterTweet || this.config.after_tweet;
         if (this.actionAfterTweet !== undefined) {
@@ -63,15 +63,15 @@ export default class TweetWindow {
         }
     }
 
-    openNewTweet(text?: string): Promise<void> {
+    public openNewTweet(text?: string): Promise<void> {
         return this.open(false, text);
     }
 
-    openReply(text?: string): Promise<void> {
+    public openReply(text?: string): Promise<void> {
         return this.open(true, text);
     }
 
-    close(): Promise<void> {
+    public close(): Promise<void> {
         if (this.win !== null) {
             log.debug('Will close window');
             this.win.close();
@@ -81,11 +81,11 @@ export default class TweetWindow {
         return this.didClose;
     }
 
-    isOpen(): boolean {
+    public isOpen(): boolean {
         return this.win !== null;
     }
 
-    async openPreviousTweet() {
+    public async openPreviousTweet() {
         log.info('Open previous tweet', this.screenName, this.prevTweetId);
 
         if (this.screenName === undefined) {

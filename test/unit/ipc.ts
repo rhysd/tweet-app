@@ -6,7 +6,7 @@ import { reset } from './mock';
 const { ipcMain } = require('electron') as any; // mocked;
 
 class DummySender {
-    send = sinon.fake();
+    public send = sinon.fake();
 }
 
 describe('Ipc', function() {
