@@ -3,17 +3,17 @@ import { ipcRenderer } from 'electron';
 export type Listener = (event: Event, ...args: any[]) => void;
 
 const ipc = new class {
-    private listeners: [IPC.Chan, Listener][];
+    private listeners: [IpcChan.FromMain, Listener][];
 
     public constructor() {
         this.listeners = [];
     }
 
-    public send(chan: IPC.Chan, ...args: any[]) {
+    public send(chan: IpcChan.FromRenderer, ...args: any[]) {
         ipcRenderer.send(chan, ...args);
     }
 
-    public on(chan: IPC.Chan, listener: Listener) {
+    public on(chan: IpcChan.FromMain, listener: Listener) {
         ipcRenderer.on(chan, listener);
         this.listeners.push([chan, listener]);
     }

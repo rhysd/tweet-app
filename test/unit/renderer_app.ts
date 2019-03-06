@@ -25,7 +25,7 @@ describe('App', function() {
         delete (global as any).document;
     });
 
-    function emulateSend(chan: IPC.Chan, ...args: any[]) {
+    function emulateSend(chan: IpcChan.FromMain, ...args: any[]) {
         ok(ipcRenderer.on.called);
         const calls = ipcRenderer.on.getCalls();
         for (const call of calls) {

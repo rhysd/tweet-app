@@ -36,15 +36,13 @@ interface CommandLineOptions {
 
 type OnlineStatus = 'online' | 'offline';
 
-declare namespace IPC {
-    type Chan =
+declare namespace IpcChan {
+    type FromMain =
         | 'tweetapp:action-after-tweet'
-        | 'tweetapp:sent-tweet'
         | 'tweetapp:screen-name'
-        | 'tweetapp:prev-tweet-id'
         | 'tweetapp:open'
         | 'tweetapp:click-tweet-button'
-        | 'tweetapp:login'
-        | 'tweetapp:online-status'
-        | 'tweetapp:exit-app';
+        | 'tweetapp:sent-tweet'
+        | 'tweetapp:login';
+    type FromRenderer = 'tweetapp:prev-tweet-id' | 'tweetapp:online-status' | 'tweetapp:exit-app';
 }

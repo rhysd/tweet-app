@@ -45,32 +45,32 @@ describe('Ipc', function() {
 
         it('sets listener as IPC receiver', function() {
             const listener = (_: Event) => {};
-            ipc.on('tweetapp:sent-tweet', listener);
+            ipc.on('tweetapp:online-status', listener);
             ok(ipcMain.on.calledOnce);
             const call = ipcMain.on.getCalls()[0];
-            eq(call.args, ['tweetapp:sent-tweet', listener]);
+            eq(call.args, ['tweetapp:online-status', listener]);
         });
 
         it('forgets listener', function() {
             const listener = (_: Event) => {};
-            ipc.on('tweetapp:sent-tweet', listener);
-            ipc.forget('tweetapp:sent-tweet', listener);
+            ipc.on('tweetapp:online-status', listener);
+            ipc.forget('tweetapp:online-status', listener);
             ok(ipcMain.removeListener.calledOnce);
             const call = ipcMain.removeListener.getCalls()[0];
-            eq(call.args, ['tweetapp:sent-tweet', listener]);
+            eq(call.args, ['tweetapp:online-status', listener]);
         });
 
         it('forgets all listeners on dispose()', function() {
             const l1 = (_: Event) => {};
             const l2 = (_: Event) => {};
-            ipc.on('tweetapp:sent-tweet', l1);
-            ipc.on('tweetapp:sent-tweet', l2);
+            ipc.on('tweetapp:online-status', l1);
+            ipc.on('tweetapp:online-status', l2);
             ipc.dispose();
             ok(ipcMain.removeListener.called);
 
             // Note: Map does not preserve order of elements.
             const actual = new Set(ipcMain.removeListener.getCalls().map((c: any) => c.args));
-            const expected = new Set([['tweetapp:sent-tweet', l1], ['tweetapp:sent-tweet', l2]]);
+            const expected = new Set([['tweetapp:online-status', l1], ['tweetapp:online-status', l2]]);
             eq(actual, expected);
         });
     });
