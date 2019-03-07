@@ -36,6 +36,17 @@ describe('Ipc', function() {
             ipc.send('tweetapp:sent-tweet', 'foo', 'bar', 'piyo');
             eq(sender.send.getCalls(), []);
         });
+
+        it('does nothing when different sender is specified', function() {
+            const sender1: any = new DummySender();
+            const sender2: any = new DummySender();
+            ipc.attach(sender1);
+            ipc.detach(sender2);
+            ipc.send('tweetapp:sent-tweet');
+            ok(sender1.send.called);
+            eq(sender1.send.lastCall.args, ['tweetapp:sent-tweet']);
+            ok(!sender2.send.called);
+        });
     });
 
     describe('receiver', function() {
@@ -72,6 +83,14 @@ describe('Ipc', function() {
             const actual = new Set(ipcMain.removeListener.getCalls().map((c: any) => c.args));
             const expected = new Set([['tweetapp:online-status', l1], ['tweetapp:online-status', l2]]);
             eq(actual, expected);
+        });
+
+        it('forgets nothing when listener was acutally not registered', function() {
+            const l1 = (_: Event) => {};
+            const l2 = (_: Event) => {};
+            ipc.on('tweetapp:online-status', l1);
+            ipc.forget('tweetapp:online-status', l2);
+            ok(!ipcMain.removeListener.called);
         });
     });
 });

@@ -70,6 +70,7 @@ class DummyBrowserWindow extends EventEmitter {
     public close() {
         this.emit('close');
         this.emit('closed');
+        this.webContents.url = undefined;
     }
 }
 

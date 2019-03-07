@@ -313,7 +313,27 @@ describe('TweetWindow', function() {
         await w.wantToQuit;
     });
 
-    it('can update options for second instance', async function() {
+    it('does nothing when /statuses/update.json API fails', async function() {
+        const ipc = new Ipc();
+        const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
+        await w.openNewTweet();
+
+        const contents = (w as any).win.webContents;
+
+        ok(contents.session.webRequest.onCompleted.called);
+        const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
+        callback({
+            url: 'https://api.twitter.com/1.1/statuses/update.json',
+            statusCode: 400,
+            method: 'POST',
+            fromCache: false,
+        });
+
+        neq((w as any).win, null);
+        ok(contents.url);
+    });
+
+    it('updates options for second instance', async function() {
         const config = {
             after_tweet: 'quit' as 'quit',
         };
@@ -345,7 +365,6 @@ describe('TweetWindow', function() {
         const config: Config = {
             window: {
                 width: 400,
-                height: 380,
                 zoom: 0.7,
                 auto_hide_menu_bar: false,
                 visible_on_all_workspaces: true,
@@ -356,7 +375,7 @@ describe('TweetWindow', function() {
         const opts = (w as any).win.opts;
 
         eq(opts.width, 400);
-        eq(opts.height, 380);
+        eq(opts.height, 600);
         eq(opts.autoHideMenuBar, false);
         eq(opts.webPreferences.zoomFactor, 0.7);
         ok((w as any).win.setVisibleOnAllWorkspaces.lastCall.args[0]);
@@ -667,5 +686,14 @@ describe('TweetWindow', function() {
                 ok(cb.lastCall.args[0]);
             }
         });
+    });
+
+    it('rejects window title update', async function() {
+        const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
+        await w.openNewTweet();
+
+        const preventDefault = sinon.fake();
+        (w as any).win.emit('page-title-updated', { preventDefault });
+        ok(preventDefault.called);
     });
 });
