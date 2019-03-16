@@ -34,6 +34,6 @@ describe('Smoke', function() {
         const expected = {
             message: 'unknown error: require is not defined',
         };
-        await rejects(() => app.client.execute(() => require('electron')), expected);
+        await rejects(() => app.client.execute(() => require('electron')) as any, expected);
     });
 });
