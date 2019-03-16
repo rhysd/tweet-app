@@ -7,7 +7,7 @@ cask 'tweet' do
   name 'Tweet'
   homepage 'https://github.com/rhysd/tweet-app/'
 
-  depends_on node: true
+  depends_on formula: 'node'
 
   app 'Tweet.app'
   binary "#{appdir}/Tweet.app/Contents/Resources/app/bin/cli.js", target: 'tweet'
