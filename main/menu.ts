@@ -164,16 +164,19 @@ export function createMenu(
     ];
 
     if (accounts.length > 1) {
-        const accountSubmenu = accounts.map((a, i) => ({
-            type: 'radio' as 'radio',
-            checked: i === 0,
-            label: a.startsWith('@') ? a : '@' + a,
-            accelerator: `CmdOrCtrl+${i + 1}`,
-            click() {
-                log.info('Switching account to', a);
-                switchAccount(a);
-            },
-        }));
+        const accountSubmenu = accounts.map(
+            (a, i) =>
+                ({
+                    type: 'radio',
+                    checked: i === 0,
+                    label: a.startsWith('@') ? a : '@' + a,
+                    accelerator: `CmdOrCtrl+${i + 1}`,
+                    click() {
+                        log.info('Switching account to', a);
+                        switchAccount(a);
+                    },
+                } as const),
+        );
         template.splice(template.length - 1, 0, {
             label: 'Accounts',
             submenu: accountSubmenu,

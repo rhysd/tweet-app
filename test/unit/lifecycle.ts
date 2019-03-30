@@ -64,7 +64,7 @@ describe('Lifecycle', function() {
         const cfg = {
             default_account: 'foo',
             other_accounts: ['bar'],
-            after_tweet: 'quit' as 'quit',
+            after_tweet: 'quit' as const,
         };
         const opts = { text: '' };
         const life = new Lifecycle(cfg, opts);
@@ -90,7 +90,7 @@ describe('Lifecycle', function() {
         const cfg = {
             default_account: 'foo',
             other_accounts: ['bar'],
-            after_tweet: 'quit' as 'quit',
+            after_tweet: 'quit' as const,
             quit_on_close: true,
         };
         const opts = { text: '' };

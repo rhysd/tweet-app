@@ -234,7 +234,7 @@ describe('TweetWindow', function() {
     });
 
     it('prepare next tweet when action after tweet is tweet or reply', async function() {
-        for (const action of ['new tweet' as 'new tweet', 'reply previous' as 'reply previous']) {
+        for (const action of ['new tweet', 'reply previous'] as const) {
             const config = {
                 after_tweet: action,
             };
@@ -264,8 +264,8 @@ describe('TweetWindow', function() {
 
     it('closes window when action after tweet is close', async function() {
         const config = {
-            after_tweet: 'close' as 'close',
-        };
+            after_tweet: 'close',
+        } as const;
         const ipc = new Ipc();
         const w = new TweetWindow('foo', config, ipc, { text: '' }, {} as any);
         await w.openNewTweet();
@@ -290,8 +290,8 @@ describe('TweetWindow', function() {
 
     it('quits when action after tweet is quit', async function() {
         const config = {
-            after_tweet: 'quit' as 'quit',
-        };
+            after_tweet: 'quit',
+        } as const;
         const ipc = new Ipc();
         const w = new TweetWindow('foo', config, ipc, { text: '' }, {} as any);
         await w.openNewTweet();
@@ -335,8 +335,8 @@ describe('TweetWindow', function() {
 
     it('updates options for second instance', async function() {
         const config = {
-            after_tweet: 'quit' as 'quit',
-        };
+            after_tweet: 'quit',
+        } as const;
         const opts = {
             hashtags: ['foo', 'bar'],
             text: '',
