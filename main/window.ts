@@ -48,11 +48,13 @@ export default class TweetWindow {
         this.prevTweetId = null;
         this.onPrevTweetIdReceived = this.onPrevTweetIdReceived.bind(this);
         this.onOnlineStatusChange = this.onOnlineStatusChange.bind(this);
+        this.resolveWantToQuit = () => {};
         this.wantToQuit = new Promise<void>(resolve => {
             this.resolveWantToQuit = resolve;
         });
         this.didClose = Promise.resolve();
         this.onlineStatus = 'online'; // Assume network is available at start
+        this.hashtags = '';
     }
 
     public updateOptions(opts: CommandLineOptions) {

@@ -17,6 +17,7 @@ export default class Lifecycle {
     private prevTweetIds: Map<string, string | null>; // Screen name -> Maybe Tweet ID
 
     public constructor(private readonly config: Config, private opts: CommandLineOptions) {
+        this.resolveQuit = () => {};
         this.didQuit = new Promise(resolve => {
             this.resolveQuit = resolve;
         });
