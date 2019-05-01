@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron';
 
 export type Listener = (event: Event, ...args: any[]) => void;
 
-const ipc = new class {
+const ipc = new (class {
     private listeners: [IpcChan.FromMain, Listener][];
 
     public constructor() {
@@ -24,6 +24,6 @@ const ipc = new class {
         }
         this.listeners = [];
     }
-}();
+})();
 
 export default ipc;

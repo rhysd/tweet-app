@@ -18,6 +18,10 @@ module.exports = {
     },
     plugins: ['@typescript-eslint', 'node', 'mocha', 'security'],
     rules: {
+        // Enabled
+        '@typescript-eslint/prefer-for-of': 'error',
+        '@typescript-eslint/prefer-string-starts-ends-with': 'error',
+
         // Disabled
         '@typescript-eslint/no-parameter-properties': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
