@@ -29,7 +29,7 @@ describe('TweetWindow', function() {
         }
     });
 
-    it('opens window for new tweet', async function() {
+    it('opens window for new tweet with no query', async function() {
         const ipc = new Ipc();
         const w = new TweetWindow('@foo', {}, ipc, { text: '' }, {} as any);
         await w.openNewTweet();

@@ -34,6 +34,9 @@ export default class TweetWindow {
         opts: CommandLineOptions,
         private readonly menu: Menu,
     ) {
+        // Note: This is necessary for enabling strictPropertyInitialization
+        this.hashtags = '';
+
         this.updateOptions(opts);
 
         if (screenName !== undefined && screenName !== '') {
@@ -54,7 +57,6 @@ export default class TweetWindow {
         });
         this.didClose = Promise.resolve();
         this.onlineStatus = 'online'; // Assume network is available at start
-        this.hashtags = '';
     }
 
     public updateOptions(opts: CommandLineOptions) {
