@@ -34,18 +34,16 @@ export default class Lifecycle {
         }
         log.debug('Accounts:', this.accounts);
 
-        this.menu = createMenu(
-            config.keymaps || {},
-            this.accounts,
-            this.quit,
-            this.newTweet,
-            this.replyToPrevTweet,
-            this.clickTweetButton,
-            this.openAccountSettings,
-            this.switchAccount,
-            this.openPreviousTweet,
-            this.openProfilePageForDebug,
-        );
+        this.menu = createMenu(config.keymaps || {}, this.accounts, {
+            quit: this.quit,
+            tweet: this.newTweet,
+            reply: this.replyToPrevTweet,
+            tweetButton: this.clickTweetButton,
+            accountSettings: this.openAccountSettings,
+            switchAccount: this.switchAccount,
+            openPrevTweet: this.openPreviousTweet,
+            debug: this.openProfilePageForDebug,
+        });
         this.currentWin = this.newWindow(config.default_account);
     }
 

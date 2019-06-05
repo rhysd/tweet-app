@@ -1,9 +1,28 @@
 import { deepStrictEqual as eq, ok } from 'assert';
 import sinon = require('sinon');
-import { createMenu, dockMenu, touchBar } from '../../main/menu';
+import { createMenu, dockMenu, touchBar, MenuActions, TouchbarActions } from '../../main/menu';
 import { reset } from './mock';
 
 const { shell } = require('electron') as any; // mocked
+
+function noop(..._: any[]): any {}
+
+const EMPTY_MENU_ACTIONS: MenuActions = {
+    quit: noop,
+    tweet: noop,
+    reply: noop,
+    tweetButton: noop,
+    accountSettings: noop,
+    openPrevTweet: noop,
+    switchAccount: noop,
+    debug: noop,
+};
+
+const EMPTY_TOUCHBAR_ACTIONS: TouchbarActions = {
+    tweet: noop,
+    reply: noop,
+    openPrevTweet: noop,
+};
 
 describe('Menu', function() {
     beforeEach(reset);
@@ -32,35 +51,40 @@ describe('Menu', function() {
         it('calls callbacks on button clicks', function() {
             const tweet = sinon.fake();
             const reply = sinon.fake();
-            const openPrev = sinon.fake();
-            const items = (touchBar('screen_name', tweet, reply, openPrev) as any).args[0].items;
+            const openPrevTweet = sinon.fake();
+            const actions = {
+                ...EMPTY_TOUCHBAR_ACTIONS,
+                tweet,
+                reply,
+                openPrevTweet,
+            };
+            const items = (touchBar('screen_name', actions) as any).args[0].items;
 
             let item = items.find((i: any) => i.args[0].label === 'New Tweet').args[0];
             ok(item, `${item}`);
             item.click();
             ok(tweet.calledOnce);
             ok(!reply.called);
-            ok(!openPrev.called);
+            ok(!openPrevTweet.called);
 
             item = items.find((i: any) => i.args[0].label === 'Reply to Previous').args[0];
             ok(item, `${item}`);
             item.click();
             ok(tweet.calledOnce);
             ok(reply.calledOnce);
-            ok(!openPrev.called);
+            ok(!openPrevTweet.called);
 
             item = items.find((i: any) => i.args[0].label === 'Open Previous Tweet').args[0];
             ok(item, `${item}`);
             item.click();
             ok(tweet.calledOnce);
             ok(reply.calledOnce);
-            ok(openPrev.called);
+            ok(openPrevTweet.called);
         });
 
         it('sets screen name as label if available', function() {
-            const noop = () => {};
             for (const name of ['name', '@name', undefined]) {
-                const items = (touchBar(name, noop, noop, noop) as any).args[0].items;
+                const items = (touchBar(name, EMPTY_TOUCHBAR_ACTIONS) as any).args[0].items;
                 const item = items.find((i: any) => i.args[0].label === '@name');
                 if (name !== undefined) {
                     ok(item, item);
@@ -72,12 +96,10 @@ describe('Menu', function() {
     });
 
     describe('createMenu', function() {
-        const noop = (..._: any[]): any => {};
-
         it('creates menu items', function() {
-            const menu: any = createMenu({}, ['foo'], noop, noop, noop, noop, noop, noop, noop, noop);
+            const menu: any = createMenu({}, ['foo'], EMPTY_MENU_ACTIONS);
             ok(Array.isArray(menu));
-            menu.every((i: any) => i.label !== undefined || i.roke !== undefined);
+            menu.every((i: any) => i.label !== undefined || i.role !== undefined);
         });
 
         it('calls proper callback when clicking item', function() {
@@ -86,20 +108,19 @@ describe('Menu', function() {
             const reply = sinon.fake();
             const tweetButton = sinon.fake();
             const accountSettings = sinon.fake();
-            const openPrev = sinon.fake();
+            const openPrevTweet = sinon.fake();
 
-            const menu = (createMenu(
-                {},
-                ['foo'],
+            const actions = {
+                ...EMPTY_MENU_ACTIONS,
                 quit,
                 tweet,
                 reply,
                 tweetButton,
                 accountSettings,
-                noop,
-                openPrev,
-                noop,
-            ) as any) as any[];
+                openPrevTweet,
+            };
+
+            const menu = (createMenu({}, ['foo'], actions) as any) as any[];
 
             const edit = menu.find((i: any) => i.label === 'Edit');
             ok(edit);
@@ -127,7 +148,7 @@ describe('Menu', function() {
             const open = edit.submenu.find((i: any) => i.label === 'Open Previous Tweet');
             ok(open);
             open.click();
-            ok(openPrev.calledOnce);
+            ok(openPrevTweet.calledOnce);
 
             const q = menu[0].submenu.find((i: any) => i.label === 'Quit Tweet App');
             ok(q);
@@ -138,39 +159,21 @@ describe('Menu', function() {
             ok(reply.calledOnce);
             ok(tweetButton.calledOnce);
             ok(accountSettings.calledOnce);
-            ok(openPrev.calledOnce);
+            ok(openPrevTweet.calledOnce);
         });
 
         it('puts switch account menu for multiple accounts', function() {
             const switchAccount = sinon.fake();
-            let menu = (createMenu(
-                {},
-                ['foo'],
-                noop,
-                noop,
-                noop,
-                noop,
-                noop,
+            const actions = {
+                ...EMPTY_MENU_ACTIONS,
                 switchAccount,
-                noop,
-                noop,
-            ) as any) as any[];
+            };
+            let menu = (createMenu({}, ['foo'], actions) as any) as any[];
 
             let accountMenu = menu.find((i: any) => i.label === 'Accounts');
             eq(accountMenu, undefined);
 
-            menu = (createMenu(
-                {},
-                ['foo', '@bar'],
-                noop,
-                noop,
-                noop,
-                noop,
-                noop,
-                switchAccount,
-                noop,
-                noop,
-            ) as any) as any[];
+            menu = (createMenu({}, ['foo', '@bar'], actions) as any) as any[];
             accountMenu = menu.find((i: any) => i.label === 'Accounts');
             ok(menu);
 
@@ -193,7 +196,7 @@ describe('Menu', function() {
                 'Edit Config': null,
             };
 
-            const menu = (createMenu(keymaps, ['foo'], noop, noop, noop, noop, noop, noop, noop, noop) as any) as any[];
+            const menu = (createMenu(keymaps, ['foo'], EMPTY_MENU_ACTIONS) as any) as any[];
             const edit = menu.find((i: any) => i.label === 'Edit');
             for (const name of Object.keys(keymaps)) {
                 const item = edit.submenu.find((i: any) => i.label === name);
@@ -211,7 +214,7 @@ describe('Menu', function() {
             let help: any[];
 
             beforeEach(function() {
-                menu = createMenu({}, ['foo'], noop, noop, noop, noop, noop, noop, noop, noop) as any;
+                menu = createMenu({}, ['foo'], EMPTY_MENU_ACTIONS) as any;
                 help = menu.find((m: any) => m.role === 'help').submenu;
             });
 

@@ -15,19 +15,27 @@ const DefaultKeyMaps: Required<KeyMapConfig> = {
 };
 
 type A = () => void;
-export function createMenu(
-    userKeyMaps: KeyMapConfig,
-    accounts: string[],
-    quit: A,
-    tweet: A,
-    reply: A,
-    tweetButton: A,
-    accountSettings: A,
-    switchAccount: (s: string) => Promise<void>,
-    openPrevTweet: A,
-    debug: A,
-): Menu {
+
+export type MenuActions = {
+    quit: A;
+    tweet: A;
+    reply: A;
+    tweetButton: A;
+    accountSettings: A;
+    switchAccount: (s: string) => Promise<void>;
+    openPrevTweet: A;
+    debug: A;
+};
+
+export type TouchbarActions = {
+    tweet: A;
+    reply: A;
+    openPrevTweet: A;
+};
+
+export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], actions: MenuActions): Menu {
     const keymaps = Object.assign({}, DefaultKeyMaps, userKeyMaps);
+
     function actionMenuItem(label: keyof KeyMapConfig, click: A): Electron.MenuItemConstructorOptions {
         const accelerator = keymaps[label];
         if (accelerator === null) {
@@ -84,11 +92,11 @@ export function createMenu(
         {
             type: 'separator',
         },
-        actionMenuItem('New Tweet', tweet),
-        actionMenuItem('Reply to Previous Tweet', reply),
-        actionMenuItem('Click Tweet Button', tweetButton),
-        actionMenuItem('Open Previous Tweet', openPrevTweet),
-        actionMenuItem('Account Settings', accountSettings),
+        actionMenuItem('New Tweet', actions.tweet),
+        actionMenuItem('Reply to Previous Tweet', actions.reply),
+        actionMenuItem('Click Tweet Button', actions.tweetButton),
+        actionMenuItem('Open Previous Tweet', actions.openPrevTweet),
+        actionMenuItem('Account Settings', actions.accountSettings),
         actionMenuItem('Edit Config', openConfig),
     ];
     if (IS_DEV) {
@@ -98,7 +106,7 @@ export function createMenu(
             },
             {
                 label: 'Open Profile (Debug)',
-                click: debug,
+                click: actions.debug,
             },
         );
     }
@@ -173,7 +181,7 @@ export function createMenu(
                     accelerator: `CmdOrCtrl+${i + 1}`,
                     click() {
                         log.info('Switching account to', a);
-                        switchAccount(a);
+                        actions.switchAccount(a);
                     },
                 } as const),
         );
@@ -217,7 +225,7 @@ export function createMenu(
                 {
                     label: 'Quit ' + APP_NAME,
                     accelerator: 'Command+Q',
-                    click: quit,
+                    click: actions.quit,
                 },
             ],
         });
@@ -237,7 +245,7 @@ export function createMenu(
                 {
                     label: 'Quit ' + APP_NAME,
                     accelerator: 'CmdOrCtrl+Q',
-                    click: quit,
+                    click: actions.quit,
                 },
             ],
         });
@@ -260,27 +268,24 @@ export function dockMenu(tweet: A, reply: A) {
     return Menu.buildFromTemplate(template);
 }
 
-export function touchBar(screenName: string | undefined, tweet: A, reply: A, openPrev: A) {
+export function touchBar(screenName: string | undefined, actions: TouchbarActions) {
     const smallSpacer = new TouchBarSpacer({ size: 'small' });
+
+    function button(label: string, click: A) {
+        return new TouchBarButton({
+            label,
+            backgroundColor: '#1da1f2',
+            click,
+        });
+    }
+
     const items = [
         smallSpacer,
-        new TouchBarButton({
-            label: 'New Tweet',
-            backgroundColor: '#1da1f2',
-            click: tweet,
-        }),
+        button('New Tweet', actions.tweet),
         smallSpacer,
-        new TouchBarButton({
-            label: 'Reply to Previous',
-            backgroundColor: '#1da1f2',
-            click: reply,
-        }),
+        button('Reply to Previous', actions.reply),
         smallSpacer,
-        new TouchBarButton({
-            label: 'Open Previous Tweet',
-            backgroundColor: '#1da1f2',
-            click: openPrev,
-        }),
+        button('Open Previous Tweet', actions.openPrevTweet),
     ];
 
     if (screenName !== undefined) {

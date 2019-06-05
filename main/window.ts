@@ -473,12 +473,11 @@ export default class TweetWindow {
 
             if (ON_DARWIN) {
                 win.setTouchBar(
-                    touchBar(
-                        this.screenName,
-                        this.open.bind(this, false),
-                        this.open.bind(this, true),
-                        this.openPreviousTweet.bind(this),
-                    ),
+                    touchBar(this.screenName, {
+                        tweet: this.open.bind(this, false),
+                        reply: this.open.bind(this, true),
+                        openPrevTweet: this.openPreviousTweet.bind(this),
+                    }),
                 );
                 log.debug('Touch bar was set');
             }
