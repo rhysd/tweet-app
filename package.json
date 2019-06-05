@@ -11,15 +11,15 @@
     "tweet": "./bin/cli.js"
   },
   "scripts": {
-    "build:tsc": "tsc -p . && chmod +x ./bin/cli.js",
+    "build:tsc": "tsc -p . && shx chmod +x ./bin/cli.js",
     "build:parcel": "parcel build -o preload.js -d renderer/ --target electron renderer/index.js --no-source-maps",
     "build": "npm-run-all build:tsc build:parcel",
     "watch:tsc": "tsc -p . --watch",
     "watch:parcel": "parcel -o preload.js -d renderer/ --target electron renderer/index.js --no-source-maps",
     "watch": "npm-run-all -p watch:tsc watch:parcel",
     "cli": "node ./bin/cli.js",
-    "app": "NODE_ENV=development node ./bin/cli.js --no-detach",
-    "debug": "TWEET_APP_DEBUG=true NODE_ENV=development node ./bin/cli.js --no-detach",
+    "app": "cross-env NODE_ENV=development node ./bin/cli.js --no-detach",
+    "debug": "cross-env TWEET_APP_DEBUG=true NODE_ENV=development node ./bin/cli.js --no-detach",
     "prod": "node ./bin/cli.js",
     "pack": "electron-builder",
     "update-cask": "./Casks/update.sh `./bin/cli.js --version`",
@@ -65,6 +65,7 @@
     "@types/sinon": "^7.0.12",
     "@types/webdriverio": "^4.13.3",
     "@typescript-eslint/eslint-plugin": "^1.9.0",
+    "cross-env": "^5.2.0",
     "electron": "^5.0.2",
     "electron-builder": "^20.42.0",
     "eslint": "^5.16.0",
@@ -81,6 +82,7 @@
     "nyc": "^14.1.1",
     "parcel-bundler": "^1.12.3",
     "prettier": "^1.17.1",
+    "shx": "^0.3.2",
     "sinon": "^7.3.2",
     "spectron": "^5.0.0",
     "typescript": "^3.5.1"
@@ -89,6 +91,7 @@
     "electron": "^4.0.4"
   },
   "dependencies": {
+    "break-tweet-autolink": "^0.3.0",
     "commander": "^2.20.0",
     "electron-context-menu": "^0.12.1",
     "electron-window-state": "^5.0.3"
