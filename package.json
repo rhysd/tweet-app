@@ -88,7 +88,7 @@
     "typescript": "^3.5.1"
   },
   "peerDependencies": {
-    "electron": "^4.0.4"
+    "electron": "^5.0.2"
   },
   "dependencies": {
     "break-tweet-autolink": "^0.3.0",
