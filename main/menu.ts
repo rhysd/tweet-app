@@ -16,7 +16,7 @@ const DefaultKeyMaps: Required<KeyMapConfig> = {
 
 type A = () => void;
 
-export type MenuActions = {
+export interface MenuActions {
     quit: A;
     tweet: A;
     reply: A;
@@ -25,13 +25,13 @@ export type MenuActions = {
     switchAccount: (s: string) => Promise<void>;
     openPrevTweet: A;
     debug: A;
-};
+}
 
-export type TouchbarActions = {
+export interface TouchbarActions {
     tweet: A;
     reply: A;
     openPrevTweet: A;
-};
+}
 
 export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], actions: MenuActions): Menu {
     const keymaps = Object.assign({}, DefaultKeyMaps, userKeyMaps);

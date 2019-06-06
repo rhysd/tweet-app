@@ -4,9 +4,9 @@ import log from './log';
 import Lifecycle from './lifecycle';
 
 export default class ContextMenu {
-    app: Lifecycle | null = null;
+    private app: Lifecycle | null = null;
 
-    constructor() {
+    public constructor() {
         contextMenu({
             prepend: (_, params) => {
                 return [this.itemUnlink(params)];
