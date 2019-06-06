@@ -3,6 +3,7 @@ import * as assert from 'assert';
 import * as path from 'path';
 import { BrowserWindow, Menu, dialog, nativeImage, app } from 'electron';
 import windowState = require('electron-window-state');
+import { TweetAutoLinkBreaker } from 'break-tweet-autolink';
 import log from './log';
 import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
 import Ipc from './ipc';
@@ -114,6 +115,25 @@ export default class TweetWindow {
                 resolve();
             });
         });
+    }
+
+    public unlinkSelection(text: string) {
+        if (this.win === null) {
+            log.debug('Window is not open. Cannot unlink selection');
+            return;
+        }
+
+        const breaker = new TweetAutoLinkBreaker();
+        const unlinked = breaker.breakAutoLinks(text);
+        log.debug('Text was unlinked:', text, '->', unlinked);
+
+        if (text === unlinked) {
+            log.debug('Nothing was unlinked. Skip replacing text');
+            return;
+        }
+
+        // This removes selected text and put the unlinked text instead
+        this.win.webContents.insertText(unlinked);
     }
 
     private notifyReplyUnavailableUntilTweet(doSomething: string) {

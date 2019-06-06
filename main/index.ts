@@ -1,9 +1,9 @@
 import { app, dialog } from 'electron';
-import contextMenu = require('electron-context-menu');
 import Lifecycle from './lifecycle';
 import log from './log';
 import { loadConfig } from './config';
 import { ON_DARWIN, ICON_PATH } from './constants';
+import ContextMenu from './context_menu';
 
 async function go() {
     // default_app sets app.on('all-window-closed', () => app.quit()) before
@@ -22,7 +22,7 @@ async function go() {
         }
     }
 
-    contextMenu();
+    const contextMenu = new ContextMenu();
 
     let exitStatus = 0;
 
@@ -47,6 +47,8 @@ async function go() {
             await lifecycle.restart(newOpts);
             log.info('Second instance started');
         });
+
+        contextMenu.setLifecycle(lifecycle);
 
         await lifecycle.runUntilQuit();
     } catch (err) {

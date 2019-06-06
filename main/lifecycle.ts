@@ -132,6 +132,11 @@ export default class Lifecycle {
         }
     }
 
+    // For context menu
+    public unlinkSelection(text: string) {
+        this.currentWin.unlinkSelection(text);
+    }
+
     // Actions
 
     public clickTweetButton = () => {
