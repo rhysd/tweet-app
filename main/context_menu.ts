@@ -9,6 +9,7 @@ export default class ContextMenu {
     public constructor() {
         contextMenu({
             prepend: (_, params) => {
+                log.debug('Context menu:', params);
                 return [this.itemUnlink(params)];
             },
         });
@@ -20,12 +21,14 @@ export default class ContextMenu {
 
     private itemUnlink(params: ContextMenuParams): MenuItem {
         const sel = params.selectionText || '';
+        const flags = params.editFlags;
+        const visible = sel !== '' && params.isEditable && flags.canDelete && flags.canPaste;
         return {
             label: 'Unlink auto links',
-            visible: true,
+            visible,
             checked: false,
             click: this.unlink.bind(this, sel),
-            enabled: sel !== '',
+            enabled: true,
         };
     }
 
