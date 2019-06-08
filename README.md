@@ -227,6 +227,15 @@ in configuration, you can switch accounts from 'Accounts' menu. When switching a
 is created again to switch login session. For configuration, please read following 'Customization'
 section.
 
+### Context Menu
+
+Thanks to [electron-context-menu][], it supports basic context menu on right click.
+
+In addition, 'Unlink auto links' item appears when showing context menu after selecting text in tweet form.
+It removes auto links in selected text by inserting zero-width space.
+
+<!-- Add short screenshot -->
+
 ### Touch Bar Support
 
 For recent MacBook Pro, this app supports a touch bar.
@@ -408,3 +417,4 @@ Some icon was provided by [feather icons][feathericons] (`Copyright (c) 2013-201
 [nsis]: https://sourceforge.net/projects/nsis/
 [ELECTRON_RUN_AS_NODE]: https://electronjs.org/docs/api/environment-variables#electron_run_as_node
 [homebrew-cask]: https://github.com/Homebrew/homebrew-cask
+[electron-context-menu]: https://github.com/sindresorhus/electron-context-menu
