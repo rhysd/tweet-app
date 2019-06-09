@@ -6,9 +6,9 @@ import * as fs from 'fs';
 import { join } from 'path';
 import commander = require('commander');
 
-function electronExePath(opts: string | undefined): string {
+function appExePath(opts: string | undefined): string {
     const specified = opts || process.env.TWEET_APP_ELECTRON_EXECUTABLE;
-    if (specified !== undefined) {
+    if (specified) {
         try {
             const { X_OK, R_OK } = fs.constants;
             fs.accessSync(specified, R_OK | X_OK);
@@ -16,7 +16,7 @@ function electronExePath(opts: string | undefined): string {
             return specified;
         } catch (e) {
             throw new Error(
-                `Executable '${specified}' specified by $TWEET_APP_ELECTRON_EXECUTABLE does not exist: ${e}`,
+                `Executable '${specified}' specified by --electron-path or $TWEET_APP_ELECTRON_EXECUTABLE does not exist: ${e}`,
             );
         }
     }
@@ -50,7 +50,7 @@ function electronExePath(opts: string | undefined): string {
     try {
         // XXX: In node context, require('electron') returns a string which represents path to electron
         // binary in electron npm package.
-        return require('electron') as any;
+        return (require('electron') as any) as string;
     } catch (e) {
         throw new Error(
             `Cannot find Electron executable. Please run \`npm install -g electron\` or install Tweet app from https://github.com/rhysd/tweet-app/releases: ${e}`,
@@ -90,6 +90,7 @@ const opts: CommandLineOptions = {
     text: args.join(' '),
     reply,
 };
+const appBinPath = appExePath(electronPath);
 
 // First argument is path to `node`, second argument is path to script
 const argv = [join(__dirname, '..'), '--', JSON.stringify(opts)];
@@ -99,15 +100,15 @@ delete process.env.ELECTRON_RUN_AS_NODE;
 
 if (detach) {
     // TODO?: Output stderr to $DATA_DIR/log.txt
-    cp.spawn(electronExePath(electronPath), argv, {
+    cp.spawn(appBinPath, argv, {
         stdio: 'ignore',
         detached: true,
     }).unref();
 } else {
-    const app = cp.spawn(electronExePath(electronPath), argv, {
+    const proc = cp.spawn(appBinPath, argv, {
         stdio: 'inherit',
     });
-    app.on('exit', code => {
+    proc.on('exit', code => {
         process.exit(typeof code === 'number' ? code : 3);
     });
 }
