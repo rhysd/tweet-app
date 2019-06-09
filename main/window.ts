@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import * as path from 'path';
 import { BrowserWindow, Menu, dialog, nativeImage, app } from 'electron';
 import windowState = require('electron-window-state');
-import { TweetAutoLinkBreaker, DEFAULT_CONFIG } from 'break-tweet-autolink';
+import { TweetAutoLinkBreaker, UNLINK_ALL_CONFIG } from 'break-tweet-autolink';
 import log from './log';
 import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
 import Ipc from './ipc';
@@ -15,12 +15,6 @@ const INJECTED_CSS =
     'a[href="/"] { display: none !important; }\n' +
     'a[href="/home"] { display: none !important; }\n' +
     ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
-
-const BREAKER_UNLINK_ALL_CONFIG = { ...DEFAULT_CONFIG };
-for (const k of Object.keys(BREAKER_UNLINK_ALL_CONFIG)) {
-    // Unlink everything
-    (BREAKER_UNLINK_ALL_CONFIG as any)[k] = true;
-}
 
 export default class TweetWindow {
     public readonly screenName: string | undefined;
@@ -129,7 +123,7 @@ export default class TweetWindow {
             return;
         }
 
-        const breaker = new TweetAutoLinkBreaker(BREAKER_UNLINK_ALL_CONFIG);
+        const breaker = new TweetAutoLinkBreaker(UNLINK_ALL_CONFIG);
         const unlinked = breaker.breakAutoLinks(text);
         log.debug('Text was unlinked:', text, '->', unlinked);
 
