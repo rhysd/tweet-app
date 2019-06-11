@@ -1,7 +1,7 @@
 {
   "name": "tweet-app",
   "productName": "Tweet",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Small Twitter client only for tweeting. Timeline never shows up",
   "engines": {
     "node": ">=10.1"
