@@ -1,5 +1,6 @@
 module.exports = {
     extends: [
+        'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:node/recommended',
         'plugin:security/recommended',
@@ -15,12 +16,14 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     parserOptions: {
         project: './tsconfig.json',
+        sourceType: 'module', // Avoid 'Parsing error: ImportDeclaration should appear when the mode is ES6 and in the module context'
     },
-    plugins: ['@typescript-eslint', 'node', 'mocha', 'security'],
+    plugins: ['@typescript-eslint', 'node', 'mocha', 'security', 'prettier'],
     rules: {
         // Enabled
         '@typescript-eslint/prefer-for-of': 'error',
         '@typescript-eslint/prefer-string-starts-ends-with': 'error',
+        'prettier/prettier': 'error',
 
         // Disabled
         '@typescript-eslint/no-parameter-properties': 'off',

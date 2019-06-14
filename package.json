@@ -4,7 +4,7 @@
   "version": "0.2.4",
   "description": "Small Twitter client only for tweeting. Timeline never shows up",
   "engines": {
-    "node": ">=10.1"
+    "node": ">=12.0.0"
   },
   "main": "main/index.js",
   "bin": {
@@ -29,12 +29,8 @@
     "test": "npm-run-all test:unit test:integ",
     "nyc": "nyc mocha ./test/unit",
     "cov": "npm run nyc && nyc report --reporter html && open ./coverage/index.html",
-    "eslint": "eslint \"main/**/*.ts\" \"renderer/**/*.ts\" \"bin/**/*.ts\" \"test/**/*.ts\"",
-    "prettier": "prettier --check \"main/**/*.ts\" \"renderer/**/*.ts\" \"bin/**/*.ts\" \"test/**/*.ts\" \"types/*.d.ts\"",
-    "lint": "npm-run-all eslint prettier",
-    "fix:eslint": "npm run eslint -- --fix",
-    "fix:prettier": "prettier --write \"main/**/*.ts\" \"renderer/**/*.ts\" \"bin/**/*.ts\" \"test/**/*.ts\" \"types/*.d.ts\"",
-    "fix": "npm-run-all fix:eslint fix:prettier",
+    "lint": "eslint \"main/**/*.ts\" \"renderer/**/*.ts\" \"bin/**/*.ts\" \"test/**/*.ts\"",
+    "fix": "npm run lint -- --fix",
     "husky": "npm-run-all -p lint \"test:unit -- --invert --grep \\\"searches tweet button with 4s timeout\\\"\"",
     "prepublishOnly": "npm-run-all build test lint"
   },
@@ -61,20 +57,22 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/mocha": "^5.2.7",
     "@types/mock-require": "^2.0.0",
-    "@types/node": "^11.13.13",
-    "@types/sinon": "^7.0.12",
+    "@types/node": "^12.0.8",
+    "@types/sinon": "^7.0.13",
     "@types/twitter-text": "^2.0.0",
     "@types/webdriverio": "^4.13.3",
-    "@typescript-eslint/eslint-plugin": "^1.9.0",
+    "@typescript-eslint/eslint-plugin": "^1.10.2",
+    "@typescript-eslint/parser": "^1.10.2",
     "cross-env": "^5.2.0",
-    "electron": "^5.0.2",
+    "electron": "^5.0.3",
     "electron-builder": "^20.43.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.3.0",
     "eslint-plugin-mocha": "^5.3.0",
-    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-security": "^1.4.0",
-    "husky": "^2.3.0",
+    "husky": "^2.4.1",
     "jsdom": "^15.1.1",
     "lodash.merge": "^4.6.1",
     "mocha": "^6.1.4",
@@ -82,14 +80,14 @@
     "npm-run-all": "^4.1.5",
     "nyc": "^14.1.1",
     "parcel-bundler": "^1.12.3",
-    "prettier": "^1.17.1",
+    "prettier": "^1.18.2",
     "shx": "^0.3.2",
     "sinon": "^7.3.2",
     "spectron": "^5.0.0",
-    "typescript": "^3.5.1"
+    "typescript": "^3.5.2"
   },
   "peerDependencies": {
-    "electron": "^5.0.2"
+    "electron": "^5.0.3"
   },
   "dependencies": {
     "break-tweet-autolink": "^0.3.1",
