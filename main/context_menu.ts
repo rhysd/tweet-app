@@ -23,13 +23,11 @@ export default class ContextMenu {
         const sel = params.selectionText || '';
         const flags = params.editFlags;
         const visible = sel !== '' && params.isEditable && flags.canDelete && flags.canPaste;
-        return {
+        return new MenuItem({
             label: 'Unlink auto links',
             visible,
-            checked: false,
             click: this.unlink.bind(this, sel),
-            enabled: true,
-        };
+        });
     }
 
     private unlink(text: string) {
