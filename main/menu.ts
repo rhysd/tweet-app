@@ -86,7 +86,7 @@ export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], action
             accelerator: 'CmdOrCtrl+V',
         },
         {
-            role: 'selectall',
+            role: 'selectAll',
             accelerator: 'CmdOrCtrl+A',
         },
         {
@@ -129,21 +129,21 @@ export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], action
                     accelerator: '', // Disable shortcut
                 },
                 {
-                    role: 'toggledevtools',
+                    role: 'toggleDevTools',
                 },
                 {
                     type: 'separator',
                 },
                 {
-                    role: 'resetzoom',
+                    role: 'resetZoom',
                     accelerator: 'CmdOrCtrl+O',
                 },
                 {
-                    role: 'zoomin',
+                    role: 'zoomIn',
                     accelerator: 'CmdOrCtrl+Plus',
                 },
                 {
-                    role: 'zoomout',
+                    role: 'zoomOut',
                     accelerator: 'CmdOrCtrl+-',
                 },
             ],
@@ -213,7 +213,7 @@ export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], action
                     accelerator: 'Command+H',
                 },
                 {
-                    role: 'hideothers',
+                    role: 'hideOthers',
                     accelerator: 'Command+Shift+H',
                 },
                 {

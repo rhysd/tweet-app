@@ -137,44 +137,35 @@ export default class TweetWindow {
     }
 
     private notifyReplyUnavailableUntilTweet(doSomething: string) {
-        return new Promise<void>(resolve => {
-            dialog.showMessageBox(
-                {
-                    type: 'info',
-                    title: `Cannot ${doSomething}`,
-                    message: `To ${doSomething}, at least one tweet must be posted before`,
-                    detail: `Please choose "New Tweet" from menu and post a new tweet at first`,
-                    icon: nativeImage.createFromPath(ICON_PATH),
-                    buttons: ['OK'],
-                },
-                () => resolve(),
-            );
+        return dialog.showMessageBox({
+            type: 'info',
+            title: `Cannot ${doSomething}`,
+            message: `To ${doSomething}, at least one tweet must be posted before`,
+            detail: `Please choose "New Tweet" from menu and post a new tweet at first`,
+            icon: nativeImage.createFromPath(ICON_PATH),
+            buttons: ['OK'],
         });
     }
 
     private requireConfigWithDialog(doSomething: string) {
-        return new Promise<void>(resolve => {
-            const buttons = ['Edit Config', 'OK'];
-            dialog.showMessageBox(
-                {
-                    type: 'info',
-                    title: 'Config is required',
-                    message: `Configuration is required to ${doSomething}`,
-                    detail:
-                        "Please click 'Edit Config', enter your @screen_name at 'default_account' field, restart app",
-                    icon: nativeImage.createFromPath(ICON_PATH),
-                    buttons,
-                },
-                idx => {
-                    const label = buttons[idx];
-                    if (label === 'Edit Config') {
-                        openConfig().then(resolve);
-                    } else {
-                        resolve();
-                    }
-                },
-            );
-        });
+        const buttons = ['Edit Config', 'OK'];
+        return dialog
+            .showMessageBox({
+                type: 'info',
+                title: 'Config is required',
+                message: `Configuration is required to ${doSomething}`,
+                detail: "Please click 'Edit Config', enter your @screen_name at 'default_account' field, restart app",
+                icon: nativeImage.createFromPath(ICON_PATH),
+                buttons,
+            })
+            .then(result => {
+                const idx = result.response;
+                const label = buttons[idx];
+                if (label === 'Edit Config') {
+                    return openConfig();
+                }
+                return;
+            });
     }
 
     private composeNewTweetUrl(text?: string): string {
@@ -469,19 +460,19 @@ export default class TweetWindow {
                     return;
                 }
 
-                dialog.showMessageBox(
-                    {
+                dialog
+                    .showMessageBox({
                         type: 'info',
                         title: 'Permission was requested',
                         message: `Permission '${perm}' was requested from ${url}`,
                         detail: "Please click 'Accept' to allow the request or 'Reject' to reject it",
                         icon: nativeImage.createFromPath(ICON_PATH),
                         buttons: ['Accept', 'Reject'],
-                    },
-                    idx => {
+                    })
+                    .then(result => {
+                        const idx = result.response;
                         callback(idx === 0);
-                    },
-                );
+                    });
             });
 
             this.ipc.on('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
