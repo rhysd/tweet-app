@@ -32,7 +32,7 @@ describe('Smoke', function() {
 
     it('disables Node integration', async function() {
         const expected = {
-            message: 'unknown error: require is not defined',
+            message: 'javascript error: require is not defined',
         };
         await rejects(() => app.client.execute(() => require('electron')) as any, expected);
     });

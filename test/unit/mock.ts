@@ -103,7 +103,7 @@ export function reset() {
         }),
         BrowserWindow: DummyBrowserWindow,
         dialog: {
-            showMessageBox: sinon.fake(),
+            showMessageBox: sinon.fake.returns(Promise.resolve({ response: 0 })),
         },
         nativeImage: {
             createFromPath: sinon.fake(),

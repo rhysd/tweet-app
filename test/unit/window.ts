@@ -163,9 +163,8 @@ describe('TweetWindow', function() {
         ok(dialog.showMessageBox.calledOnce);
         const call = dialog.showMessageBox.lastCall;
 
-        const [opts, callback] = call.args;
+        const [opts] = call.args;
         eq(opts.title, 'Config is required');
-        callback(0 /*: index of buttons. emulate 'Edit Config' button was pressed*/);
 
         await willOpenAfterDialogClosed;
 
@@ -175,6 +174,9 @@ describe('TweetWindow', function() {
     });
 
     it('shows dialog to require default_account config and do nothing when clicking OK', async function() {
+        // index of buttons. emulate 'OK' button was pressed
+        dialog.showMessageBox = sinon.fake.returns(Promise.resolve({ response: 1 }));
+
         const ipc = new Ipc();
         const w = new TweetWindow(undefined, {}, ipc, { text: '' }, {} as any);
         eq(w.screenName, undefined);
@@ -183,9 +185,8 @@ describe('TweetWindow', function() {
         ok(dialog.showMessageBox.calledOnce);
         const call = dialog.showMessageBox.lastCall;
 
-        const [opts, callback] = call.args;
+        const [opts] = call.args;
         eq(opts.title, 'Config is required');
-        callback(1 /*: index of buttons. emulate 'OK' button was pressed*/);
 
         await willOpenAfterDialogClosed;
 
@@ -200,9 +201,8 @@ describe('TweetWindow', function() {
         ok(dialog.showMessageBox.calledOnce);
         const call = dialog.showMessageBox.lastCall;
 
-        const [opts, callback] = call.args;
+        const [opts] = call.args;
         eq(opts.title, 'Cannot reply to previous tweet');
-        callback(0);
 
         await willOpenAfterDialogClosed;
     });
@@ -438,10 +438,9 @@ describe('TweetWindow', function() {
         const dialogClosed = w.openPreviousTweet();
         ok(dialog.showMessageBox.calledOnce);
         const call = dialog.showMessageBox.lastCall;
-        const [opts, callback] = call.args;
+        const [opts] = call.args;
         eq(opts.title, 'Config is required');
         ok(opts.message.includes('open previous tweet page'), opts.message);
-        callback(0 /*: index of buttons. emulate 'Edit Config' button was pressed*/);
 
         await dialogClosed;
     });
@@ -454,9 +453,8 @@ describe('TweetWindow', function() {
         ok(dialog.showMessageBox.calledOnce);
         const call = dialog.showMessageBox.lastCall;
 
-        const [opts, callback] = call.args;
+        const [opts] = call.args;
         eq(opts.title, 'Cannot open previous tweet page');
-        callback(0);
 
         await dialogClosed;
     });
@@ -648,42 +646,35 @@ describe('TweetWindow', function() {
             ok(!cb.lastCall.args[0]);
         });
 
-        it('rejects when user clicks "Reject" button of dialog', function() {
+        it('rejects when user clicks "Reject" button of dialog', async function() {
             for (const perm of ['media', 'geolocation']) {
-                const showMessageBox = sinon.fake();
-                dialog.showMessageBox = showMessageBox;
+                // 1 means button at index 1 'Reject' was clicked
+                dialog.showMessageBox = sinon.fake.returns(Promise.resolve({ response: 1 }));
 
-                const cb = sinon.fake();
-                handler(webContents, perm, cb, {});
+                const p = new Promise(resolve => {
+                    handler(webContents, perm, resolve, {});
+                });
 
                 ok(dialog.showMessageBox.called);
                 eq(dialog.showMessageBox.lastCall.args[0].title, 'Permission was requested');
                 const msg = dialog.showMessageBox.lastCall.args[0].message;
                 ok(msg.includes(perm), msg);
-                ok(!cb.called);
 
-                const dialogCB = dialog.showMessageBox.lastCall.args[1];
-                dialogCB(1); // 1 means button at index 1 'Reject' was clicked
-                ok(cb.called);
-                ok(!cb.lastCall.args[0]);
+                const accepted = (await p) as boolean;
+                ok(!accepted);
             }
         });
 
-        it('accepts when user clicks "Accept" button of dialog', function() {
+        it('accepts when user clicks "Accept" button of dialog', async function() {
             for (const perm of ['media', 'geolocation']) {
-                const showMessageBox = sinon.fake();
-                dialog.showMessageBox = showMessageBox;
-
-                const cb = sinon.fake();
-                handler(webContents, perm, cb, {});
+                const p = new Promise(resolve => {
+                    handler(webContents, perm, resolve, {});
+                });
 
                 ok(dialog.showMessageBox.called);
-                ok(!cb.called);
 
-                const dialogCB = dialog.showMessageBox.lastCall.args[1];
-                dialogCB(0); // 0 means button at index 0 'Accept' was clicked
-                ok(cb.called);
-                ok(cb.lastCall.args[0]);
+                const accepted = (await p) as boolean;
+                ok(accepted);
             }
         });
     });
