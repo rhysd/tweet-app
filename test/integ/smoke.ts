@@ -4,6 +4,10 @@ import { deepStrictEqual as eq, ok, rejects } from 'assert';
 
 const electronPath = require('electron') as any;
 
+function timeout(ms: number) {
+    return new Promise(resolve => setTimeout(() => resolve('timeout!!'), ms));
+}
+
 describe('Smoke', function() {
     this.timeout(10000);
 
@@ -20,7 +24,10 @@ describe('Smoke', function() {
 
     after(async function() {
         if (app && app.isRunning()) {
-            await app.stop();
+            const ret = await Promise.race([timeout(5000), app.stop]);
+            if (ret === 'timeout!!') {
+                console.error('Application.prototype.stop() did not stop app within 5 seconds');
+            }
         }
     });
 
