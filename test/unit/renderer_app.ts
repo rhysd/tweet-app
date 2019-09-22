@@ -113,7 +113,7 @@ describe('App', function() {
                 };
             });
         }
-        let hrefWasSet = setHrefSpy();
+        const hrefWasSet = setHrefSpy();
 
         (global as any).document = new JSDOM('').window.document;
 

@@ -126,5 +126,7 @@ mock('electron', electron);
 mock('electron-window-state', () => ({
     x: 600,
     y: 600,
-    manage() {},
+    manage() {
+        /* noop */
+    },
 }));

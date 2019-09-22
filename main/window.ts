@@ -169,7 +169,7 @@ export default class TweetWindow {
     }
 
     private composeNewTweetUrl(text?: string): string {
-        let queries = [];
+        const queries = [];
         if (text !== undefined && text !== '') {
             queries.push('text=' + querystring.escape(text));
         }

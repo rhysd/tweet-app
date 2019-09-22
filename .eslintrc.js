@@ -34,6 +34,7 @@ module.exports = {
         'no-console': 'off', // bin/ and renderer/ is still using console
         'no-process-exit': 'off',
         'node/no-unsupported-features/es-syntax': 'off', // false positive at import statements
+        'node/no-unpublished-import': 'off', // false positive? at spectron and jsdom packages
         'security/detect-non-literal-fs-filename': 'off',
         'security/detect-object-injection': 'off', // false positive at array index accesses
         'node/shebang': 'off', // It complains bin/cli.ts

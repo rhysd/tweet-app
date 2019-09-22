@@ -5,7 +5,9 @@ import { reset } from './mock';
 
 const { shell } = require('electron') as any; // mocked
 
-function noop(..._: any[]): any {}
+function noop(..._: any[]): any {
+    /* noop */
+}
 
 const EMPTY_MENU_ACTIONS: MenuActions = {
     quit: noop,
