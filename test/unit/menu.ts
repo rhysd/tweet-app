@@ -180,13 +180,19 @@ describe('Menu', function() {
             ok(menu);
 
             const items = accountMenu.submenu;
-            eq(items.map((i: any) => i.label), ['@foo', '@bar']);
+            eq(
+                items.map((i: any) => i.label),
+                ['@foo', '@bar'],
+            );
             for (const item of items) {
                 item.click();
             }
 
             const calls = switchAccount.getCalls();
-            eq(calls.map(c => c.args), [['foo'], ['@bar']]);
+            eq(
+                calls.map(c => c.args),
+                [['foo'], ['@bar']],
+            );
         });
 
         it('sets keymaps as shortcut of menu items', function() {

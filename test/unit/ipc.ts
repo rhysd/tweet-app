@@ -81,7 +81,10 @@ describe('Ipc', function() {
 
             // Note: Map does not preserve order of elements.
             const actual = new Set(ipcMain.removeListener.getCalls().map((c: any) => c.args));
-            const expected = new Set([['tweetapp:online-status', l1], ['tweetapp:online-status', l2]]);
+            const expected = new Set([
+                ['tweetapp:online-status', l1],
+                ['tweetapp:online-status', l2],
+            ]);
             eq(actual, expected);
         });
 
