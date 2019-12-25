@@ -6,9 +6,9 @@ import { ON_DARWIN, ICON_PATH } from './constants';
 import ContextMenu from './context_menu';
 
 async function go() {
-    // default_app sets app.on('all-window-closed', () => app.quit()) before
+    // default_app sets app.on('window-all-closed', () => app.quit()) before
     // loading this application. We need to disable the callback.
-    app.removeAllListeners('all-window-closed');
+    app.removeAllListeners('window-all-closed');
 
     function parseCmdlineOptions(args: string[]): CommandLineOptions {
         const idx = args.indexOf('--') + 1;
