@@ -1,3 +1,12 @@
+<a name="v0.2.6"></a>
+# [v0.2.6](https://github.com/rhysd/tweet-app/releases/tag/v0.2.6) - 25 Dec 2019
+
+- Migrate to Electron v7
+- Update many dependencies
+
+[Changes][v0.2.6]
+
+
 <a name="v0.2.5"></a>
 # [v0.2.5](https://github.com/rhysd/tweet-app/releases/tag/v0.2.5) - 08 Aug 2019
 
@@ -72,6 +81,7 @@
 [Changes][v0.1.0]
 
 
+[v0.2.6]: https://github.com/rhysd/tweet-app/compare/v0.2.5...v0.2.6
 [v0.2.5]: https://github.com/rhysd/tweet-app/compare/v0.2.4...v0.2.5
 [v0.2.4]: https://github.com/rhysd/tweet-app/compare/v0.2.3...v0.2.4
 [v0.2.3]: https://github.com/rhysd/tweet-app/compare/v0.2.2...v0.2.3
