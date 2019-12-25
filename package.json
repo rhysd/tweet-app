@@ -64,7 +64,7 @@
     "@typescript-eslint/eslint-plugin": "^2.13.0",
     "@typescript-eslint/parser": "^2.13.0",
     "cross-env": "^6.0.3",
-    "electron": "^6.0.10",
+    "electron": "^7.1.7",
     "electron-builder": "^21.2.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.7.0",
@@ -83,11 +83,11 @@
     "prettier": "^1.19.1",
     "shx": "^0.3.2",
     "sinon": "^8.0.1",
-    "spectron": "^8.0.0",
+    "spectron": "^9.0.0",
     "typescript": "^3.7.4"
   },
   "peerDependencies": {
-    "electron": "^6.0.10"
+    "electron": "^7.1.7"
   },
   "dependencies": {
     "break-tweet-autolink": "^0.3.1",

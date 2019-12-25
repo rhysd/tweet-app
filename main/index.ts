@@ -8,7 +8,7 @@ import ContextMenu from './context_menu';
 async function go() {
     // default_app sets app.on('all-window-closed', () => app.quit()) before
     // loading this application. We need to disable the callback.
-    app.removeAllListeners();
+    app.removeAllListeners('all-window-closed');
 
     function parseCmdlineOptions(args: string[]): CommandLineOptions {
         const idx = args.indexOf('--') + 1;
