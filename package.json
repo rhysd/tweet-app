@@ -29,7 +29,7 @@
     "test": "npm-run-all -p test:unit test:integ",
     "nyc": "nyc mocha ./test/unit",
     "cov": "npm run nyc && nyc report --reporter html && open ./coverage/index.html",
-    "lint": "eslint \"main/**/*.ts\" \"renderer/**/*.ts\" \"bin/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint --max-warnings 0 \"main/**/*.ts\" \"renderer/**/*.ts\" \"bin/**/*.ts\" \"test/**/*.ts\"",
     "fix": "npm run lint -- --fix",
     "husky": "npm-run-all -p lint \"test:unit -- --invert --grep \\\"searches tweet button with 4s timeout\\\"\"",
     "prepublishOnly": "npm-run-all build test lint"

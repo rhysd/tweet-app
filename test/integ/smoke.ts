@@ -19,7 +19,7 @@ describe('Smoke', function () {
     });
 
     after(async function () {
-        if (app && app.isRunning()) {
+        if (app?.isRunning()) {
             await app.stop();
         }
     });

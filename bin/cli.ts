@@ -6,8 +6,8 @@ import * as fs from 'fs';
 import { join } from 'path';
 import commander = require('commander');
 
-function appExePath(opts: string | undefined): string {
-    const specified = opts || process.env.TWEET_APP_ELECTRON_EXECUTABLE;
+function appExePath(exe: string | undefined): string {
+    const specified = exe ?? process.env.TWEET_APP_ELECTRON_EXECUTABLE;
     if (specified) {
         try {
             const { X_OK, R_OK } = fs.constants;

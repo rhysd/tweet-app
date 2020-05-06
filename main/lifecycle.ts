@@ -14,7 +14,7 @@ export default class Lifecycle {
     private resolveQuit: () => void;
     private currentWin: TweetWindow;
     private switchingAccount: boolean;
-    private prevTweetIds: Map<string, string | null>; // Screen name -> Maybe Tweet ID
+    private readonly prevTweetIds: Map<string, string | null>; // Screen name -> Maybe Tweet ID
 
     public constructor(private readonly config: Config, private opts: CommandLineOptions) {
         this.resolveQuit = () => {};
@@ -34,7 +34,7 @@ export default class Lifecycle {
         }
         log.debug('Accounts:', this.accounts);
 
-        this.menu = createMenu(config.keymaps || {}, this.accounts, {
+        this.menu = createMenu(config.keymaps ?? {}, this.accounts, {
             quit: this.quit,
             tweet: this.newTweet,
             reply: this.replyToPrevTweet,

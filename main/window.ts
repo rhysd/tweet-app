@@ -61,8 +61,8 @@ export default class TweetWindow {
     }
 
     public updateOptions(opts: CommandLineOptions) {
-        this.hashtags = (opts.hashtags || []).join(',');
-        this.actionAfterTweet = opts.afterTweet || this.config.after_tweet;
+        this.hashtags = (opts.hashtags ?? []).join(',');
+        this.actionAfterTweet = opts.afterTweet ?? this.config.after_tweet;
         if (this.actionAfterTweet !== undefined) {
             this.actionAfterTweet = this.actionAfterTweet.toLowerCase() as ConfigAfterTweet;
         }

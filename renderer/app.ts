@@ -36,7 +36,7 @@ export default class App {
                 if (label === null) {
                     continue;
                 }
-                if (text.indexOf(label) >= 0) {
+                if (text.includes(label)) {
                     return b as HTMLElement;
                 }
             }
