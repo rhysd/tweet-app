@@ -1,4 +1,4 @@
-import { ContextMenuParams, MenuItem } from 'electron';
+import { ContextMenuParams, MenuItemConstructorOptions } from 'electron';
 import contextMenu = require('electron-context-menu');
 import log from './log';
 import Lifecycle from './lifecycle';
@@ -8,7 +8,7 @@ export default class ContextMenu {
 
     public constructor() {
         contextMenu({
-            prepend: (_, params) => {
+            prepend: (_params, params, _window) => {
                 log.debug('Context menu:', params);
                 return [this.itemUnlink(params)];
             },
@@ -19,15 +19,15 @@ export default class ContextMenu {
         this.app = l;
     }
 
-    private itemUnlink(params: ContextMenuParams): MenuItem {
+    private itemUnlink(params: ContextMenuParams): MenuItemConstructorOptions {
         const sel = params.selectionText || '';
         const flags = params.editFlags;
         const visible = sel !== '' && params.isEditable && flags.canDelete && flags.canPaste;
-        return new MenuItem({
+        return {
             label: 'Unlink auto links',
             visible,
             click: this.unlink.bind(this, sel),
-        });
+        };
     }
 
     private unlink(text: string) {

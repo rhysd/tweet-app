@@ -269,7 +269,8 @@ export function dockMenu(tweet: A, reply: A) {
 }
 
 export function touchBar(screenName: string | undefined, actions: TouchbarActions) {
-    const smallSpacer = new TouchBarSpacer({ size: 'small' });
+    // Cannot add a single instance of TouchBarItem multiple times in a TouchBar
+    const smallSpacer = () => new TouchBarSpacer({ size: 'small' });
 
     function button(label: string, click: A) {
         return new TouchBarButton({
@@ -280,11 +281,11 @@ export function touchBar(screenName: string | undefined, actions: TouchbarAction
     }
 
     const items = [
-        smallSpacer,
+        smallSpacer(),
         button('New Tweet', actions.tweet),
-        smallSpacer,
+        smallSpacer(),
         button('Reply to Previous', actions.reply),
-        smallSpacer,
+        smallSpacer(),
         button('Open Previous Tweet', actions.openPrevTweet),
     ];
 
@@ -292,7 +293,7 @@ export function touchBar(screenName: string | undefined, actions: TouchbarAction
         if (!screenName.startsWith('@')) {
             screenName = '@' + screenName;
         }
-        items.unshift(smallSpacer, new TouchBarLabel({ label: screenName }));
+        items.unshift(smallSpacer(), new TouchBarLabel({ label: screenName }));
     }
 
     return new TouchBar({ items });
