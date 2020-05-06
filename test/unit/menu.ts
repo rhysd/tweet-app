@@ -26,11 +26,11 @@ const EMPTY_TOUCHBAR_ACTIONS: TouchbarActions = {
     openPrevTweet: noop,
 };
 
-describe('Menu', function() {
+describe('Menu', function () {
     beforeEach(reset);
 
-    describe('dockMenu', function() {
-        it('calls callbacks on click', function() {
+    describe('dockMenu', function () {
+        it('calls callbacks on click', function () {
             const tweet = sinon.fake();
             const reply = sinon.fake();
             const items: any = dockMenu(tweet, reply);
@@ -49,8 +49,8 @@ describe('Menu', function() {
         });
     });
 
-    describe('touchBar', function() {
-        it('calls callbacks on button clicks', function() {
+    describe('touchBar', function () {
+        it('calls callbacks on button clicks', function () {
             const tweet = sinon.fake();
             const reply = sinon.fake();
             const openPrevTweet = sinon.fake();
@@ -84,7 +84,7 @@ describe('Menu', function() {
             ok(openPrevTweet.called);
         });
 
-        it('sets screen name as label if available', function() {
+        it('sets screen name as label if available', function () {
             for (const name of ['name', '@name', undefined]) {
                 const items = (touchBar(name, EMPTY_TOUCHBAR_ACTIONS) as any).args[0].items;
                 const item = items.find((i: any) => i.args[0].label === '@name');
@@ -97,14 +97,14 @@ describe('Menu', function() {
         });
     });
 
-    describe('createMenu', function() {
-        it('creates menu items', function() {
+    describe('createMenu', function () {
+        it('creates menu items', function () {
             const menu: any = createMenu({}, ['foo'], EMPTY_MENU_ACTIONS);
             ok(Array.isArray(menu));
             menu.every((i: any) => i.label !== undefined || i.role !== undefined);
         });
 
-        it('calls proper callback when clicking item', function() {
+        it('calls proper callback when clicking item', function () {
             const quit = sinon.fake();
             const tweet = sinon.fake();
             const reply = sinon.fake();
@@ -164,7 +164,7 @@ describe('Menu', function() {
             ok(openPrevTweet.calledOnce);
         });
 
-        it('puts switch account menu for multiple accounts', function() {
+        it('puts switch account menu for multiple accounts', function () {
             const switchAccount = sinon.fake();
             const actions = {
                 ...EMPTY_MENU_ACTIONS,
@@ -195,7 +195,7 @@ describe('Menu', function() {
             );
         });
 
-        it('sets keymaps as shortcut of menu items', function() {
+        it('sets keymaps as shortcut of menu items', function () {
             const keymaps: KeyMapConfig = {
                 'New Tweet': 'CmdOrCtrl+T',
                 'Reply to Previous Tweet': 'CmdOrCtrl+I',
@@ -217,22 +217,22 @@ describe('Menu', function() {
             }
         });
 
-        describe('Help menu', function() {
+        describe('Help menu', function () {
             let menu: any[];
             let help: any[];
 
-            beforeEach(function() {
+            beforeEach(function () {
                 menu = createMenu({}, ['foo'], EMPTY_MENU_ACTIONS) as any;
                 help = menu.find((m: any) => m.role === 'help').submenu;
             });
 
-            it('opens README on "Learn More"', function() {
+            it('opens README on "Learn More"', function () {
                 help[0].click();
                 ok(shell.openExternal.calledOnce);
                 eq(shell.openExternal.lastCall.args[0], 'https://github.com/rhysd/tweet-app#readme');
             });
 
-            it('opens Issues page on "Search Issues"', function() {
+            it('opens Issues page on "Search Issues"', function () {
                 help[1].click();
                 ok(shell.openExternal.calledOnce);
                 eq(shell.openExternal.lastCall.args[0], 'https://github.com/rhysd/tweet-app/issues');

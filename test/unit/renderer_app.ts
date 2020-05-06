@@ -8,10 +8,10 @@ import App from '../../renderer/app';
 
 const { ipcRenderer } = require('electron') as any; // mocked
 
-describe('App', function() {
+describe('App', function () {
     let app: App;
 
-    beforeEach(function() {
+    beforeEach(function () {
         reset();
         (global as any).window = {
             addEventListener: sinon.spy(),
@@ -20,7 +20,7 @@ describe('App', function() {
         app.start();
     });
 
-    afterEach(function() {
+    afterEach(function () {
         delete (global as any).window;
         delete (global as any).document;
     });
@@ -37,17 +37,17 @@ describe('App', function() {
         fail(`No listener for ${chan}: ${JSON.stringify(calls, null, 2)}`);
     }
 
-    it('sets action after tweet on IPC message', function() {
+    it('sets action after tweet on IPC message', function () {
         emulateSend('tweetapp:action-after-tweet', 'reply previous');
         eq((app as any).afterTweet, 'reply previous');
     });
 
-    it('sets screen name on IPC message', function() {
+    it('sets screen name on IPC message', function () {
         emulateSend('tweetapp:screen-name', 'foo');
         eq((app as any).screenName, 'foo');
     });
 
-    it('reopens given URL when no screen name is set on tweetapp:sent-tweet', function() {
+    it('reopens given URL when no screen name is set on tweetapp:sent-tweet', function () {
         // Navigation is not implemented in jsdom
         (global as any).window.location = {};
         const url = 'https://mobile.twitter.com/compose/tweet';
@@ -55,7 +55,7 @@ describe('App', function() {
         eq(window.location.href, url);
     });
 
-    it('finds previous tweet ID and sets in_reply_to query param on tweetapp:sent-tweet', async function() {
+    it('finds previous tweet ID and sets in_reply_to query param on tweetapp:sent-tweet', async function () {
         emulateSend('tweetapp:screen-name', 'foo');
         emulateSend('tweetapp:action-after-tweet', 'reply previous');
 
@@ -95,7 +95,7 @@ describe('App', function() {
         eq(url, twTextUrl + '&in_reply_to=114514');
     });
 
-    it('searches tweet button with 4s timeout', async function() {
+    it('searches tweet button with 4s timeout', async function () {
         this.timeout(10000); // Timeout is 4 seconds
         const start = Date.now();
 
@@ -126,7 +126,7 @@ describe('App', function() {
         ok(elapsedMs > 4000, `${elapsedMs}`);
     });
 
-    it('opens given URL on tweetapp:open', function() {
+    it('opens given URL on tweetapp:open', function () {
         // Navigation is not implemented in jsdom
         (global as any).window.location = {};
         const url = 'https://mobile.twitter.com/compose/tweet?text=hello';
@@ -134,7 +134,7 @@ describe('App', function() {
         eq(window.location.href, url);
     });
 
-    it('sets login name to user name <input> on tweetapp:login', function() {
+    it('sets login name to user name <input> on tweetapp:login', function () {
         (global as any).document = new JSDOM(`
             <input name="username_or_email"/>
             <input name="password"/>
@@ -148,7 +148,7 @@ describe('App', function() {
         eq(input!.value, 'foo');
     });
 
-    it('does not set login name to user name <input> on tweetapp:login when screen name is unknown or <input> is not found', function() {
+    it('does not set login name to user name <input> on tweetapp:login when screen name is unknown or <input> is not found', function () {
         (global as any).document = new JSDOM(`
             <input name="username_or_email"/>
             <input name="password"/>
@@ -173,7 +173,7 @@ describe('App', function() {
         '<div role="button" tabIndex="0">すべてツイート</div>',
         '<div role="button" tabIndex="0">返信</div>',
     ]) {
-        it(`finds tweet button from "${html}" on tweetapp:click-tweet-button`, function() {
+        it(`finds tweet button from "${html}" on tweetapp:click-tweet-button`, function () {
             (global as any).document = new JSDOM(html).window.document;
 
             const click = sinon.fake();
@@ -184,7 +184,7 @@ describe('App', function() {
         });
     }
 
-    it('does nothing when button is not found', function() {
+    it('does nothing when button is not found', function () {
         (global as any).document = new JSDOM('<div role="button" tabIndex="0">Foooo!!!!!</div>').window.document;
         const click = sinon.fake();
         (document.getElementsByTagName('DIV')[0] as HTMLDivElement).click = click;
@@ -192,7 +192,7 @@ describe('App', function() {
         ok(!click.called);
     });
 
-    it('sends IPC message to main process when online status changed', function() {
+    it('sends IPC message to main process when online status changed', function () {
         (window as any).navigator = { onLine: true };
         const calls = (window as any).addEventListener.getCalls();
         const onOnline = calls.find((c: any) => c.args[0] === 'online').args[1];
@@ -209,7 +209,7 @@ describe('App', function() {
         eq(ipcRenderer.send.lastCall.args, ['tweetapp:online-status', 'online']);
     });
 
-    it('rejects ESC key since it navigates to home timeline at tweet form', function() {
+    it('rejects ESC key since it navigates to home timeline at tweet form', function () {
         const calls = (window as any).addEventListener.getCalls();
         const onKeydown = calls.find((c: any) => c.args[0] === 'keydown').args[1];
         const stopPropagation = sinon.fake();

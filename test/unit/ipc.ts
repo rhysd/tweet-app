@@ -9,15 +9,15 @@ class DummySender {
     public send = sinon.fake();
 }
 
-describe('Ipc', function() {
+describe('Ipc', function () {
     let ipc: Ipc;
 
-    beforeEach(function() {
+    beforeEach(function () {
         ipc = new Ipc();
     });
 
-    describe('sender', function() {
-        it('sends IPC message with attached sender', function() {
+    describe('sender', function () {
+        it('sends IPC message with attached sender', function () {
             const sender: any = new DummySender();
             ipc.attach(sender);
             ipc.send('tweetapp:sent-tweet');
@@ -28,7 +28,7 @@ describe('Ipc', function() {
             eq(calls[1].args, ['tweetapp:sent-tweet', 'foo', 'bar', 'piyo']);
         });
 
-        it('does not send IPC message after detach', function() {
+        it('does not send IPC message after detach', function () {
             const sender: any = new DummySender();
             ipc.attach(sender);
             ipc.detach(sender);
@@ -37,7 +37,7 @@ describe('Ipc', function() {
             eq(sender.send.getCalls(), []);
         });
 
-        it('does nothing when different sender is specified', function() {
+        it('does nothing when different sender is specified', function () {
             const sender1: any = new DummySender();
             const sender2: any = new DummySender();
             ipc.attach(sender1);
@@ -49,12 +49,12 @@ describe('Ipc', function() {
         });
     });
 
-    describe('receiver', function() {
-        beforeEach(function() {
+    describe('receiver', function () {
+        beforeEach(function () {
             reset();
         });
 
-        it('sets listener as IPC receiver', function() {
+        it('sets listener as IPC receiver', function () {
             const listener = (_: Event) => {};
             ipc.on('tweetapp:online-status', listener);
             ok(ipcMain.on.calledOnce);
@@ -62,7 +62,7 @@ describe('Ipc', function() {
             eq(call.args, ['tweetapp:online-status', listener]);
         });
 
-        it('forgets listener', function() {
+        it('forgets listener', function () {
             const listener = (_: Event) => {};
             ipc.on('tweetapp:online-status', listener);
             ipc.forget('tweetapp:online-status', listener);
@@ -71,7 +71,7 @@ describe('Ipc', function() {
             eq(call.args, ['tweetapp:online-status', listener]);
         });
 
-        it('forgets all listeners on dispose()', function() {
+        it('forgets all listeners on dispose()', function () {
             const l1 = (_: Event) => {};
             const l2 = (_: Event) => {};
             ipc.on('tweetapp:online-status', l1);
@@ -88,7 +88,7 @@ describe('Ipc', function() {
             eq(actual, expected);
         });
 
-        it('forgets nothing when listener was acutally not registered', function() {
+        it('forgets nothing when listener was acutally not registered', function () {
             const l1 = (_: Event) => {};
             const l2 = (_: Event) => {};
             ipc.on('tweetapp:online-status', l1);

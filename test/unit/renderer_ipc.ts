@@ -5,21 +5,21 @@ import { reset } from './mock';
 
 const { ipcRenderer } = require('electron') as any; // mocked
 
-describe('Ipc on renderer', function() {
+describe('Ipc on renderer', function () {
     beforeEach(reset);
 
-    afterEach(function() {
+    afterEach(function () {
         Ipc.dispose();
     });
 
-    it('sends IPC message with send() method', function() {
+    it('sends IPC message with send() method', function () {
         const args = ['tweetapp:prev-tweet-id', '12345'] as ['tweetapp:prev-tweet-id', '12345'];
         Ipc.send(...args);
         ok(ipcRenderer.send.calledOnce);
         eq(ipcRenderer.send.lastCall.args, args);
     });
 
-    it('receives IP message by setting callback', function() {
+    it('receives IP message by setting callback', function () {
         const callback = sinon.fake();
         Ipc.on('tweetapp:open', callback);
         ok(ipcRenderer.on.calledOnce);
@@ -28,7 +28,7 @@ describe('Ipc on renderer', function() {
         ok(callback.calledOnce);
     });
 
-    it('removes all listeners on dispose() method', function() {
+    it('removes all listeners on dispose() method', function () {
         const listeners = [
             ['tweetapp:open', (_: Event) => {}] as ['tweetapp:open', (e: Event) => void],
             ['tweetapp:open', (_: Event) => {}] as ['tweetapp:open', (e: Event) => void],

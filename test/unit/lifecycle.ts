@@ -7,14 +7,14 @@ import { reset } from './mock';
 
 const { globalShortcut } = require('electron') as any; // mocked
 
-describe('Lifecycle', function() {
+describe('Lifecycle', function () {
     beforeEach(reset);
 
     function waitForWindowOpen(lifecycle: Lifecycle) {
         return new Promise(resolve => {
             const ipc = (lifecycle as any).ipc;
             const send = ipc.send.bind(ipc);
-            (lifecycle as any).ipc.send = function(...args: any[]) {
+            (lifecycle as any).ipc.send = function (...args: any[]) {
                 if (args[0] === 'tweetapp:action-after-tweet') {
                     resolve();
                 }
@@ -23,7 +23,7 @@ describe('Lifecycle', function() {
         });
     }
 
-    it('creates window instance for default account but does not open yet', function() {
+    it('creates window instance for default account but does not open yet', function () {
         const cfg = { default_account: 'foo' };
         const opts = { text: '' };
         const life = new Lifecycle(cfg, opts);
@@ -32,7 +32,7 @@ describe('Lifecycle', function() {
         eq(win.screenName, 'foo');
     });
 
-    it('opens window when starting its lifecycle', async function() {
+    it('opens window when starting its lifecycle', async function () {
         const cfg = { default_account: 'foo', other_accounts: ['bar'] };
         const opts = { text: '' };
         const life = new Lifecycle(cfg, opts);
@@ -42,7 +42,7 @@ describe('Lifecycle', function() {
         eq((life as any).currentWin.screenName, 'foo');
     });
 
-    it('run until quit after start', async function() {
+    it('run until quit after start', async function () {
         const cfg = { default_account: 'foo', other_accounts: ['bar'] };
         const opts = { text: '' };
         const life = new Lifecycle(cfg, opts);
@@ -60,7 +60,7 @@ describe('Lifecycle', function() {
         await life.didQuit;
     });
 
-    it('quits when window wants to quit', async function() {
+    it('quits when window wants to quit', async function () {
         const cfg = {
             default_account: 'foo',
             other_accounts: ['bar'],
@@ -86,7 +86,7 @@ describe('Lifecycle', function() {
         await life.didQuit;
     });
 
-    it('quits when window is closed if quit_on_close is set to true', async function() {
+    it('quits when window is closed if quit_on_close is set to true', async function () {
         const cfg = {
             default_account: 'foo',
             other_accounts: ['bar'],
@@ -106,7 +106,7 @@ describe('Lifecycle', function() {
         await life.didQuit;
     });
 
-    it('restarts window without new options', async function() {
+    it('restarts window without new options', async function () {
         const cfg = { default_account: 'foo' };
         const opts = { text: '' };
         const life = new Lifecycle(cfg, opts);
@@ -133,7 +133,7 @@ describe('Lifecycle', function() {
         await life.didQuit;
     });
 
-    it('restarts window with new options for second instance', async function() {
+    it('restarts window with new options for second instance', async function () {
         const cfg = { default_account: 'foo' };
         const opts = { text: '' };
         const life = new Lifecycle(cfg, opts);
@@ -174,7 +174,7 @@ describe('Lifecycle', function() {
         await life.didQuit;
     });
 
-    it('registers and unregisters hot key as global shortcut', async function() {
+    it('registers and unregisters hot key as global shortcut', async function () {
         const hotkey = 'CmdOrCtrl+Shift+X';
         const cfg = { hotkey };
         const life = new Lifecycle(cfg, { text: '' });
@@ -190,8 +190,8 @@ describe('Lifecycle', function() {
         ok(globalShortcut.unregisterAll.calledOnce);
     });
 
-    describe('Actions', function() {
-        it('switches account reopens window for next account', async function() {
+    describe('Actions', function () {
+        it('switches account reopens window for next account', async function () {
             const cfg = { default_account: 'foo', other_accounts: ['bar', 'piyo'] };
             const opts = { text: '' };
             const life = new Lifecycle(cfg, opts);
@@ -248,7 +248,7 @@ describe('Lifecycle', function() {
             await life.didQuit;
         });
 
-        it('maintains previous tweet ID even after account switch', async function() {
+        it('maintains previous tweet ID even after account switch', async function () {
             const cfg = { default_account: 'foo', other_accounts: ['bar', 'piyo'] };
             const opts = { text: '' };
             const life = new Lifecycle(cfg, opts);
@@ -273,7 +273,7 @@ describe('Lifecycle', function() {
             await life.didQuit;
         });
 
-        it('clicks tweet button via IPC', async function() {
+        it('clicks tweet button via IPC', async function () {
             const life = new Lifecycle({}, { text: '' });
             life.runUntilQuit();
             await waitForWindowOpen(life);
@@ -283,7 +283,7 @@ describe('Lifecycle', function() {
             eq(send.lastCall.args[0], 'tweetapp:click-tweet-button');
         });
 
-        it('shows "new tweet" window', async function() {
+        it('shows "new tweet" window', async function () {
             const life = new Lifecycle({}, { text: '' });
             life.runUntilQuit();
             await waitForWindowOpen(life);
@@ -296,7 +296,7 @@ describe('Lifecycle', function() {
             eq((life as any).currentWin.win.webContents.url, 'https://mobile.twitter.com/compose/tweet');
         });
 
-        it('shows "reply to previous" window', async function() {
+        it('shows "reply to previous" window', async function () {
             const life = new Lifecycle({ default_account: 'foo' }, { text: '' });
             life.runUntilQuit();
             await waitForWindowOpen(life);
@@ -313,7 +313,7 @@ describe('Lifecycle', function() {
             );
         });
 
-        it('opens account settings page', async function() {
+        it('opens account settings page', async function () {
             const life = new Lifecycle({}, { text: '' });
             life.runUntilQuit();
             await waitForWindowOpen(life);
@@ -324,7 +324,7 @@ describe('Lifecycle', function() {
             eq(send.lastCall.args, ['tweetapp:open', 'https://mobile.twitter.com/settings/account']);
         });
 
-        it('opens profile page for debugging', async function() {
+        it('opens profile page for debugging', async function () {
             const life = new Lifecycle({ default_account: 'foo' }, { text: '' });
             life.runUntilQuit();
             await waitForWindowOpen(life);
@@ -335,7 +335,7 @@ describe('Lifecycle', function() {
             eq(send.lastCall.args, ['tweetapp:open', 'https://mobile.twitter.com/foo']);
         });
 
-        it('toggles window', async function() {
+        it('toggles window', async function () {
             const life = new Lifecycle({ default_account: 'foo' }, { text: '' });
             life.runUntilQuit();
             await waitForWindowOpen(life);
@@ -349,7 +349,7 @@ describe('Lifecycle', function() {
             ok(w.isOpen());
         });
 
-        it('opens previous tweet page', async function() {
+        it('opens previous tweet page', async function () {
             const life = new Lifecycle({ default_account: 'foo' }, { text: '' });
             life.runUntilQuit();
             await waitForWindowOpen(life);

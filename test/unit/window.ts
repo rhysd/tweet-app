@@ -8,10 +8,10 @@ import { appDir, reset } from './mock';
 
 const { ipcMain, dialog, shell, app } = require('electron') as any; // mocked
 
-describe('TweetWindow', function() {
+describe('TweetWindow', function () {
     beforeEach(reset);
 
-    after(function() {
+    after(function () {
         const config = path.join(appDir, 'config.json');
         try {
             fs.unlinkSync(config);
@@ -20,7 +20,7 @@ describe('TweetWindow', function() {
         }
     });
 
-    it('initializes screen name at constructor', function() {
+    it('initializes screen name at constructor', function () {
         const dummy = {} as any;
         for (const n of [undefined, 'foo', '@foo']) {
             const w = new TweetWindow(n, dummy, dummy, dummy, dummy);
@@ -29,7 +29,7 @@ describe('TweetWindow', function() {
         }
     });
 
-    it('opens window for new tweet with no query', async function() {
+    it('opens window for new tweet with no query', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow('@foo', {}, ipc, { text: '' }, {} as any);
         await w.openNewTweet();
@@ -47,7 +47,7 @@ describe('TweetWindow', function() {
         ok(contents.session.webRequest.onCompleted.calledOnce);
     });
 
-    it('opens window multiple times', async function() {
+    it('opens window multiple times', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow('@foo', {}, ipc, { text: '' }, {} as any);
         await w.openNewTweet();
@@ -70,7 +70,7 @@ describe('TweetWindow', function() {
         }
     });
 
-    it('opens window for new tweet with hashtags', async function() {
+    it('opens window for new tweet with hashtags', async function () {
         const ipc = new Ipc();
         const opts = {
             hashtags: ['foo', 'bar'],
@@ -86,7 +86,7 @@ describe('TweetWindow', function() {
         eq(contents.url, 'https://mobile.twitter.com/compose/tweet?hashtags=foo%2Cbar');
     });
 
-    it('opens window for new tweet with text', async function() {
+    it('opens window for new tweet with text', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow('@foo', {}, ipc, { text: '' }, {} as any);
         await w.openNewTweet('this is test');
@@ -97,7 +97,7 @@ describe('TweetWindow', function() {
         eq(contents.url, 'https://mobile.twitter.com/compose/tweet?text=this%20is%20test');
     });
 
-    it('opens window for reply to previous tweet', async function() {
+    it('opens window for reply to previous tweet', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow('@foo', {}, ipc, { text: '' }, {} as any);
         await w.openNewTweet();
@@ -130,7 +130,7 @@ describe('TweetWindow', function() {
         eq(contents.url, 'https://mobile.twitter.com/compose/tweet');
     });
 
-    it('opens window for reply to previous tweet with text', async function() {
+    it('opens window for reply to previous tweet with text', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow('@foo', {}, ipc, { text: '' }, {} as any);
         await w.openNewTweet();
@@ -154,7 +154,7 @@ describe('TweetWindow', function() {
         eq(url, 'https://mobile.twitter.com/compose/tweet?text=this%20is%20text&in_reply_to=114514');
     });
 
-    it('shows dialog to require default_account config when no screen name is set and reply is requested', async function() {
+    it('shows dialog to require default_account config when no screen name is set and reply is requested', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow(undefined, {}, ipc, { text: '' }, {} as any);
         eq(w.screenName, undefined);
@@ -173,7 +173,7 @@ describe('TweetWindow', function() {
         ok(file.endsWith('config.json'), file);
     });
 
-    it('shows dialog to require default_account config and do nothing when clicking OK', async function() {
+    it('shows dialog to require default_account config and do nothing when clicking OK', async function () {
         // index of buttons. emulate 'OK' button was pressed
         dialog.showMessageBox = sinon.fake.returns(Promise.resolve({ response: 1 }));
 
@@ -193,7 +193,7 @@ describe('TweetWindow', function() {
         eq(shell.openItem.callCount, 0);
     });
 
-    it('shows dialog to notify a new tweet must be posted before reply', async function() {
+    it('shows dialog to notify a new tweet must be posted before reply', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
         const willOpenAfterDialogClosed = w.openReply();
@@ -207,7 +207,7 @@ describe('TweetWindow', function() {
         await willOpenAfterDialogClosed;
     });
 
-    it('closes window and cleanup IPC receiver', async function() {
+    it('closes window and cleanup IPC receiver', async function () {
         const ipc: any = new Ipc();
         ipc.detach = sinon.fake();
         ipc.forget = sinon.fake();
@@ -233,7 +233,7 @@ describe('TweetWindow', function() {
         await w.close();
     });
 
-    it('prepare next tweet when action after tweet is tweet or reply', async function() {
+    it('prepare next tweet when action after tweet is tweet or reply', async function () {
         for (const action of ['new tweet', 'reply previous'] as const) {
             const config = {
                 after_tweet: action,
@@ -262,7 +262,7 @@ describe('TweetWindow', function() {
         }
     });
 
-    it('closes window when action after tweet is close', async function() {
+    it('closes window when action after tweet is close', async function () {
         const config = {
             after_tweet: 'close',
         } as const;
@@ -288,7 +288,7 @@ describe('TweetWindow', function() {
         await w.didClose;
     });
 
-    it('quits when action after tweet is quit', async function() {
+    it('quits when action after tweet is quit', async function () {
         const config = {
             after_tweet: 'quit',
         } as const;
@@ -313,7 +313,7 @@ describe('TweetWindow', function() {
         await w.wantToQuit;
     });
 
-    it('does nothing when /statuses/update.json API fails', async function() {
+    it('does nothing when /statuses/update.json API fails', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
         await w.openNewTweet();
@@ -333,7 +333,7 @@ describe('TweetWindow', function() {
         ok(contents.url);
     });
 
-    it('updates options for second instance', async function() {
+    it('updates options for second instance', async function () {
         const config = {
             after_tweet: 'quit',
         } as const;
@@ -361,7 +361,7 @@ describe('TweetWindow', function() {
         eq(call.args[1], 'quit');
     });
 
-    it('reflects window configuration to BrowserWindow options', async function() {
+    it('reflects window configuration to BrowserWindow options', async function () {
         const config: Config = {
             window: {
                 width: 400,
@@ -381,7 +381,7 @@ describe('TweetWindow', function() {
         ok((w as any).win.setVisibleOnAllWorkspaces.lastCall.args[0]);
     });
 
-    it('shows "Network unavailable" page on offline and reopens page again when it is back to online', async function() {
+    it('shows "Network unavailable" page on offline and reopens page again when it is back to online', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
         const call = ipcMain.on.getCalls().find((c: any) => c.args[0] === 'tweetapp:online-status');
@@ -398,7 +398,7 @@ describe('TweetWindow', function() {
         eq(url, 'https://mobile.twitter.com/compose/tweet');
     });
 
-    it('does nothing when online status does not change on tweetapp:online-status message', async function() {
+    it('does nothing when online status does not change on tweetapp:online-status message', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
         const call = ipcMain.on.getCalls().find((c: any) => c.args[0] === 'tweetapp:online-status');
@@ -416,7 +416,7 @@ describe('TweetWindow', function() {
         eq((w as any).win.webContents.url, prevUrl);
     });
 
-    it('does nothing when no window is opened on online status change', async function() {
+    it('does nothing when no window is opened on online status change', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
         const call = ipcMain.on.getCalls().find((c: any) => c.args[0] === 'tweetapp:online-status');
@@ -430,7 +430,7 @@ describe('TweetWindow', function() {
         eq((w as any).win, null);
     });
 
-    it('shows dialog to require default_account config when no screen name is set and showing previous tweet is requested', async function() {
+    it('shows dialog to require default_account config when no screen name is set and showing previous tweet is requested', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow(undefined, {}, ipc, { text: '' }, {} as any);
         eq(w.screenName, undefined);
@@ -445,7 +445,7 @@ describe('TweetWindow', function() {
         await dialogClosed;
     });
 
-    it('shows dialog to notify a new tweet must be posted before opening previous tweet', async function() {
+    it('shows dialog to notify a new tweet must be posted before opening previous tweet', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
         const dialogClosed = w.openPreviousTweet();
@@ -459,7 +459,7 @@ describe('TweetWindow', function() {
         await dialogClosed;
     });
 
-    it('opens previous tweet page if screen name and previous tweet ID is set', async function() {
+    it('opens previous tweet page if screen name and previous tweet ID is set', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
         const win = (w as any).win;
@@ -481,7 +481,7 @@ describe('TweetWindow', function() {
         ok(win.restore.called);
     });
 
-    it('opens "New Tweet" page again after deleting a tweet to prevent back to home timeline', async function() {
+    it('opens "New Tweet" page again after deleting a tweet to prevent back to home timeline', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
         await w.openNewTweet();
@@ -503,7 +503,7 @@ describe('TweetWindow', function() {
         eq(w.prevTweetId, null);
     });
 
-    it('prevents navigation when the URL is not mobile.twitter.com', async function() {
+    it('prevents navigation when the URL is not mobile.twitter.com', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
 
@@ -523,7 +523,7 @@ describe('TweetWindow', function() {
         ok(!e.preventDefault.called);
     });
 
-    it('prevents creating a new window', async function() {
+    it('prevents creating a new window', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
 
@@ -536,7 +536,7 @@ describe('TweetWindow', function() {
         ok(e.preventDefault.called);
     });
 
-    it('injects CSS to prevent some links from displaying', async function() {
+    it('injects CSS to prevent some links from displaying', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
 
@@ -564,7 +564,7 @@ describe('TweetWindow', function() {
         ok(css.includes('[href="/foo"]'), css);
     });
 
-    it('detects login at onBeforeRequest hook', async function() {
+    it('detects login at onBeforeRequest hook', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
 
@@ -617,11 +617,11 @@ describe('TweetWindow', function() {
         eq(wc.session.webRequest.onBeforeRequest.lastCall.args[0], null); // listener was removed
     });
 
-    describe('Permission request handler', function() {
+    describe('Permission request handler', function () {
         let webContents: any;
         let handler: Function;
 
-        beforeEach(async function() {
+        beforeEach(async function () {
             const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
             await w.openNewTweet();
             webContents = (w as any).win.webContents;
@@ -629,7 +629,7 @@ describe('TweetWindow', function() {
             handler = webContents.session.setPermissionRequestHandler.lastCall.args[0];
         });
 
-        it('rejects some permissions without asking to user', function() {
+        it('rejects some permissions without asking to user', function () {
             for (const perm of ['fullscreen', 'notification']) {
                 const cb = sinon.fake();
                 handler(webContents, perm, cb, {});
@@ -638,7 +638,7 @@ describe('TweetWindow', function() {
             }
         });
 
-        it('rejects any permission from outside mobile.twitter.com', function() {
+        it('rejects any permission from outside mobile.twitter.com', function () {
             webContents.url = 'https:/example.com'; // This changes return value of webContents.getURL()
             const cb = sinon.fake();
             handler(webContents, 'media', cb, {});
@@ -646,7 +646,7 @@ describe('TweetWindow', function() {
             ok(!cb.lastCall.args[0]);
         });
 
-        it('rejects when user clicks "Reject" button of dialog', async function() {
+        it('rejects when user clicks "Reject" button of dialog', async function () {
             for (const perm of ['media', 'geolocation']) {
                 // 1 means button at index 1 'Reject' was clicked
                 dialog.showMessageBox = sinon.fake.returns(Promise.resolve({ response: 1 }));
@@ -665,7 +665,7 @@ describe('TweetWindow', function() {
             }
         });
 
-        it('accepts when user clicks "Accept" button of dialog', async function() {
+        it('accepts when user clicks "Accept" button of dialog', async function () {
             for (const perm of ['media', 'geolocation']) {
                 const p = new Promise(resolve => {
                     handler(webContents, perm, resolve, {});
@@ -679,7 +679,7 @@ describe('TweetWindow', function() {
         });
     });
 
-    it('rejects window title update', async function() {
+    it('rejects window title update', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
 
