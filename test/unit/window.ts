@@ -168,8 +168,8 @@ describe('TweetWindow', function () {
 
         await willOpenAfterDialogClosed;
 
-        eq(shell.openItem.callCount, 1);
-        const file = shell.openItem.lastCall.args[0];
+        eq(shell.openPath.callCount, 1);
+        const file = shell.openPath.lastCall.args[0];
         ok(file.endsWith('config.json'), file);
     });
 
@@ -190,7 +190,7 @@ describe('TweetWindow', function () {
 
         await willOpenAfterDialogClosed;
 
-        eq(shell.openItem.callCount, 0);
+        eq(shell.openPath.callCount, 0);
     });
 
     it('shows dialog to notify a new tweet must be posted before reply', async function () {

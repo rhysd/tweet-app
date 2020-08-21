@@ -85,7 +85,7 @@ export function reset() {
             hide: sinon.fake(),
         },
         shell: {
-            openItem: sinon.fake(),
+            openPath: sinon.fake.returns(Promise.resolve('')),
             openExternal: sinon.fake(),
         },
         ipcMain: {

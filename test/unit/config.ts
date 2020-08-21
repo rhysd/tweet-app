@@ -60,7 +60,7 @@ describe('config.ts', function () {
             reset();
         });
 
-        it('opens config with openItem()', async function () {
+        it('opens config with openPath()', async function () {
             const config = {
                 default_account: 'foo',
                 other_accounts: ['aaa', 'bbb'],
@@ -71,14 +71,14 @@ describe('config.ts', function () {
             fs.writeFileSync(ConfigPath, JSON.stringify(config));
 
             await openConfig();
-            ok(shell.openItem.calledOnce);
-            eq(shell.openItem.getCall(0).args, [ConfigPath]);
+            ok(shell.openPath.calledOnce);
+            eq(shell.openPath.getCall(0).args, [ConfigPath]);
         });
 
         it('opens config after writing default config to file when no config found', async function () {
             await openConfig();
-            ok(shell.openItem.calledOnce);
-            eq(shell.openItem.getCall(0).args, [ConfigPath]);
+            ok(shell.openPath.calledOnce);
+            eq(shell.openPath.getCall(0).args, [ConfigPath]);
         });
     });
 });
