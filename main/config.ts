@@ -38,6 +38,10 @@ export async function openConfig() {
         log.info('Created empty config file at', CONFIG_FILE);
     }
 
-    shell.openItem(CONFIG_FILE);
+    const errMsg = await shell.openPath(CONFIG_FILE);
+    if (errMsg !== '') {
+        throw new Error(`Could not open '${CONFIG_FILE}: ${errMsg}`);
+    }
+
     log.info('Opened', CONFIG_FILE);
 }
