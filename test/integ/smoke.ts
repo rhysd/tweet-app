@@ -31,9 +31,12 @@ describe('Smoke', function () {
     });
 
     it('disables Node integration', async function () {
-        const expected = {
-            message: 'javascript error: require is not defined',
-        };
-        await rejects(() => app.client.execute(() => require('electron')) as any, expected);
+        await rejects(
+            () => app.client.execute(() => require('electron')) as any,
+            (err: Error) => {
+                ok(err.message.includes('javascript error: require is not defined'), err);
+                return true;
+            },
+        );
     });
 });
