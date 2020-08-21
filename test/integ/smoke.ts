@@ -3,11 +3,11 @@ import { Application } from 'spectron';
 import { deepStrictEqual as eq, ok, rejects } from 'assert';
 
 const electronPath = require('electron') as any;
+const appDir = path.join(__dirname, '..', '..');
 
 describe('Smoke', function () {
     this.timeout(10000);
 
-    const appDir = path.join(__dirname, '..', '..');
     let app: Application;
 
     before(async function () {

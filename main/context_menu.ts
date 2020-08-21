@@ -15,7 +15,7 @@ export default class ContextMenu {
         });
     }
 
-    public setLifecycle(l: Lifecycle) {
+    public setLifecycle(l: Lifecycle): void {
         this.app = l;
     }
 

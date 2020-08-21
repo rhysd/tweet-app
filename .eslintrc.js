@@ -18,7 +18,7 @@ module.exports = {
         project: './tsconfig.json',
         sourceType: 'module', // Avoid 'Parsing error: ImportDeclaration should appear when the mode is ES6 and in the module context'
     },
-    plugins: ['@typescript-eslint', 'node', 'mocha', 'security', 'prettier'],
+    plugins: ['@typescript-eslint', 'node', 'security', 'prettier'],
     rules: {
         // Enabled
         '@typescript-eslint/prefer-for-of': 'error',
@@ -30,7 +30,13 @@ module.exports = {
         '@typescript-eslint/no-extra-non-null-assertion': 'error',
         '@typescript-eslint/prefer-nullish-coalescing': 'error',
         '@typescript-eslint/prefer-optional-chain': 'error',
-        '@typescript-eslint/ban-ts-ignore': 'error',
+        '@typescript-eslint/ban-ts-comment': [
+            'error',
+            {
+                'ts-ignore': true,
+                'ts-nocheck': true,
+            },
+        ],
         '@typescript-eslint/prefer-includes': 'error',
         '@typescript-eslint/prefer-for-of': 'error',
         '@typescript-eslint/prefer-string-starts-ends-with': 'error',
@@ -50,6 +56,7 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-object-literal-type-assertion': 'off', // https://github.com/typescript-eslint/typescript-eslint/issues/166
         '@typescript-eslint/no-empty-function': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
         'no-console': 'off', // bin/ and renderer/ is still using console
         'no-process-exit': 'off',
         'node/no-unsupported-features/es-syntax': 'off', // false positive at import statements
@@ -59,31 +66,41 @@ module.exports = {
         'node/shebang': 'off', // It complains bin/cli.ts
 
         // Configured
-        '@typescript-eslint/camelcase': [
+        '@typescript-eslint/naming-convention': [
             'error',
             {
-                allow: [
+                selector: 'default',
+                format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+                leadingUnderscore: 'allow',
+                filter: {
                     // Keys in config.json
-                    'default_account',
-                    'other_accounts',
-                    'quit_on_close',
-                    'after_tweet',
-                    'auto_hide_menu_bar',
-                    'visible_on_all_workspaces',
-                ],
+                    regex:
+                        '^(default_account|other_accounts|quit_on_close|after_tweet|auto_hide_menu_bar|visible_on_all_workspaces|_)$',
+                    match: false,
+                },
             },
         ],
 
         // Enabled
-        'mocha/handle-done-callback': 'error',
-        'mocha/no-exclusive-tests': 'error',
-        'mocha/no-global-tests': 'error',
-        'mocha/no-top-level-hooks': 'error',
-        'mocha/no-identical-title': 'error',
-        'mocha/no-mocha-arrows': 'error',
-        'mocha/no-pending-tests': 'error',
-        'mocha/no-skipped-tests': 'error',
-        'mocha/no-return-and-callback': 'error',
-        'mocha/no-async-describe': 'error',
     },
+    overrides: [
+        {
+            files: ['test/**/*.ts'],
+            plugins: ['mocha'],
+            extends: ['plugin:mocha/recommended'],
+            rules: {
+                'mocha/handle-done-callback': 'error',
+                'mocha/no-exclusive-tests': 'error',
+                'mocha/no-global-tests': 'error',
+                'mocha/no-top-level-hooks': 'error',
+                'mocha/no-identical-title': 'error',
+                'mocha/no-mocha-arrows': 'error',
+                'mocha/no-pending-tests': 'error',
+                'mocha/no-skipped-tests': 'error',
+                'mocha/no-return-and-callback': 'error',
+                'mocha/no-async-describe': 'error',
+                '@typescript-eslint/no-var-requires': 'off',
+            },
+        },
+    ],
 };

@@ -50,6 +50,7 @@ function appExePath(exe: string | undefined): string {
     try {
         // XXX: In node context, require('electron') returns a string which represents path to electron
         // binary in electron npm package.
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         return (require('electron') as any) as string;
     } catch (e) {
         throw new Error(

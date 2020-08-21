@@ -269,7 +269,7 @@ export default class TweetWindow {
                 icon: ICON_PATH,
                 show: false,
                 title: 'Tweet',
-                titleBarStyle: 'hiddenInset' as 'hiddenInset',
+                titleBarStyle: 'hiddenInset' as const,
                 frame: !ON_DARWIN,
                 fullscreenable: false,
                 useContentSize: true,

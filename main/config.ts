@@ -22,7 +22,7 @@ export async function loadConfig(): Promise<Config> {
     }
 }
 
-export async function openConfig() {
+export async function openConfig(): Promise<void> {
     try {
         await fs.access(DATA_DIR);
     } catch (err) {

@@ -619,7 +619,7 @@ describe('TweetWindow', function () {
 
     describe('Permission request handler', function () {
         let webContents: any;
-        let handler: Function;
+        let handler: (...args: any[]) => any;
 
         beforeEach(async function () {
             const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);

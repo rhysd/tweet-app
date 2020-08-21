@@ -8,7 +8,7 @@ export const appDir = path.join(__dirname, 'appDir');
 
 const electron: any = {};
 
-function ctorSpy(statics?: { [n: string]: Function }) {
+function ctorSpy(statics?: { [n: string]: unknown }) {
     class Spy {
         public args: any[];
         public constructor(...args: any[]) {
