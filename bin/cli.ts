@@ -63,7 +63,7 @@ const AfterTweetActions: ConfigAfterTweet[] = ['new tweet', 'reply previous', 'c
 
 const { hashtags, args, afterTweet, detach, reply, electronPath } = commander
     .command('tweet')
-    .version('0.2.7')
+    .version('0.2.9')
     .usage('[options] [text]')
     .description('Desktop application for tweeting. Timeline never shows up.')
     .option('-t --hashtags <list>', 'comma-separated list of hashtags (e.g. "js,react,node")', s =>
