@@ -1,3 +1,14 @@
+<a name="v0.2.9"></a>
+# [v0.2.9](https://github.com/rhysd/tweet-app/releases/tag/v0.2.9) - 28 Sep 2020
+
+Maintenance updates. No new features.
+
+- Update Electron from v8.2 to v10.1
+- Update many npm dependencies including security patches
+
+[Changes][v0.2.9]
+
+
 <a name="v0.2.7"></a>
 # [v0.2.7](https://github.com/rhysd/tweet-app/releases/tag/v0.2.7) - 06 May 2020
 
@@ -90,6 +101,7 @@
 [Changes][v0.1.0]
 
 
+[v0.2.9]: https://github.com/rhysd/tweet-app/compare/v0.2.7...v0.2.9
 [v0.2.7]: https://github.com/rhysd/tweet-app/compare/v0.2.6...v0.2.7
 [v0.2.6]: https://github.com/rhysd/tweet-app/compare/v0.2.5...v0.2.6
 [v0.2.5]: https://github.com/rhysd/tweet-app/compare/v0.2.4...v0.2.5
