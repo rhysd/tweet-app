@@ -15,7 +15,7 @@ a tweets timeline. It's built on [Twitter Lite][twitter-lite] and [Electron][ele
 - Multi-account support
 - Terminal is first class. A `tweet` command is provided to access to the app
 - Customizable. Keyboard shortcuts and lifecycle of the application can be configured
-- macOS, Linux and Windows are supported (confirmed with macOS 10.12, Ubuntu 18.04, Windows 10)
+- macOS, Linux and Windows are supported (confirmed with macOS 10.15, Ubuntu 18.04, Windows 10)
 
 
 
@@ -39,7 +39,7 @@ I'm working on something (e.g. coding, debugging, ...).
 
 By separating posting a tweet from seeing timeline, it stops you 'escaping' into a timeline (and
 consuming time to see it) and makes you back to your work when posting a tweet. I'm also thinking
-that reducing times to see a timeline and actively determine the timing to see it are effective to
+that reducing times to see a timeline and actively determining the timing to see it are effective to
 avoid SNS addiction.
 
 To achieve the separation, this app only provides the functionality to post tweets.
@@ -55,12 +55,13 @@ To achieve the separation, this app only provides the functionality to post twee
 Installers for each platforms are ready at [releases page][release].
 Please download it for your platform and double click it to install.
 
-- **macOS**: `Tweet-x.y.z.dmg` or `Tweet-0.2.0-mac.zip`
+- **macOS**: `Tweet-x.y.z.dmg` or `Tweet-x.y.z-mac.zip`
 - **Linux**: `Tweet x.y.z.AppImage` (in [AppImage][appimage] format) or `tweet-app_x.y.z_amd64.deb`
 - **Windows**: `Tweet Setup.x.y.z.exe` (as [NSIS][nsis] installer)
 
 Note: On macOS, trying to install app may be rejected by OS at first time since this app is not
-signed with code signing. In the case, please install from it 'Preferences -> Security'.
+signed with code signing. In the case, please allow to run it from
+`System Preferences -> Security and Privacy`.
 
 #### With [homebrew-cask][]
 
