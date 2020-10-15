@@ -46,6 +46,8 @@ module.exports = {
         '@typescript-eslint/await-thenable': 'error',
         '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
         '@typescript-eslint/switch-exhaustiveness-check': 'error',
+        '@typescript-eslint/no-duplicate-imports': 'error',
+        '@typescript-eslint/no-unused-vars': 'error',
         'prettier/prettier': 'error',
         eqeqeq: 'error',
 
@@ -64,6 +66,7 @@ module.exports = {
         'security/detect-non-literal-fs-filename': 'off',
         'security/detect-object-injection': 'off', // false positive at array index accesses
         'node/shebang': 'off', // It complains bin/cli.ts
+        'no-unused-vars': 'off', // For @typescript-eslint/no-unused-vars
 
         // Configured
         '@typescript-eslint/naming-convention': [

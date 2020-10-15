@@ -3,7 +3,6 @@
 import * as cp from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
-import { join } from 'path';
 import commander = require('commander');
 
 function appExePath(exe: string | undefined): string {
@@ -94,7 +93,7 @@ const opts: CommandLineOptions = {
 const appBinPath = appExePath(electronPath);
 
 // First argument is path to `node`, second argument is path to script
-const argv = [join(__dirname, '..'), '--', JSON.stringify(opts)];
+const argv = [path.join(__dirname, '..'), '--', JSON.stringify(opts)];
 
 // Otherwise the electron process will exit immediately since the executable is run as node.
 delete process.env.ELECTRON_RUN_AS_NODE;
