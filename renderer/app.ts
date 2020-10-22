@@ -45,19 +45,19 @@ export default class App {
             return null; // Not found
         }
 
-        Ipc.on('tweetapp:action-after-tweet', (_: Event, action: ConfigAfterTweet | undefined) => {
+        Ipc.on('tweetapp:action-after-tweet', (_, action: ConfigAfterTweet | undefined) => {
             if (action) {
                 console.log('Specifying action after tweet:', action);
                 this.afterTweet = action;
             }
         });
 
-        Ipc.on('tweetapp:screen-name', (_: Event, name: string) => {
+        Ipc.on('tweetapp:screen-name', (_, name: string) => {
             console.log('Screen name from IPC:', name);
             this.screenName = name;
         });
 
-        Ipc.on('tweetapp:login', (_: Event) => {
+        Ipc.on('tweetapp:login', _ => {
             console.log('Login detected with screen name', this.screenName);
             const loginInput = document.querySelector('input[name*="username_or_email"]') as HTMLInputElement | null;
             if (loginInput === null || this.screenName === null) {
@@ -73,7 +73,7 @@ export default class App {
             }
         });
 
-        Ipc.on('tweetapp:sent-tweet', async (_: Event, url: string) => {
+        Ipc.on('tweetapp:sent-tweet', async (_, url: string) => {
             console.log('tweet posted. next URL:', url);
             if (this.screenName === null) {
                 window.location.href = url;
@@ -84,12 +84,12 @@ export default class App {
             await this.inReplyTo(url, this.screenName, 0);
         });
 
-        Ipc.on('tweetapp:open', (_: Event, url: string) => {
+        Ipc.on('tweetapp:open', (_, url: string) => {
             window.location.href = url;
             console.log('Open URL due to tweetapp:open message:', url);
         });
 
-        Ipc.on('tweetapp:click-tweet-button', (_: Event) => {
+        Ipc.on('tweetapp:click-tweet-button', _ => {
             const btn = findTweetButton();
             if (btn !== null) {
                 console.log('Click tweet button', btn);

@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 
-export type Listener = (event: Event, ...args: any[]) => void;
+export type Listener = (event: Event, ...args: unknown[]) => void;
 
 const ipc = new (class {
     private listeners: [IpcChan.FromMain, Listener][];
@@ -9,7 +9,7 @@ const ipc = new (class {
         this.listeners = [];
     }
 
-    public send(chan: IpcChan.FromRenderer, ...args: any[]) {
+    public send(chan: IpcChan.FromRenderer, ...args: unknown[]) {
         ipcRenderer.send(chan, ...args);
     }
 

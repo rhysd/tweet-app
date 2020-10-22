@@ -17,7 +17,7 @@ interface WindowConfig {
     auto_hide_menu_bar?: boolean;
     visible_on_all_workspaces?: boolean;
 }
-interface Config {
+interface MutableConfig {
     default_account?: string;
     other_accounts?: string[];
     keymaps?: KeyMapConfig;
@@ -26,13 +26,15 @@ interface Config {
     quit_on_close?: boolean;
     window?: WindowConfig;
 }
+type Config = Readonly<MutableConfig>;
 
-interface CommandLineOptions {
+interface MutableCommandLineOptions {
     hashtags?: string[];
     afterTweet?: ConfigAfterTweet;
     reply?: boolean;
     text: string;
 }
+type CommandLineOptions = Readonly<MutableCommandLineOptions>;
 
 type OnlineStatus = 'online' | 'offline';
 
