@@ -8,7 +8,7 @@
   },
   "main": "main/index.js",
   "bin": {
-    "tweet": "./bin/cli.js"
+    "tweet": "bin/cli.js"
   },
   "scripts": {
     "build:tsc": "tsc -p . && shx chmod +x ./bin/cli.js",
