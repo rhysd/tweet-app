@@ -11,7 +11,7 @@ describe('Lifecycle', function () {
     beforeEach(reset);
 
     function waitForWindowOpen(lifecycle: Lifecycle) {
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             const ipc = (lifecycle as any).ipc;
             const send = ipc.send.bind(ipc);
             (lifecycle as any).ipc.send = function (...args: any[]) {

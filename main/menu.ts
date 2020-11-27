@@ -33,6 +33,8 @@ export interface TouchbarActions {
     openPrevTweet: A;
 }
 
+type TouchBarItem = Electron.TouchBarButton | Electron.TouchBarSpacer | Electron.TouchBarLabel;
+
 export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], actions: MenuActions): Menu {
     const keymaps = Object.assign({}, DefaultKeyMaps, userKeyMaps);
 
@@ -178,7 +180,9 @@ export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], action
                     type: 'radio',
                     checked: i === 0,
                     label: a.startsWith('@') ? a : '@' + a,
-                    accelerator: `CmdOrCtrl+${i + 1}`,
+                    // XXX: Without this `as`, tsc reports that the value is incompatible with Electron.Accelerator
+                    // https://github.com/electron/electron/issues/26716
+                    accelerator: `CmdOrCtrl+${i + 1}` as Electron.Accelerator,
                     click() {
                         log.info('Switching account to', a);
                         actions.switchAccount(a);
@@ -280,7 +284,7 @@ export function touchBar(screenName: string | undefined, actions: TouchbarAction
         });
     }
 
-    const items = [
+    const items: TouchBarItem[] = [
         smallSpacer(),
         button('New Tweet', actions.tweet),
         smallSpacer(),

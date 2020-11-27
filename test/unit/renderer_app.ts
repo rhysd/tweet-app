@@ -61,7 +61,7 @@ describe('App', function () {
 
         let url: string | undefined;
         function setHrefSpy() {
-            return new Promise(resolve => {
+            return new Promise<void>(resolve => {
                 (global as any).window.location = {
                     set href(u: string) {
                         url = u;
@@ -104,7 +104,7 @@ describe('App', function () {
 
         let url: string | undefined;
         function setHrefSpy() {
-            return new Promise(resolve => {
+            return new Promise<void>(resolve => {
                 (global as any).window.location = {
                     set href(u: string) {
                         url = u;
