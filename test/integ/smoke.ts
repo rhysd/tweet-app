@@ -11,13 +11,6 @@ describe('Smoke', function () {
     let app: Application;
 
     before(async function () {
-        if (process.platform === 'darwin' || process.platform === 'win32') {
-            // Spectron v12.0.0 (Electron v11) does not work on macOS and Windows. On macOS,
-            // it launches the application but cannot detect the application was launched.
-            // As the result, starting application fails and many application instances are left open.
-            this.skip();
-        }
-
         app = new Application({
             path: electronPath,
             args: [appDir, '--integration-test-running'],
