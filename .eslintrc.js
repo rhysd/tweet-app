@@ -48,6 +48,7 @@ module.exports = {
         '@typescript-eslint/switch-exhaustiveness-check': 'error',
         '@typescript-eslint/no-duplicate-imports': 'error',
         '@typescript-eslint/no-unused-vars': 'error',
+        '@typescript-eslint/no-confusing-void-expression': 'error',
         'prettier/prettier': 'error',
         eqeqeq: 'error',
 

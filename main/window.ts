@@ -313,7 +313,9 @@ export default class TweetWindow {
                 /* eslint-enable @typescript-eslint/no-non-null-assertion */
             });
 
-            win.on('page-title-updated', e => e.preventDefault());
+            win.on('page-title-updated', e => {
+                e.preventDefault();
+            });
 
             this.didClose = new Promise<void>(resolve => {
                 win.once('closed', (_: Event) => {
