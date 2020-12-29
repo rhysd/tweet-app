@@ -123,7 +123,7 @@ export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], action
             submenu: [
                 {
                     role: 'reload',
-                    click(_, focusedWindow) {
+                    click(_, focusedWindow): void {
                         if (focusedWindow) {
                             focusedWindow.reload();
                         }
@@ -159,13 +159,13 @@ export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], action
             submenu: [
                 {
                     label: 'Learn More',
-                    click() {
+                    click(): void {
                         shell.openExternal('https://github.com/rhysd/tweet-app#readme');
                     },
                 },
                 {
                     label: 'Search Issues',
-                    click() {
+                    click(): void {
                         shell.openExternal('https://github.com/rhysd/tweet-app/issues');
                     },
                 },
@@ -258,7 +258,7 @@ export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], action
     return Menu.buildFromTemplate(template);
 }
 
-export function dockMenu(tweet: A, reply: A) {
+export function dockMenu(tweet: A, reply: A): Menu {
     const template: Electron.MenuItemConstructorOptions[] = [
         {
             label: 'New Tweet',
@@ -272,11 +272,11 @@ export function dockMenu(tweet: A, reply: A) {
     return Menu.buildFromTemplate(template);
 }
 
-export function touchBar(screenName: string | undefined, actions: TouchbarActions) {
+export function touchBar(screenName: string | undefined, actions: TouchbarActions): TouchBar {
     // Cannot add a single instance of TouchBarItem multiple times in a TouchBar
-    const smallSpacer = () => new TouchBarSpacer({ size: 'small' });
+    const smallSpacer = (): Electron.TouchBarSpacer => new TouchBarSpacer({ size: 'small' });
 
-    function button(label: string, click: A) {
+    function button(label: string, click: A): Electron.TouchBarButton {
         return new TouchBarButton({
             label,
             backgroundColor: '#1da1f2',

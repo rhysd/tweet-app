@@ -9,16 +9,16 @@ const ipc = new (class {
         this.listeners = [];
     }
 
-    public send(chan: IpcChan.FromRenderer, ...args: unknown[]) {
+    public send(chan: IpcChan.FromRenderer, ...args: unknown[]): void {
         ipcRenderer.send(chan, ...args);
     }
 
-    public on(chan: IpcChan.FromMain, listener: Listener) {
+    public on(chan: IpcChan.FromMain, listener: Listener): void {
         ipcRenderer.on(chan, listener);
         this.listeners.push([chan, listener]);
     }
 
-    public dispose() {
+    public dispose(): void {
         for (const [chan, listener] of this.listeners) {
             ipcRenderer.removeListener(chan, listener);
         }

@@ -5,7 +5,7 @@ import { loadConfig } from './config';
 import { ON_DARWIN, ICON_PATH } from './constants';
 import ContextMenu from './context_menu';
 
-async function go() {
+async function go(): Promise<void> {
     // default_app sets app.on('window-all-closed', () => app.quit()) before
     // loading this application. We need to disable the callback.
     app.removeAllListeners('window-all-closed');

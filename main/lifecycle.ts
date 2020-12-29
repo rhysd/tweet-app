@@ -17,7 +17,7 @@ export default class Lifecycle {
     private readonly prevTweetIds: Map<string, string | null>; // Screen name -> Maybe Tweet ID
 
     public constructor(private readonly config: Config, private opts: CommandLineOptions) {
-        this.resolveQuit = () => {};
+        this.resolveQuit = (): void => {};
         this.didQuit = new Promise(resolve => {
             this.resolveQuit = resolve;
         });
@@ -133,17 +133,17 @@ export default class Lifecycle {
     }
 
     // For context menu
-    public unlinkSelection(text: string) {
+    public unlinkSelection(text: string): void {
         this.currentWin.unlinkSelection(text);
     }
 
     // Actions
 
-    public clickTweetButton = () => {
+    public clickTweetButton = (): void => {
         this.ipc.send('tweetapp:click-tweet-button');
     };
 
-    public quit = async () => {
+    public quit = async (): Promise<void> => {
         log.debug('Will close window and quit');
         await this.currentWin.close();
         this.ipc.dispose();
@@ -153,15 +153,15 @@ export default class Lifecycle {
         this.resolveQuit();
     };
 
-    public newTweet = () => {
+    public newTweet = (): Promise<void> => {
         return this.currentWin.openNewTweet();
     };
 
-    public replyToPrevTweet = () => {
+    public replyToPrevTweet = (): Promise<void> => {
         return this.currentWin.openReply();
     };
 
-    public openProfilePageForDebug = () => {
+    public openProfilePageForDebug = (): void => {
         let url = 'https://mobile.twitter.com';
         if (this.currentWin.screenName !== undefined) {
             url = `https://mobile.twitter.com/${this.currentWin.screenName}`;
@@ -169,11 +169,11 @@ export default class Lifecycle {
         this.ipc.send('tweetapp:open', url);
     };
 
-    public openAccountSettings = () => {
+    public openAccountSettings = (): void => {
         this.ipc.send('tweetapp:open', 'https://mobile.twitter.com/settings/account');
     };
 
-    public switchAccount = async (screenName: string) => {
+    public switchAccount = async (screenName: string): Promise<void> => {
         if (screenName.startsWith('@')) {
             screenName = screenName.slice(1);
         }
@@ -194,7 +194,7 @@ export default class Lifecycle {
         }
     };
 
-    public toggleWindow = () => {
+    public toggleWindow = async (): Promise<void> => {
         const opened = this.currentWin.isOpen();
         log.debug('Toggle window. Window is open:', opened);
         if (opened) {
@@ -204,7 +204,7 @@ export default class Lifecycle {
         }
     };
 
-    public openPreviousTweet = () => {
+    public openPreviousTweet = (): Promise<void> => {
         return this.currentWin.openPreviousTweet();
     };
 }

@@ -30,7 +30,7 @@ export default class ContextMenu {
         };
     }
 
-    private unlink(text: string) {
+    private unlink(text: string): void {
         if (this.app === null) {
             log.debug('Cannot handle context menu due to no app lifecycle');
             return;

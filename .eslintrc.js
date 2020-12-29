@@ -49,12 +49,12 @@ module.exports = {
         '@typescript-eslint/no-duplicate-imports': 'error',
         '@typescript-eslint/no-unused-vars': 'error',
         '@typescript-eslint/no-confusing-void-expression': 'error',
+        '@typescript-eslint/explicit-function-return-type': 'error',
         'prettier/prettier': 'error',
         eqeqeq: 'error',
 
         // Disabled
         '@typescript-eslint/no-parameter-properties': 'off',
-        '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/no-unused-vars': 'off', // Since it is checked by TypeScript compiler
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-object-literal-type-assertion': 'off', // https://github.com/typescript-eslint/typescript-eslint/issues/166
@@ -104,6 +104,7 @@ module.exports = {
                 'mocha/no-return-and-callback': 'error',
                 'mocha/no-async-describe': 'error',
                 '@typescript-eslint/no-var-requires': 'off',
+                '@typescript-eslint/explicit-function-return-type': 'off',
             },
         },
     ],

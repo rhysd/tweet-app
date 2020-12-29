@@ -1,6 +1,6 @@
 import Ipc from './ipc';
 
-function wait(ms: number) {
+function wait(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -8,8 +8,8 @@ export default class App {
     private afterTweet: ConfigAfterTweet = 'new tweet';
     private screenName: string | null = null;
 
-    public start() {
-        function createCoverElement() {
+    public start(): void {
+        function createCoverElement(): HTMLDivElement {
             const e = document.createElement('div');
             e.style.display = 'block';
             e.style.position = 'fixed';
@@ -117,13 +117,13 @@ export default class App {
         );
     }
 
-    private sendOnlineStatus(isOnline: boolean) {
+    private sendOnlineStatus(isOnline: boolean): void {
         const s = isOnline ? 'online' : 'offline';
         console.log('Online status:', s);
         Ipc.send('tweetapp:online-status', s);
     }
 
-    private async inReplyTo(url: string, screenName: string, retry: number) {
+    private async inReplyTo(url: string, screenName: string, retry: number): Promise<void> {
         const a: HTMLAnchorElement | null = document.querySelector(`a[href^="/${screenName}/status/"]`);
         if (a === null) {
             if (retry > 40) {

@@ -1,6 +1,6 @@
 import App from './app';
 
-function cancel(e: Event) {
+function cancel(e: Event): void {
     e.preventDefault();
     e.stopPropagation();
 }

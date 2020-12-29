@@ -14,12 +14,12 @@ export default class Ipc {
         this.listeners = new Map<Listener, IpcChan.FromRenderer>();
     }
 
-    public attach(sender: Electron.WebContents) {
+    public attach(sender: Electron.WebContents): void {
         log.debug('Attach webContents as IPC sender', sender.id);
         this.sender = sender;
     }
 
-    public detach(sender: Electron.WebContents) {
+    public detach(sender: Electron.WebContents): void {
         if (this.sender !== sender) {
             return;
         }
@@ -27,7 +27,7 @@ export default class Ipc {
         this.sender = null;
     }
 
-    public send(chan: IpcChan.FromMain, ...args: any[]) {
+    public send(chan: IpcChan.FromMain, ...args: any[]): void {
         if (this.sender === null) {
             log.error('Cannot send IPC message because sender is not existing', chan, args);
         } else {
@@ -36,14 +36,14 @@ export default class Ipc {
         }
     }
 
-    public on(chan: IpcChan.FromRenderer, listener: Listener) {
+    public on(chan: IpcChan.FromRenderer, listener: Listener): void {
         assert.ok(!this.listeners.has(listener));
         ipcMain.on(chan, listener);
         this.listeners.set(listener, chan);
         log.debug('Listen IPC channel', chan, listener.name);
     }
 
-    public forget(chan: IpcChan.FromRenderer, listener: Listener) {
+    public forget(chan: IpcChan.FromRenderer, listener: Listener): void {
         const deleted = this.listeners.delete(listener);
         if (!deleted) {
             log.warn('No listener found for', chan, 'channel to forget');
@@ -53,7 +53,7 @@ export default class Ipc {
         log.debug('Forget IPC channel', chan, listener.name);
     }
 
-    public dispose() {
+    public dispose(): void {
         for (const [listener, chan] of this.listeners.entries()) {
             ipcMain.removeListener(chan, listener);
         }

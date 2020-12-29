@@ -52,7 +52,7 @@ export default class TweetWindow {
         this.prevTweetId = null;
         this.onPrevTweetIdReceived = this.onPrevTweetIdReceived.bind(this);
         this.onOnlineStatusChange = this.onOnlineStatusChange.bind(this);
-        this.resolveWantToQuit = () => {};
+        this.resolveWantToQuit = (): void => {};
         this.wantToQuit = new Promise<void>(resolve => {
             this.resolveWantToQuit = resolve;
         });
@@ -60,7 +60,7 @@ export default class TweetWindow {
         this.onlineStatus = 'online'; // Assume network is available at start
     }
 
-    public updateOptions(opts: CommandLineOptions) {
+    public updateOptions(opts: CommandLineOptions): void {
         this.hashtags = (opts.hashtags ?? []).join(',');
         this.actionAfterTweet = opts.afterTweet ?? this.config.after_tweet;
         if (this.actionAfterTweet !== undefined) {
@@ -90,13 +90,15 @@ export default class TweetWindow {
         return this.win !== null;
     }
 
-    public async openPreviousTweet() {
+    public async openPreviousTweet(): Promise<void> {
         log.info('Open previous tweet', this.screenName, this.prevTweetId);
 
         if (this.screenName === undefined) {
-            return this.requireConfigWithDialog('open previous tweet page');
+            await this.requireConfigWithDialog('open previous tweet page');
+            return;
         } else if (this.prevTweetId === null) {
-            return this.notifyReplyUnavailableUntilTweet('open previous tweet page');
+            await this.notifyReplyUnavailableUntilTweet('open previous tweet page');
+            return;
         }
 
         if (this.win === null) {
@@ -117,7 +119,7 @@ export default class TweetWindow {
         });
     }
 
-    public unlinkSelection(text: string) {
+    public unlinkSelection(text: string): void {
         if (this.win === null) {
             log.debug('Window is not open. Cannot unlink selection');
             return;
@@ -136,7 +138,7 @@ export default class TweetWindow {
         this.win.webContents.insertText(unlinked);
     }
 
-    private notifyReplyUnavailableUntilTweet(doSomething: string) {
+    private notifyReplyUnavailableUntilTweet(doSomething: string): Promise<unknown> {
         return dialog.showMessageBox({
             type: 'info',
             title: `Cannot ${doSomething}`,
@@ -147,7 +149,7 @@ export default class TweetWindow {
         });
     }
 
-    private requireConfigWithDialog(doSomething: string) {
+    private requireConfigWithDialog(doSomething: string): Promise<unknown> {
         const buttons = ['Edit Config', 'OK'];
         return dialog
             .showMessageBox({
@@ -218,7 +220,7 @@ export default class TweetWindow {
         return this.config.window[name] as T;
     }
 
-    private async open(reply: boolean, text?: string) {
+    private async open(reply: boolean, text?: string): Promise<void> {
         if (reply) {
             if (this.screenName === undefined) {
                 await this.requireConfigWithDialog('reply to previous tweet');
@@ -504,12 +506,12 @@ export default class TweetWindow {
         });
     }
 
-    private onPrevTweetIdReceived(_: Event, id: string) {
+    private onPrevTweetIdReceived(_: Event, id: string): void {
         log.info('Previous tweet:', id);
         this.prevTweetId = id;
     }
 
-    private onOnlineStatusChange(_: Event, status: OnlineStatus) {
+    private onOnlineStatusChange(_: Event, status: OnlineStatus): void {
         log.info('Online status changed:', status, 'Previous status:', this.onlineStatus);
 
         if (this.onlineStatus === status) {
