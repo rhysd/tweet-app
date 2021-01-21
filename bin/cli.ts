@@ -60,7 +60,7 @@ function appExePath(exe: string | undefined): string {
 
 const AfterTweetActions: ConfigAfterTweet[] = ['new tweet', 'reply previous', 'close', 'quit'];
 
-const { hashtags, args, afterTweet, detach, reply, electronPath } = commander
+const parsed = commander
     .command('tweet')
     .version('0.2.9')
     .usage('[options] [text]')
@@ -77,6 +77,8 @@ const { hashtags, args, afterTweet, detach, reply, electronPath } = commander
     .option('-r --reply', 'reply to tweet sent previously. This option is only effective when app is already running')
     .option('--electron-path <path>', 'file path to Electron executable to run app')
     .parse(process.argv);
+const { hashtags, afterTweet, detach, reply, electronPath } = parsed.opts();
+const args = parsed.args;
 
 // Verify --after-tweet
 if (afterTweet !== undefined && !AfterTweetActions.includes(afterTweet)) {
