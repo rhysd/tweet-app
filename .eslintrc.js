@@ -50,6 +50,7 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': 'error',
         '@typescript-eslint/no-confusing-void-expression': 'error',
         '@typescript-eslint/explicit-function-return-type': 'error',
+        '@typescript-eslint/consistent-type-imports': 'error',
         'prettier/prettier': 'error',
         eqeqeq: 'error',
 
@@ -105,6 +106,7 @@ module.exports = {
                 'mocha/no-async-describe': 'error',
                 '@typescript-eslint/no-var-requires': 'off',
                 '@typescript-eslint/explicit-function-return-type': 'off',
+                '@typescript-eslint/consistent-type-imports': 'off',
             },
         },
     ],

@@ -1,12 +1,13 @@
 import * as querystring from 'querystring';
 import * as assert from 'assert';
 import * as path from 'path';
-import { BrowserWindow, Menu, dialog, nativeImage, app } from 'electron';
+import { BrowserWindow, dialog, nativeImage, app } from 'electron';
+import type { Menu } from 'electron';
 import windowState = require('electron-window-state');
 import { TweetAutoLinkBreaker, UNLINK_ALL_CONFIG } from 'break-tweet-autolink';
 import log from './log';
 import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
-import Ipc from './ipc';
+import type Ipc from './ipc';
 import { touchBar } from './menu';
 import { openConfig } from './config';
 

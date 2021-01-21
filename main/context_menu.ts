@@ -1,7 +1,7 @@
-import { ContextMenuParams, MenuItemConstructorOptions } from 'electron';
+import type { ContextMenuParams, MenuItemConstructorOptions } from 'electron';
 import contextMenu = require('electron-context-menu');
 import log from './log';
-import Lifecycle from './lifecycle';
+import type Lifecycle from './lifecycle';
 
 export default class ContextMenu {
     private app: Lifecycle | null = null;
