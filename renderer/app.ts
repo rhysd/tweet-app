@@ -134,6 +134,7 @@ export default class App {
             back.click();
 
             function resetWindow() {
+                document.body.appendChild(createCoverElement());
                 Ipc.send('tweetapp:reset-window');
             }
 
