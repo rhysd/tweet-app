@@ -133,7 +133,7 @@ export default class App {
             console.log('Click back button', back);
             back.click();
 
-            function resetWindow() {
+            function resetWindow(): void {
                 document.body.appendChild(createCoverElement());
                 Ipc.send('tweetapp:reset-window');
             }
