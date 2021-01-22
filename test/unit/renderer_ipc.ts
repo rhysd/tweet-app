@@ -13,7 +13,7 @@ describe('Ipc on renderer', function () {
     });
 
     it('sends IPC message with send() method', function () {
-        const args = ['tweetapp:prev-tweet-id', '12345'] as ['tweetapp:prev-tweet-id', '12345'];
+        const args = ['tweetapp:prev-tweet-id', '12345'] as const;
         Ipc.send(...args);
         ok(ipcRenderer.send.calledOnce);
         eq(ipcRenderer.send.lastCall.args, args);
@@ -30,9 +30,9 @@ describe('Ipc on renderer', function () {
 
     it('removes all listeners on dispose() method', function () {
         const listeners = [
-            ['tweetapp:open', (_: Event) => {}] as ['tweetapp:open', (e: Event) => void],
-            ['tweetapp:open', (_: Event) => {}] as ['tweetapp:open', (e: Event) => void],
-            ['tweetapp:action-after-tweet', (_: Event) => {}] as ['tweetapp:action-after-tweet', (e: Event) => void],
+            ['tweetapp:open', (_: Event) => {}] as const,
+            ['tweetapp:open', (_: Event) => {}] as const,
+            ['tweetapp:action-after-tweet', (_: Event) => {}] as const,
         ];
 
         for (const [c, l] of listeners) {
