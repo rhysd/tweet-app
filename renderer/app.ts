@@ -147,6 +147,10 @@ export default class App {
             if (save !== null) {
                 save.addEventListener('click', backToUrl, { passive: false });
             }
+
+            if (cancel === null || save === null) {
+                console.warn('Cancel dialog was not detected correctly. Cancel:', cancel, ', Save:', save);
+            }
         });
 
         window.addEventListener(
