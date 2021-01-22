@@ -42,6 +42,7 @@ export default class Lifecycle {
             accountSettings: this.openAccountSettings,
             switchAccount: this.switchAccount,
             openPrevTweet: this.openPreviousTweet,
+            cancelTweet: this.cancelTweet,
             debug: this.openProfilePageForDebug,
         });
         this.currentWin = this.newWindow(config.default_account);
@@ -140,6 +141,7 @@ export default class Lifecycle {
     // Actions
 
     public clickTweetButton = (): void => {
+        console.debug('Try to click "Tweet" button');
         this.ipc.send('tweetapp:click-tweet-button');
     };
 
@@ -206,5 +208,9 @@ export default class Lifecycle {
 
     public openPreviousTweet = (): Promise<void> => {
         return this.currentWin.openPreviousTweet();
+    };
+
+    public cancelTweet = (): void => {
+        this.currentWin.cancelTweet();
     };
 }

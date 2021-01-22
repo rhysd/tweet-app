@@ -17,6 +17,7 @@ const EMPTY_MENU_ACTIONS: MenuActions = {
     accountSettings: noop,
     openPrevTweet: noop,
     switchAccount: noop,
+    cancelTweet: noop,
     debug: noop,
 };
 
@@ -24,6 +25,7 @@ const EMPTY_TOUCHBAR_ACTIONS: TouchbarActions = {
     tweet: noop,
     reply: noop,
     openPrevTweet: noop,
+    cancelTweet: noop,
 };
 
 describe('Menu', function () {
@@ -54,11 +56,12 @@ describe('Menu', function () {
             const tweet = sinon.fake();
             const reply = sinon.fake();
             const openPrevTweet = sinon.fake();
+            const cancelTweet = sinon.fake();
             const actions = {
-                ...EMPTY_TOUCHBAR_ACTIONS,
                 tweet,
                 reply,
                 openPrevTweet,
+                cancelTweet,
             };
             const items = (touchBar('screen_name', actions) as any).args[0].items;
 
@@ -68,6 +71,7 @@ describe('Menu', function () {
             ok(tweet.calledOnce);
             ok(!reply.called);
             ok(!openPrevTweet.called);
+            ok(!cancelTweet.called);
 
             item = items.find((i: any) => i.args[0].label === 'Reply to Previous').args[0];
             ok(item, `${item}`);
@@ -75,13 +79,23 @@ describe('Menu', function () {
             ok(tweet.calledOnce);
             ok(reply.calledOnce);
             ok(!openPrevTweet.called);
+            ok(!cancelTweet.called);
 
             item = items.find((i: any) => i.args[0].label === 'Open Previous Tweet').args[0];
             ok(item, `${item}`);
             item.click();
             ok(tweet.calledOnce);
             ok(reply.calledOnce);
+            ok(openPrevTweet.calledOnce);
+            ok(!cancelTweet.called);
+
+            item = items.find((i: any) => i.args[0].label === 'Cancel Tweet').args[0];
+            ok(item, `${item}`);
+            item.click();
+            ok(tweet.calledOnce);
+            ok(reply.calledOnce);
             ok(openPrevTweet.called);
+            ok(cancelTweet.calledOnce);
         });
 
         it('sets screen name as label if available', function () {
@@ -111,6 +125,7 @@ describe('Menu', function () {
             const tweetButton = sinon.fake();
             const accountSettings = sinon.fake();
             const openPrevTweet = sinon.fake();
+            const cancelTweet = sinon.fake();
 
             const actions = {
                 ...EMPTY_MENU_ACTIONS,
@@ -120,6 +135,7 @@ describe('Menu', function () {
                 tweetButton,
                 accountSettings,
                 openPrevTweet,
+                cancelTweet,
             };
 
             const menu = (createMenu({}, ['foo'], actions) as any) as any[];
@@ -152,16 +168,23 @@ describe('Menu', function () {
             open.click();
             ok(openPrevTweet.calledOnce);
 
+            const cancel = edit.submenu.find((i: any) => i.label === 'Cancel Tweet');
+            ok(cancel);
+            cancel.click();
+            ok(cancelTweet.calledOnce);
+
             const q = menu[0].submenu.find((i: any) => i.label === 'Quit Tweet App');
             ok(q);
             q.click();
             ok(quit.calledOnce);
 
+            // Check all action were called once after all
             ok(tweet.calledOnce);
             ok(reply.calledOnce);
             ok(tweetButton.calledOnce);
             ok(accountSettings.calledOnce);
             ok(openPrevTweet.calledOnce);
+            ok(cancelTweet.calledOnce);
         });
 
         it('puts switch account menu for multiple accounts', function () {

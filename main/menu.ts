@@ -11,6 +11,7 @@ const DefaultKeyMaps: Required<KeyMapConfig> = {
     'Click Tweet Button': 'CmdOrCtrl+Enter',
     'Account Settings': 'CmdOrCtrl+,',
     'Open Previous Tweet': 'CmdOrCtrl+Shift+O',
+    'Cancel Tweet': 'CmdOrCtrl+Shift+S',
     'Edit Config': null,
 };
 
@@ -24,6 +25,7 @@ export interface MenuActions {
     accountSettings: A;
     switchAccount: (s: string) => Promise<void>;
     openPrevTweet: A;
+    cancelTweet: A;
     debug: A;
 }
 
@@ -31,6 +33,7 @@ export interface TouchbarActions {
     tweet: A;
     reply: A;
     openPrevTweet: A;
+    cancelTweet: A;
 }
 
 type TouchBarItem = Electron.TouchBarButton | Electron.TouchBarSpacer | Electron.TouchBarLabel;
@@ -98,6 +101,7 @@ export function createMenu(userKeyMaps: KeyMapConfig, accounts: string[], action
         actionMenuItem('Reply to Previous Tweet', actions.reply),
         actionMenuItem('Click Tweet Button', actions.tweetButton),
         actionMenuItem('Open Previous Tweet', actions.openPrevTweet),
+        actionMenuItem('Cancel Tweet', actions.cancelTweet),
         actionMenuItem('Account Settings', actions.accountSettings),
         actionMenuItem('Edit Config', openConfig),
     ];
@@ -291,6 +295,8 @@ export function touchBar(screenName: string | undefined, actions: TouchbarAction
         button('Reply to Previous', actions.reply),
         smallSpacer(),
         button('Open Previous Tweet', actions.openPrevTweet),
+        smallSpacer(),
+        button('Cancel Tweet', actions.cancelTweet),
     ];
 
     if (screenName !== undefined) {

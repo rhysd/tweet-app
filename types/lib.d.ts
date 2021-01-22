@@ -7,6 +7,7 @@ interface KeyMapConfig {
     'Account Settings'?: string | null;
     'Edit Config'?: string | null;
     'Open Previous Tweet'?: string | null;
+    'Cancel Tweet'?: string | null;
 }
 
 type ConfigAfterTweet = 'new tweet' | 'reply previous' | 'close' | 'quit';
@@ -44,8 +45,13 @@ declare namespace IpcChan {
         | 'tweetapp:screen-name'
         | 'tweetapp:open'
         | 'tweetapp:click-tweet-button'
+        | 'tweetapp:cancel-tweet'
         | 'tweetapp:sent-tweet'
         | 'tweetapp:unlink-tweet'
         | 'tweetapp:login';
-    type FromRenderer = 'tweetapp:prev-tweet-id' | 'tweetapp:online-status' | 'tweetapp:exit-app';
+    type FromRenderer =
+        | 'tweetapp:prev-tweet-id'
+        | 'tweetapp:online-status'
+        | 'tweetapp:exit-app'
+        | 'tweetapp:reset-window';
 }
