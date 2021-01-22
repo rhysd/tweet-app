@@ -317,6 +317,7 @@ export default class TweetWindow {
                 this.ipc.detach(this.win!.webContents);
                 this.ipc.forget('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
                 this.ipc.forget('tweetapp:online-status', this.onOnlineStatusChange);
+                this.ipc.forget('tweetapp:reset-window', this.onResetWindow);
                 this.win!.webContents.removeAllListeners();
                 this.win!.webContents.session.setPermissionRequestHandler(null);
                 this.win!.webContents.session.webRequest.onBeforeRequest(null as any);
