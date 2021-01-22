@@ -126,35 +126,32 @@ export default class App {
         });
 
         Ipc.on('tweetapp:cancel-tweet', _ => {
-            const url = window.location.href;
-
-            const btn = findBackButton();
-            if (btn === null) {
+            const back = findBackButton();
+            if (back === null) {
                 return;
             }
-            console.log('Click back button', btn);
-            btn.click();
+            console.log('Click back button', back);
+            back.click();
 
-            function backToUrl() {
-                console.log('Back to:', url);
-                window.location.href = url;
+            function resetWindow() {
+                Ipc.send('tweetapp:reset-window');
             }
 
             const cancel = findCancelButton();
             if (cancel !== null) {
-                cancel.addEventListener('click', backToUrl, { passive: false });
+                cancel.addEventListener('click', resetWindow, { passive: false });
             }
 
             const save = findSaveButton();
             if (save !== null) {
-                save.addEventListener('click', backToUrl, { passive: false });
+                save.addEventListener('click', resetWindow, { passive: false });
             }
 
             if (cancel === null && save === null) {
                 console.log(
                     'Neither "Discard" nor "Save" buttons were clicked, meant no tweet text to save in the textarea',
                 );
-                backToUrl();
+                resetWindow();
             }
         });
 

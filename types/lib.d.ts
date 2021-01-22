@@ -49,5 +49,9 @@ declare namespace IpcChan {
         | 'tweetapp:sent-tweet'
         | 'tweetapp:unlink-tweet'
         | 'tweetapp:login';
-    type FromRenderer = 'tweetapp:prev-tweet-id' | 'tweetapp:online-status' | 'tweetapp:exit-app';
+    type FromRenderer =
+        | 'tweetapp:prev-tweet-id'
+        | 'tweetapp:online-status'
+        | 'tweetapp:exit-app'
+        | 'tweetapp:reset-window';
 }

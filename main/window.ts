@@ -53,6 +53,7 @@ export default class TweetWindow {
         this.prevTweetId = null;
         this.onPrevTweetIdReceived = this.onPrevTweetIdReceived.bind(this);
         this.onOnlineStatusChange = this.onOnlineStatusChange.bind(this);
+        this.onResetWindow = this.onResetWindow.bind(this);
         this.resolveWantToQuit = (): void => {};
         this.wantToQuit = new Promise<void>(resolve => {
             this.resolveWantToQuit = resolve;
@@ -221,7 +222,9 @@ export default class TweetWindow {
         return this.config.window[name] as T;
     }
 
-    private async open(reply: boolean, text?: string): Promise<void> {
+    private async open(reply: boolean, text?: string, force?: boolean): Promise<void> {
+        const forceReopen = force ?? false;
+
         if (reply) {
             if (this.screenName === undefined) {
                 await this.requireConfigWithDialog('reply to previous tweet');
@@ -237,7 +240,7 @@ export default class TweetWindow {
             this.win.focus();
             const url = this.composeTweetUrl(reply, text);
 
-            if (this.win.webContents.getURL() === url) {
+            if (!forceReopen && this.win.webContents.getURL() === url) {
                 log.info('Skip reopening content since URL is the same:', url);
                 return Promise.resolve();
             }
@@ -482,6 +485,7 @@ export default class TweetWindow {
 
             this.ipc.on('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
             this.ipc.on('tweetapp:online-status', this.onOnlineStatusChange);
+            this.ipc.on('tweetapp:reset-window', this.onResetWindow);
 
             const url = this.composeTweetUrl(reply, text);
             log.info('Opening', url);
@@ -538,5 +542,17 @@ export default class TweetWindow {
         const html = `file://${path.join(__dirname, 'offline.html')}`;
         this.win.loadURL(html);
         log.debug('Open offline page:', html);
+    }
+
+    private onResetWindow(_: Event): void {
+        log.info('Reopen tweet window to reset');
+        this.open(false, undefined, true)
+            .catch(err => {
+                // XXX: This error is handled internally and a user of this class cannot handle it
+                log.error('Could not open tweet window due to error:', err);
+            })
+            .then(() => {
+                log.info('Window was reopened to reset');
+            });
     }
 }
