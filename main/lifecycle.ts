@@ -211,7 +211,6 @@ export default class Lifecycle {
     };
 
     public cancelTweet = (): void => {
-        console.debug('Try to cancel tweet');
-        this.ipc.send('tweetapp:cancel-tweet');
+        this.currentWin.cancelTweet();
     };
 }

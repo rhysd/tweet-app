@@ -33,6 +33,7 @@ export interface TouchbarActions {
     tweet: A;
     reply: A;
     openPrevTweet: A;
+    cancelTweet: A;
 }
 
 type TouchBarItem = Electron.TouchBarButton | Electron.TouchBarSpacer | Electron.TouchBarLabel;
@@ -294,6 +295,8 @@ export function touchBar(screenName: string | undefined, actions: TouchbarAction
         button('Reply to Previous', actions.reply),
         smallSpacer(),
         button('Open Previous Tweet', actions.openPrevTweet),
+        smallSpacer(),
+        button('Cancel Tweet', actions.cancelTweet),
     ];
 
     if (screenName !== undefined) {

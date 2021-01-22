@@ -140,6 +140,11 @@ export default class TweetWindow {
         this.win.webContents.insertText(unlinked);
     }
 
+    public cancelTweet(): void {
+        console.debug('Try to cancel tweet');
+        this.ipc.send('tweetapp:cancel-tweet');
+    }
+
     private notifyReplyUnavailableUntilTweet(doSomething: string): Promise<unknown> {
         return dialog.showMessageBox({
             type: 'info',
@@ -497,6 +502,7 @@ export default class TweetWindow {
                         tweet: this.open.bind(this, false),
                         reply: this.open.bind(this, true),
                         openPrevTweet: this.openPreviousTweet.bind(this),
+                        cancelTweet: this.cancelTweet.bind(this),
                     }),
                 );
                 log.debug('Touch bar was set');

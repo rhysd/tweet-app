@@ -25,6 +25,7 @@ const EMPTY_TOUCHBAR_ACTIONS: TouchbarActions = {
     tweet: noop,
     reply: noop,
     openPrevTweet: noop,
+    cancelTweet: noop,
 };
 
 describe('Menu', function () {
