@@ -17,6 +17,7 @@ const EMPTY_MENU_ACTIONS: MenuActions = {
     accountSettings: noop,
     openPrevTweet: noop,
     switchAccount: noop,
+    cancelTweet: noop,
     debug: noop,
 };
 

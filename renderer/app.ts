@@ -22,14 +22,13 @@ export default class App {
             return e;
         }
 
-        function findTweetButton(): HTMLElement | null {
-            const button = document.querySelector('[data-testid="tweetButton"]') as HTMLElement;
+        function findButton(testId: string, text: string[]): HTMLElement | null {
+            const button = document.querySelector(`[data-testid="${testId}"]`) as HTMLElement;
             if (button !== null) {
                 return button;
             }
 
-            // XXX: TENTATIVE: detect tweet button by aria label
-            const text = ['Tweet', 'Tweet All', 'Reply', 'ツイート', 'すべてツイート', '返信'];
+            // XXX: TENTATIVE: detect button by aria label
             const buttons = document.querySelectorAll('[role="button"][tabIndex="0"]') as NodeList;
             for (const b of buttons) {
                 const label = b.textContent;
@@ -41,8 +40,37 @@ export default class App {
                 }
             }
 
-            console.warn("Could not find 'Tweet' button");
+            console.warn('Could not find button with testid', testId, 'and text', text);
             return null; // Not found
+        }
+
+        function findTweetButton(): HTMLElement | null {
+            const text = ['Tweet', 'Tweet All', 'Reply', 'ツイート', 'すべてツイート', '返信'];
+            return findButton('tweetButton', text);
+        }
+
+        function findCancelButton(): HTMLElement | null {
+            return findButton('confirmationSheetCancel', ['Discard', '破棄']);
+        }
+
+        function findSaveButton(): HTMLElement | null {
+            return findButton('confirmationSheetConfirm', ['Save', '保存']);
+        }
+
+        function findBackButton(): HTMLElement | null {
+            const ariaLabels = ['Back', '戻る'];
+            const buttons = document.querySelectorAll('[role="button"][tabIndex="0"]');
+            for (const b of buttons) {
+                const label = b.getAttribute('aria-label');
+                if (!label) {
+                    continue;
+                }
+                if (ariaLabels.includes(label)) {
+                    return b as HTMLElement;
+                }
+            }
+            console.warn("Could not find 'Back' button");
+            return null;
         }
 
         Ipc.on('tweetapp:action-after-tweet', (_, action: ConfigAfterTweet | undefined) => {
@@ -94,6 +122,30 @@ export default class App {
             if (btn !== null) {
                 console.log('Click tweet button', btn);
                 btn.click();
+            }
+        });
+
+        Ipc.on('tweetapp:cancel-tweet', _ => {
+            const btn = findBackButton();
+            if (btn === null) {
+                return;
+            }
+            console.log('Click back button', btn);
+            btn.click();
+
+            const url = window.location.href;
+            function backToUrl() {
+                window.location.href = url;
+            }
+
+            const cancel = findCancelButton();
+            if (cancel !== null) {
+                cancel.addEventListener('click', backToUrl, { passive: false });
+            }
+
+            const save = findSaveButton();
+            if (save !== null) {
+                save.addEventListener('click', backToUrl, { passive: false });
             }
         });
 
