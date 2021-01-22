@@ -126,6 +126,8 @@ export default class App {
         });
 
         Ipc.on('tweetapp:cancel-tweet', _ => {
+            const url = window.location.href;
+
             const btn = findBackButton();
             if (btn === null) {
                 return;
@@ -133,8 +135,8 @@ export default class App {
             console.log('Click back button', btn);
             btn.click();
 
-            const url = window.location.href;
             function backToUrl() {
+                console.log('Back to:', url);
                 window.location.href = url;
             }
 
@@ -148,8 +150,11 @@ export default class App {
                 save.addEventListener('click', backToUrl, { passive: false });
             }
 
-            if (cancel === null || save === null) {
-                console.warn('Cancel dialog was not detected correctly. Cancel:', cancel, ', Save:', save);
+            if (cancel === null && save === null) {
+                console.log(
+                    'Neither "Discard" nor "Save" buttons were clicked, meant no tweet text to save in the textarea',
+                );
+                backToUrl();
             }
         });
 
