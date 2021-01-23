@@ -320,8 +320,8 @@ export default class TweetWindow {
                 this.ipc.forget('tweetapp:reset-window', this.onResetWindow);
                 this.win!.webContents.removeAllListeners();
                 this.win!.webContents.session.setPermissionRequestHandler(null);
-                this.win!.webContents.session.webRequest.onBeforeRequest(null as any);
-                this.win!.webContents.session.webRequest.onCompleted(null as any);
+                this.win!.webContents.session.webRequest.onBeforeRequest(null);
+                this.win!.webContents.session.webRequest.onCompleted(null);
                 /* eslint-enable @typescript-eslint/no-non-null-assertion */
             });
 
@@ -443,13 +443,13 @@ export default class TweetWindow {
                 (details: any, callback) => {
                     if (details.url === 'https://api.twitter.com/1.1/statuses/update.json') {
                         // Tweet was posted. It means that user has already logged in.
-                        win.webContents.session.webRequest.onBeforeRequest(null as any); // Unsubscribe this hook
-                    } else if ((details as any).referrer === 'https://mobile.twitter.com/login') {
+                        win.webContents.session.webRequest.onBeforeRequest(null); // Unsubscribe this hook
+                    } else if (details.referrer === 'https://mobile.twitter.com/login') {
                         // XXX: TENTATIVE: detect login from google-analitics requests
                         log.debug('Login detected from URL', details.url);
                         this.ipc.send('tweetapp:login');
                         // Remove listener anymore
-                        win.webContents.session.webRequest.onBeforeRequest(null as any); // Unsubscribe this hook
+                        win.webContents.session.webRequest.onBeforeRequest(null); // Unsubscribe this hook
                     }
                     callback({});
                 },
