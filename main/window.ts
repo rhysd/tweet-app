@@ -393,8 +393,8 @@ export default class TweetWindow {
             win.webContents.session.webRequest.onCompleted(
                 {
                     urls: [
-                        'https://api.twitter.com/1.1/statuses/update.json',
-                        'https://api.twitter.com/1.1/statuses/destroy.json',
+                        'https://mobile.twitter.com/i/api/1.1/statuses/update.json',
+                        'https://mobile.twitter.com/i/api/1.1/statuses/destroy.json',
                     ],
                 },
                 details => {
@@ -435,22 +435,36 @@ export default class TweetWindow {
             // - 'https://api.twitter.com/1.1/client_event.json',
             win.webContents.session.webRequest.onBeforeRequest(
                 {
-                    urls: ['https://www.google-analytics.com/r/*', 'https://api.twitter.com/1.1/statuses/update.json'],
+                    urls: [
+                        'https://www.google-analytics.com/r/*',
+                        'https://mobile.twitter.com/i/api/1.1/statuses/update.json',
+                    ],
                 },
                 (details: any, callback) => {
                     if (details.url === 'https://api.twitter.com/1.1/statuses/update.json') {
                         // Tweet was posted. It means that user has already logged in.
-                        win.webContents.session.webRequest.onBeforeRequest(null as any);
+                        win.webContents.session.webRequest.onBeforeRequest(null as any); // Unsubscribe this hook
                     } else if ((details as any).referrer === 'https://mobile.twitter.com/login') {
                         // XXX: TENTATIVE: detect login from google-analitics requests
                         log.debug('Login detected from URL', details.url);
                         this.ipc.send('tweetapp:login');
                         // Remove listener anymore
-                        win.webContents.session.webRequest.onBeforeRequest(null as any);
+                        win.webContents.session.webRequest.onBeforeRequest(null as any); // Unsubscribe this hook
                     }
                     callback({});
                 },
             );
+
+            // NOTE: Uncomment this block when analyzing issues about hooking web requests. Be careful that previous
+            // hooks will be removed when below hooks are set.
+            //
+            // win.webContents.session.webRequest.onCompleted({ urls: ['*://*/*'] }, details => {
+            //     console.log('WEBREQUEST.ON_COMPLETED:', details);
+            // });
+            // win.webContents.session.webRequest.onBeforeRequest({ urls: ['*://*/*'] }, (details, callback) => {
+            //     console.log('WEBREQUEST.ON_BEFORE_REQUEST:', details);
+            //     callback({});
+            // });
 
             win.webContents.session.setPermissionRequestHandler((webContents, perm, callback, details) => {
                 const url = webContents.getURL();
