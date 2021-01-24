@@ -15,6 +15,7 @@ import { openConfig } from './config';
 const INJECTED_CSS =
     'a[href="/"] { display: none !important; }\n' +
     'a[href="/home"] { display: none !important; }\n' +
+    'header[role="banner"] { display: none !important; }\n' +
     ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
 
 export default class TweetWindow {
