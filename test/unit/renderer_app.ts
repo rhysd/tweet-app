@@ -173,7 +173,7 @@ describe('App', function () {
         '<div role="button" tabIndex="0">すべてツイート</div>',
         '<div role="button" tabIndex="0">返信</div>',
     ]) {
-        it(`finds tweet button from "${html}" on tweetapp:click-tweet-button`, function () {
+        it(`finds tweet button from "${html}" on tweetapp:click-tweet-button IPC message`, function () {
             (global as any).document = new JSDOM(html).window.document;
 
             const click = sinon.fake();
@@ -183,6 +183,63 @@ describe('App', function () {
             ok(click.calledOnce);
         });
     }
+
+    for (const [what, html] of [
+        [
+            'data-testid',
+            `
+                <div role="button" tabIndex="0"></div>
+                <div id="back" role="button" tabIndex="0" aria-label="Back"></div>
+                <div id="discard" data-testid="confirmationSheetCancel"></div>
+                <div id="save" data-testid="confirmationSheetConfirm"></div>
+            `,
+        ],
+        [
+            'English texts',
+            `
+                <div role="button" tabIndex="0"></div>
+                <div id="back" role="button" tabIndex="0" aria-label="Back"></div>
+                <div id="discard" role="button" tabIndex="0">Discard</div>
+                <div id="save" role="button" tabIndex="0">Save</div>
+            `,
+        ],
+        [
+            'Japanese texts',
+            `
+                <div role="button" tabIndex="0"></div>
+                <div id="back" role="button" tabIndex="0" aria-label="戻る"></div>
+                <div id="discard" role="button" tabIndex="0">破棄</div>
+                <div id="save" role="button" tabIndex="0">保存</div>
+            `,
+        ],
+    ]) {
+        it(`finds "Discard" and "Save" buttons with ${what} on tweetapp:cancel-tweet IPC message`, function () {
+            (global as any).document = new JSDOM(html).window.document;
+
+            const backClick = sinon.fake();
+            (document.getElementById('back') as HTMLDivElement).click = backClick;
+
+            const discardListener = sinon.fake();
+            (document.getElementById('discard') as HTMLDivElement).addEventListener = discardListener;
+
+            const saveListener = sinon.fake();
+            (document.getElementById('save') as HTMLDivElement).addEventListener = saveListener;
+
+            emulateSend('tweetapp:cancel-tweet');
+            ok(discardListener.calledOnce);
+            eq(discardListener.lastCall.args[0], 'click');
+            ok(saveListener.calledOnce);
+            eq(saveListener.lastCall.args[0], 'click');
+        });
+    }
+
+    it('sends tweetapp:reset-window message when "Discard" and "Save" buttons are not found assuming no text in textarea', function () {
+        const htmlOnlyBackExists = '<div id="back" role="button" tabIndex="0" aria-label="Back"></div>';
+        (global as any).document = new JSDOM(htmlOnlyBackExists).window.document;
+        emulateSend('tweetapp:cancel-tweet');
+        ok(ipcRenderer.send.calledOnce);
+        eq(ipcRenderer.send.lastCall.args, ['tweetapp:reset-window']);
+    });
 
     it('does nothing when button is not found', function () {
         (global as any).document = new JSDOM('<div role="button" tabIndex="0">Foooo!!!!!</div>').window.document;

@@ -32,7 +32,7 @@ export default class App {
             const buttons = document.querySelectorAll('[role="button"][tabIndex="0"]') as NodeList;
             for (const b of buttons) {
                 const label = b.textContent;
-                if (label === null) {
+                if (!label) {
                     continue;
                 }
                 if (text.includes(label)) {
