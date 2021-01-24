@@ -157,25 +157,22 @@ export default class TweetWindow {
         });
     }
 
-    private requireConfigWithDialog(doSomething: string): Promise<unknown> {
+    private async requireConfigWithDialog(doSomething: string): Promise<unknown> {
         const buttons = ['Edit Config', 'OK'];
-        return dialog
-            .showMessageBox({
-                type: 'info',
-                title: 'Config is required',
-                message: `Configuration is required to ${doSomething}`,
-                detail: "Please click 'Edit Config', enter your @screen_name at 'default_account' field, restart app",
-                icon: nativeImage.createFromPath(ICON_PATH),
-                buttons,
-            })
-            .then(result => {
-                const idx = result.response;
-                const label = buttons[idx];
-                if (label === 'Edit Config') {
-                    return openConfig();
-                }
-                return;
-            });
+        const result = await dialog.showMessageBox({
+            type: 'info',
+            title: 'Config is required',
+            message: `Configuration is required to ${doSomething}`,
+            detail: "Please click 'Edit Config', enter your @screen_name at 'default_account' field, restart app",
+            icon: nativeImage.createFromPath(ICON_PATH),
+            buttons,
+        });
+        const idx = result.response;
+        const label = buttons[idx];
+        if (label === 'Edit Config') {
+            await openConfig();
+        }
+        return;
     }
 
     private composeNewTweetUrl(text?: string): string {
