@@ -6,14 +6,14 @@
 [![appveyor badge][]][appveyor]
 
 [Tweet app][repo] is a small Twitter client only for tweeting on [Twitter][twitter], but never shows
-a tweets timeline. It's built on [Twitter Lite][twitter-lite] and [Electron][electron].
+a tweets timeline. It's built on [mobile Twitter website][mobile-twitter] and [Electron][electron].
 
 - Tweet form is the same as mobile official client (accurate characters count, emoji picker,
-  pictures/movies upload, poll, ...)
+  pictures/movies upload, save draft tweets, poll, ...)
 - After posting a tweet, it goes back to the tweet form again. Timeline never shows up in this app
-- Replying to a previously posted tweet is supported
+- Replying to a previously posted tweet (making tweets thread) is supported
 - Multi-account support
-- Terminal is first class. A `tweet` command is provided to access to the app
+- Terminal is first class. A `tweet` command is provided to access to the app from command line
 - Customizable. Keyboard shortcuts and lifecycle of the application can be configured
 - macOS, Linux and Windows are supported (confirmed with macOS 10.15, Ubuntu 18.04, Windows 10)
 
@@ -166,8 +166,8 @@ Since Twitter Lite does not expose a screen name in DOM, setting it to `default_
 necessary to notify this app your screen name. Please see 'Customization' section for the detail.
 
 The tweet form is exactly the same as the input form of https://mobile.twitter.com/compose/tweet.
-All functionalities like accurate characters count, picture/movie upload, emoji picker, poll are
-available. Clicking '+' chains additional tweets.
+All functionalities like accurate characters count, picture/movie upload, emoji picker, save draft
+tweets, poll,... are available. Clicking '+' chains additional tweets.
 
 Menu items are in menu bar on macOS, and in a window tool bar on Windows and Linux. By default,
 the window hides a tool bar on Windows and Linux. To reveal it, please type <kbd>Alt</kbd>.
@@ -400,14 +400,6 @@ If you're facing some bug or having any feature request, please report it from
 
 
 
-## Alternatives
-
-[tweet-tray](https://github.com/jonathontoon/tweet-tray) is a nice application created with the same
-motivation as this app. However it does not support chaining tweets by replying to previous tweet
-and some functionality such as emoji picker.
-
-
-
 ## License
 
 Distributed under [the MIT License](./LICENSE.txt).
@@ -424,7 +416,7 @@ Some icon was provided by [feather icons][feathericons] (`Copyright (c) 2013-201
 [codecov]: https://codecov.io/gh/rhysd/tweet-app
 [repo]: https://github.com/rhysd/tweet-app
 [twitter]: https://twitter.com
-[twitter-lite]: https://play.google.com/store/apps/details?id=com.twitter.android.lite
+[mobile-twitter]: https://play.google.com/store/apps/details?id=com.twitter.android.lite
 [electron]: https://electronjs.org
 [release]: https://github.com/rhysd/tweet-app/releases
 [accelerator]: https://electronjs.org/docs/api/accelerator
