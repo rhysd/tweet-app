@@ -164,6 +164,14 @@ describe('App', function () {
         emulateSend('tweetapp:login'); // Should not raise an error
     });
 
+    it('does nothing when button is not found', function () {
+        (global as any).document = new JSDOM('<div role="button" tabIndex="0">Foooo!!!!!</div>').window.document;
+        const click = sinon.fake();
+        (document.getElementsByTagName('DIV')[0] as HTMLDivElement).click = click;
+        emulateSend('tweetapp:click-tweet-button');
+        ok(!click.called);
+    });
+
     for (const html of [
         '<div data-testid="tweetButton"></div>',
         '<div role="button" tabIndex="0">Tweet</div>',
@@ -233,7 +241,7 @@ describe('App', function () {
         });
     }
 
-    it('sends tweetapp:reset-window message when "Discard" and "Save" buttons are not found assuming no text in textarea', function () {
+    it('sends tweetapp:reset-window message when "Discard" and "Save" buttons are not found on tweetapp:cancel-tweet assuming no text in textarea', function () {
         const htmlOnlyBackExists = '<div id="back" role="button" tabIndex="0" aria-label="Back"></div>';
         (global as any).document = new JSDOM(htmlOnlyBackExists).window.document;
         emulateSend('tweetapp:cancel-tweet');
@@ -241,12 +249,10 @@ describe('App', function () {
         eq(ipcRenderer.send.lastCall.args, ['tweetapp:reset-window']);
     });
 
-    it('does nothing when button is not found', function () {
-        (global as any).document = new JSDOM('<div role="button" tabIndex="0">Foooo!!!!!</div>').window.document;
-        const click = sinon.fake();
-        (document.getElementsByTagName('DIV')[0] as HTMLDivElement).click = click;
-        emulateSend('tweetapp:click-tweet-button');
-        ok(!click.called);
+    it('does nothing when no "Back" button is found on tweetapp:cancel-tweet IPC message', function () {
+        (global as any).document = new JSDOM('').window.document;
+        emulateSend('tweetapp:cancel-tweet');
+        ok(!ipcRenderer.send.called);
     });
 
     it('sends IPC message to main process when online status changed', function () {
