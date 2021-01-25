@@ -707,4 +707,27 @@ describe('TweetWindow', function () {
         const unlinked = webContents.insertText.lastCall.args[0];
         eq(unlinked, 'foo! @\u200Bname #\u200Btag');
     });
+
+    it('resets window when receiving tweetapp:reset-window message', async function () {
+        const ipc = new Ipc();
+
+        const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
+        await w.openNewTweet();
+        const webContents = (w as any).win.webContents;
+
+        const call = ipcMain.on.getCalls().find((c: any) => c.args[0] === 'tweetapp:reset-window');
+        ok(call);
+        const onResetWindow = call.args[1];
+        const willReset = onResetWindow();
+        webContents.emit('dom-ready');
+        await willReset;
+        ok(w.isOpen());
+
+        // tweetapp:open is sent from main to renderer because tweetapp:reset-window forces to reopen
+        // the window
+        const sent = webContents.send.getCalls().find((call: any) => call.args[0] === 'tweetapp:open');
+        ok(sent);
+        const url = sent.args[1]; // Argument of 'tweetapp:open' message on calling open()
+        eq(url, 'https://mobile.twitter.com/compose/tweet');
+    });
 });
