@@ -252,8 +252,8 @@ export default class TweetWindow {
 
             return new Promise<void>(resolve => {
                 this.ipc.send('tweetapp:open', url);
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                this.win!.webContents.once('dom-ready', () => {
+                assert.ok(this.win);
+                this.win.webContents.once('dom-ready', () => {
                     log.debug('Reopened content:', url);
                     resolve();
                 });
@@ -563,15 +563,13 @@ export default class TweetWindow {
         log.debug('Open offline page:', html);
     }
 
-    private onResetWindow(_: Event): void {
+    private async onResetWindow(_: Event): Promise<void> {
         log.info('Reopen tweet window to reset');
-        this.open(false, undefined, true)
-            .catch(err => {
-                // XXX: This error is handled internally and a user of this class cannot handle it
-                log.error('Could not open tweet window due to error:', err);
-            })
-            .then(() => {
-                log.info('Window was reopened to reset');
-            });
+        try {
+            await this.open(false, undefined, true);
+        } catch (err) {
+            // XXX: This error is handled internally and a user of this class cannot handle it
+            log.error('Could not open tweet window due to error:', err);
+        }
     }
 }
