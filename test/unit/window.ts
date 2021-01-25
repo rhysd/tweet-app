@@ -687,4 +687,24 @@ describe('TweetWindow', function () {
         (w as any).win.emit('page-title-updated', { preventDefault });
         ok(preventDefault.called);
     });
+
+    it('unlinks tweet text', async function () {
+        const w = new TweetWindow('@foo', {}, new Ipc(), { text: '' }, {} as any);
+
+        // Do nothing when window is not open
+        w.unlinkSelection('');
+
+        await w.openNewTweet();
+        const webContents = (w as any).win.webContents;
+
+        // Nothing unlinked. Text is not changed
+        w.unlinkSelection('this is test');
+        ok(!webContents.insertText.called);
+
+        // Test unlinking things
+        w.unlinkSelection('foo! @name #tag');
+        ok(webContents.insertText.calledOnce);
+        const unlinked = webContents.insertText.lastCall.args[0];
+        eq(unlinked, 'foo! @\u200Bname #\u200Btag');
+    });
 });

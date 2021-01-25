@@ -35,6 +35,7 @@ class DummyWebContents extends EventEmitter {
     };
     public openDevTools = sinon.fake();
     public send = sinon.fake();
+    public insertText = sinon.fake();
     public url: string | undefined;
 
     public constructor() {
