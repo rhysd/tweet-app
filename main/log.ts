@@ -1,6 +1,6 @@
 import { IS_DEBUG, IS_DEV } from './constants';
 
-const log = { ...console };
+const log = { debug: console.debug, info: console.info, error: console.error, warn: console.warn };
 
 function noop(): void {
     /* do nothing */
