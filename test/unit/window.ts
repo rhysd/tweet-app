@@ -10,6 +10,13 @@ type Spy = sinon.SinonSpy;
 
 const { ipcMain, dialog, shell, app } = require('electron') as any; // mocked
 
+function findCall(spy: Spy, pred: (call: sinon.SinonSpyCall) => boolean): sinon.SinonSpyCall {
+    const calls = spy.getCalls();
+    const call = calls.find(pred);
+    ok(call, JSON.stringify(calls));
+    return call;
+}
+
 describe('TweetWindow', function () {
     beforeEach(reset);
 
@@ -108,9 +115,7 @@ describe('TweetWindow', function () {
         const contents = win.webContents;
 
         // Get IPC listener for 'tweetapp:prev-tweet-id'
-        let calls = (ipcMain.on as Spy).getCalls();
-        let call = calls.find(c => c.args[0] === 'tweetapp:prev-tweet-id');
-        ok(call, JSON.stringify(calls));
+        let call = findCall(ipcMain.on, c => c.args[0] === 'tweetapp:prev-tweet-id');
         const listener = call.args[1];
 
         listener(null, '114514');
@@ -120,9 +125,7 @@ describe('TweetWindow', function () {
 
         ok(contents.send.called);
 
-        calls = contents.send.getCalls();
-        call = calls.find(c => c.args[0] === 'tweetapp:open');
-        ok(call, JSON.stringify(calls));
+        call = findCall(contents.send, c => c.args[0] === 'tweetapp:open');
         const url = call.args[1];
 
         eq(url, 'https://mobile.twitter.com/compose/tweet?in_reply_to=114514');
@@ -148,9 +151,7 @@ describe('TweetWindow', function () {
 
         ok(contents.send.called);
 
-        const calls = (contents.send as Spy).getCalls();
-        const call = calls.find(c => c.args[0] === 'tweetapp:open');
-        ok(call, JSON.stringify(calls));
+        const call = findCall(contents.send, c => c.args[0] === 'tweetapp:open');
         const url = call.args[1];
 
         eq(url, 'https://mobile.twitter.com/compose/tweet?text=this%20is%20text&in_reply_to=114514');
@@ -245,7 +246,7 @@ describe('TweetWindow', function () {
             await w.openNewTweet();
 
             const contents = (w as any).win.webContents;
-            const call = (contents.send as Spy).getCalls().find(c => c.args[0] === 'tweetapp:action-after-tweet');
+            const call = findCall(contents.send, c => c.args[0] === 'tweetapp:action-after-tweet');
             ok(call);
             eq(call.args[1], action);
 
@@ -258,7 +259,7 @@ describe('TweetWindow', function () {
                 fromCache: false,
             });
 
-            const ipcCall = (contents.send as Spy).getCalls().find(c => c.args[0] === 'tweetapp:sent-tweet');
+            const ipcCall = findCall(contents.send, c => c.args[0] === 'tweetapp:sent-tweet');
             ok(ipcCall);
             eq(ipcCall.args[1], 'https://mobile.twitter.com/compose/tweet');
         }
@@ -273,7 +274,7 @@ describe('TweetWindow', function () {
         await w.openNewTweet();
 
         const contents = (w as any).win.webContents;
-        const call = (contents.send as Spy).getCalls().find(c => c.args[0] === 'tweetapp:action-after-tweet');
+        const call = findCall(contents.send, c => c.args[0] === 'tweetapp:action-after-tweet');
         ok(call);
         eq(call.args[1], 'close');
 
@@ -299,7 +300,7 @@ describe('TweetWindow', function () {
         await w.openNewTweet();
 
         const contents = (w as any).win.webContents;
-        const call = (contents.send as Spy).getCalls().find(c => c.args[0] === 'tweetapp:action-after-tweet');
+        const call = findCall(contents.send, c => c.args[0] === 'tweetapp:action-after-tweet');
         ok(call);
         eq(call.args[1], 'quit');
 
@@ -358,7 +359,7 @@ describe('TweetWindow', function () {
         eq(contents.url, 'https://mobile.twitter.com/compose/tweet?hashtags=aaa');
 
         // action after tweet was updated
-        const call = (contents.send as Spy).getCalls().find(c => c.args[0] === 'tweetapp:action-after-tweet');
+        const call = findCall(contents.send, c => c.args[0] === 'tweetapp:action-after-tweet');
         ok(call);
         eq(call.args[1], 'quit');
     });
@@ -386,7 +387,7 @@ describe('TweetWindow', function () {
     it('shows "Network unavailable" page on offline and reopens page again when it is back to online', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
-        const call = (ipcMain.on as Spy).getCalls().find(c => c.args[0] === 'tweetapp:online-status');
+        const call = findCall(ipcMain.on, c => c.args[0] === 'tweetapp:online-status');
         ok(call);
         const callback = call.args[1];
         callback('tweetapp:online-status', 'offline');
@@ -403,7 +404,7 @@ describe('TweetWindow', function () {
     it('does nothing when online status does not change on tweetapp:online-status message', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
-        const call = (ipcMain.on as Spy).getCalls().find(c => c.args[0] === 'tweetapp:online-status');
+        const call = findCall(ipcMain.on, c => c.args[0] === 'tweetapp:online-status');
         ok(call);
         const callback = call.args[1];
 
@@ -421,7 +422,7 @@ describe('TweetWindow', function () {
     it('does nothing when no window is opened on online status change', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);
         await w.openNewTweet();
-        const call = (ipcMain.on as Spy).getCalls().find(c => c.args[0] === 'tweetapp:online-status');
+        const call = findCall(ipcMain.on, c => c.args[0] === 'tweetapp:online-status');
         ok(call);
         const callback = call.args[1];
 
@@ -500,7 +501,7 @@ describe('TweetWindow', function () {
             fromCache: false,
         });
 
-        const ipcCall = (contents.send as Spy).getCalls().find(c => c.args[0] === 'tweetapp:open');
+        const ipcCall = findCall(contents.send, c => c.args[0] === 'tweetapp:open');
         ok(ipcCall);
         eq(ipcCall.args[1], 'https://mobile.twitter.com/compose/tweet');
         eq(w.prevTweetId, null);
@@ -718,7 +719,7 @@ describe('TweetWindow', function () {
         await w.openNewTweet();
         const webContents = (w as any).win.webContents;
 
-        const call = (ipcMain.on as Spy).getCalls().find(c => c.args[0] === 'tweetapp:reset-window');
+        const call = findCall(ipcMain.on, c => c.args[0] === 'tweetapp:reset-window');
         ok(call);
         const onResetWindow = call.args[1];
         const willReset = onResetWindow();
@@ -728,7 +729,7 @@ describe('TweetWindow', function () {
 
         // tweetapp:open is sent from main to renderer because tweetapp:reset-window forces to reopen
         // the window
-        const sent = (webContents.send as Spy).getCalls().find(call => call.args[0] === 'tweetapp:open');
+        const sent = findCall(webContents.send, call => call.args[0] === 'tweetapp:open');
         ok(sent);
         const url = sent.args[1]; // Argument of 'tweetapp:open' message on calling open()
         eq(url, 'https://mobile.twitter.com/compose/tweet');
