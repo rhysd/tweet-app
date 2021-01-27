@@ -1,6 +1,6 @@
 cask 'tweet' do
-  version '0.2.9'
-  sha256 'bb0b910c557d7d357f82b092cf08475a07dee9b8be1407059a729a6fdfe95d37'
+  version '0.3.0'
+  sha256 '9f8af59ca89841a7ee25bcacea16d8ca25aa63e9317074170a44522405376304'
 
   url "https://github.com/rhysd/tweet-app/releases/download/v#{version}/Tweet-#{version}.dmg"
   appcast 'https://github.com/rhysd/tweet-app/releases.atom'
