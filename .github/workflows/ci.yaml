@@ -37,3 +37,7 @@ jobs:
       - name: Run E2E tests (not Linux)
         if: ${{ matrix.os != 'ubuntu-latest' }}
         run: npm run test:integ
+      - name: Generate coverage report
+        run: ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v1
