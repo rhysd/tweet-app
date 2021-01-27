@@ -1,9 +1,8 @@
 <img src="assets/images/icon128x128.png" width="64" height="64" alt="icon"/> Tweet.app
 ======================================================================================
 [![npm version][]][npm]
+[![CI][ci badge]][ci]
 [![codecov badge][]][codecov]
-[![travis badge][]][travis]
-[![appveyor badge][]][appveyor]
 
 [Tweet app][repo] is a small Twitter client only for tweeting on [Twitter][twitter], but never shows
 a tweets timeline. It's built on [mobile Twitter website][mobile-twitter] and [Electron][electron].
@@ -408,10 +407,8 @@ Some icon was provided by [feather icons][feathericons] (`Copyright (c) 2013-201
 
 [npm version]: https://badge.fury.io/js/tweet-app.svg
 [npm]: https://www.npmjs.com/package/tweet-app
-[travis badge]: https://travis-ci.org/rhysd/tweet-app.svg?branch=master
-[travis]: https://travis-ci.org/rhysd/tweet-app
-[appveyor badge]: https://ci.appveyor.com/api/projects/status/nn6mtwssph025r79?svg=true
-[appveyor]: https://ci.appveyor.com/project/rhysd/tweet-app
+[ci badge]: https://github.com/rhysd/tweet-app/workflows/CI/badge.svg?branch=master&event=push
+[ci]: https://github.com/rhysd/tweet-app/actions?query=workflow%3ACI
 [codecov badge]: https://codecov.io/gh/rhysd/tweet-app/branch/master/graph/badge.svg
 [codecov]: https://codecov.io/gh/rhysd/tweet-app
 [repo]: https://github.com/rhysd/tweet-app
