@@ -1,3 +1,14 @@
+<a name="v0.3.0"></a>
+# [v0.3.0](https://github.com/rhysd/tweet-app/releases/tag/v0.3.0) - 27 Jan 2021
+
+- **Fix:** Critical issue that sending tweet does not go back to tweet page again.
+- **New:** Add support for 'Unsent Tweets' feature. Selecting 'Cancel Tweet' application menu item in 'Edit' menu will open 'Discard' or 'Save' dialog in tweet page. Clicking 'Save' button saves current text as draft. You can restore the text from 'Unsent Tweets' link in tweet page.
+- **Improve:** Update dependencies including the latest Electron v11.2
+- **Improve:** Add more unit tests
+
+[Changes][v0.3.0]
+
+
 <a name="v0.2.9"></a>
 # [v0.2.9](https://github.com/rhysd/tweet-app/releases/tag/v0.2.9) - 28 Sep 2020
 
@@ -101,6 +112,7 @@ Maintenance updates. No new features.
 [Changes][v0.1.0]
 
 
+[v0.3.0]: https://github.com/rhysd/tweet-app/compare/v0.2.9...v0.3.0
 [v0.2.9]: https://github.com/rhysd/tweet-app/compare/v0.2.7...v0.2.9
 [v0.2.7]: https://github.com/rhysd/tweet-app/compare/v0.2.6...v0.2.7
 [v0.2.6]: https://github.com/rhysd/tweet-app/compare/v0.2.5...v0.2.6
