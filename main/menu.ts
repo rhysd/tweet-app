@@ -11,7 +11,7 @@ const DefaultKeyMaps: Required<KeyMapConfig> = {
     'Click Tweet Button': 'CmdOrCtrl+Enter',
     'Account Settings': 'CmdOrCtrl+,',
     'Open Previous Tweet': 'CmdOrCtrl+Shift+O',
-    'Cancel Tweet': 'CmdOrCtrl+Shift+S',
+    'Cancel Tweet': null,
     'Edit Config': null,
 };
 
