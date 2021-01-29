@@ -379,16 +379,11 @@ process are depending on rendered contents https://mobile.twitter.com .
 
 ## Security
 
-This app loads mobile.twitter.com in a browser window directly with
+This app conforms [the official guideline](https://www.electronjs.org/docs/tutorial/security).
 
-- enabling context isolation
-- disabling node integration
-- disabling `<webview>` tag
-- enabling sandbox
-
-Regarding to permissions, only `media` and `geolocation` permissions are permitted in the browser
+Regarding to permissions, only `media` and `geolocation` permissions are allowed in the browser
 window. When mobile.twitter.com requests these permissions, the main process will open a confirmation
-dialog to ask user if it is allowed. Other permission requests are rejected by default.
+dialog to ask user if it is allowed. Other permission requests are always rejected.
 
 
 
