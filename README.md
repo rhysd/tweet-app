@@ -366,6 +366,13 @@ Here is my own configuration:
 3. Click 'Delete' item in the dropdown menu
 4. After deleting the tweet, automatically redirect to 'New Tweet' page
 
+### How can I save current text as draft?
+
+1. Click 'Cancel Tweet' item in 'Edit' menu
+2. When some text is in textarea, a dialog shows up with 'Discard' or 'Save' buttons
+3. Click 'Save' button
+4. Click 'Unsent Tweets' link in tweet page to restore the text later
+
 
 
 ## Performance
