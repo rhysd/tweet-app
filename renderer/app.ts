@@ -183,7 +183,7 @@ export default class App {
     }
 
     private async inReplyTo(url: string, screenName: string, retry: number): Promise<void> {
-        const a: HTMLAnchorElement | null = document.querySelector(`a[href^="/${screenName}/status/"]`);
+        const a: HTMLAnchorElement | null = document.querySelector(`a[href^="/${screenName}/status/" i]`);
         if (a === null) {
             if (retry > 40) {
                 window.location.href = url;
