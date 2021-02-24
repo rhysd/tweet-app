@@ -11,6 +11,7 @@
     "noUnusedParameters": true,
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
     "strictNullChecks": true,
     "strictBindCallApply": true,
     "strictPropertyInitialization": true,

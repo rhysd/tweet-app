@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import commander = require('commander');
 
 function appExePath(exe: string | undefined): string {
-    const specified = exe ?? process.env.TWEET_APP_ELECTRON_EXECUTABLE;
+    const specified = exe ?? process.env['TWEET_APP_ELECTRON_EXECUTABLE'];
     if (specified) {
         try {
             const { X_OK, R_OK } = fs.constants;
@@ -98,7 +98,7 @@ const appBinPath = appExePath(electronPath);
 const argv = [path.join(__dirname, '..'), '--', JSON.stringify(opts)];
 
 // Otherwise the electron process will exit immediately since the executable is run as node.
-delete process.env.ELECTRON_RUN_AS_NODE;
+delete process.env['ELECTRON_RUN_AS_NODE'];
 
 if (detach) {
     // TODO?: Output stderr to $DATA_DIR/log.txt
