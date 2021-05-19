@@ -1,4 +1,4 @@
-import { App } from './app';
+import App from './app';
 
 function cancel(e: Event): void {
     e.preventDefault();

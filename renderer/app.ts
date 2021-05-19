@@ -4,7 +4,7 @@ function wait(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export class App {
+export default class App {
     private afterTweet: ConfigAfterTweet = 'new tweet';
     private screenName: string | null = null;
 
