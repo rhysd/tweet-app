@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build:tsc": "tsc -p . && shx chmod +x ./bin/cli.js",
-    "build:esbuild": "esbuild --bundle renderer/index.js --outfile=renderer/preload.js --platform=node --external:electron --minify",
+    "build:esbuild": "esbuild --bundle --tsconfig=tsconfig.json renderer/index.js --outfile=renderer/preload.js --platform=node --external:electron --minify",
     "build": "npm-run-all build:tsc build:esbuild",
     "watch:tsc": "tsc -p . --watch",
     "watch:esbuild": "esbuild --watch --bundle --tsconfig=tsconfig.json renderer/index.ts --outfile=renderer/preload.js --platform=node --external:electron",
