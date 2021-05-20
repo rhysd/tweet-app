@@ -61,9 +61,8 @@ async function go(): Promise<void> {
             detail: err.stack,
         });
     } finally {
-        app.quit();
         log.info('App quits with exit status', exitStatus);
-        process.exit(exitStatus);
+        app.exit(exitStatus);
     }
 }
 
