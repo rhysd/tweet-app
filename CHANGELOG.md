@@ -1,3 +1,14 @@
+<a name="v0.3.1"></a>
+# [v0.3.1](https://github.com/rhysd/tweet-app/releases/tag/v0.3.1) - 20 May 2021
+
+- **Improve:** Update Electron to v12 and other dependencies
+- **Fix:** Crash when app quits with the latest Electron
+- **Dev:** Replace percel bundler with esbuild bundler
+- **Dev:** Migrate CI from Travis CI and AppVeyor to GitHub Actions
+
+[Changes][v0.3.1]
+
+
 <a name="v0.3.0"></a>
 # [v0.3.0](https://github.com/rhysd/tweet-app/releases/tag/v0.3.0) - 27 Jan 2021
 
@@ -112,6 +123,7 @@ Maintenance updates. No new features.
 [Changes][v0.1.0]
 
 
+[v0.3.1]: https://github.com/rhysd/tweet-app/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/rhysd/tweet-app/compare/v0.2.9...v0.3.0
 [v0.2.9]: https://github.com/rhysd/tweet-app/compare/v0.2.7...v0.2.9
 [v0.2.7]: https://github.com/rhysd/tweet-app/compare/v0.2.6...v0.2.7
