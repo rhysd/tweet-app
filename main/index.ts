@@ -62,7 +62,9 @@ async function go(): Promise<void> {
         });
     } finally {
         log.info('App quits with exit status', exitStatus);
-        app.exit(exitStatus);
+        // `app.exit(exitStatus)` is not available here due to https://github.com/electron/electron/issues/29260
+        // App crashes on calling the method. `app.quit()` does not cause the issue.
+        app.quit();
     }
 }
 
