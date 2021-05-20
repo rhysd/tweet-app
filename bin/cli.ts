@@ -50,7 +50,7 @@ function appExePath(exe: string | undefined): string {
         // XXX: In node context, require('electron') returns a string which represents path to electron
         // binary in electron npm package.
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        return (require('electron') as any) as string;
+        return require('electron') as any as string;
     } catch (e) {
         throw new Error(
             `Cannot find Electron executable. Please run \`npm install -g electron\` or install Tweet app from https://github.com/rhysd/tweet-app/releases: ${e}`,

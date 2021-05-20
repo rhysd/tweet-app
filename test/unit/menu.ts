@@ -138,7 +138,7 @@ describe('Menu', function () {
                 cancelTweet,
             };
 
-            const menu = (createMenu({}, ['foo'], actions) as any) as any[];
+            const menu = createMenu({}, ['foo'], actions) as any as any[];
 
             const edit = menu.find((i: any) => i.label === 'Edit');
             ok(edit);
@@ -193,12 +193,12 @@ describe('Menu', function () {
                 ...EMPTY_MENU_ACTIONS,
                 switchAccount,
             };
-            let menu = (createMenu({}, ['foo'], actions) as any) as any[];
+            let menu = createMenu({}, ['foo'], actions) as any as any[];
 
             let accountMenu = menu.find((i: any) => i.label === 'Accounts');
             eq(accountMenu, undefined);
 
-            menu = (createMenu({}, ['foo', '@bar'], actions) as any) as any[];
+            menu = createMenu({}, ['foo', '@bar'], actions) as any as any[];
             accountMenu = menu.find((i: any) => i.label === 'Accounts');
             ok(menu);
 
@@ -227,7 +227,7 @@ describe('Menu', function () {
                 'Edit Config': null,
             };
 
-            const menu = (createMenu(keymaps, ['foo'], EMPTY_MENU_ACTIONS) as any) as any[];
+            const menu = createMenu(keymaps, ['foo'], EMPTY_MENU_ACTIONS) as any as any[];
             const edit = menu.find((i: any) => i.label === 'Edit');
             for (const name of Object.keys(keymaps)) {
                 const item = edit.submenu.find((i: any) => i.label === name);
