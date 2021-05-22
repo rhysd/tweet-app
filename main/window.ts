@@ -1,7 +1,7 @@
 import * as querystring from 'querystring';
 import * as assert from 'assert';
 import * as path from 'path';
-import { BrowserWindow, dialog, nativeImage, app } from 'electron';
+import { BrowserWindow, dialog, nativeImage, app, net } from 'electron';
 import type { Menu } from 'electron';
 import windowState = require('electron-window-state');
 import { TweetAutoLinkBreaker, UNLINK_ALL_CONFIG } from 'break-tweet-autolink';
@@ -60,7 +60,7 @@ export default class TweetWindow {
             this.resolveWantToQuit = resolve;
         });
         this.didClose = Promise.resolve();
-        this.onlineStatus = 'online'; // Assume network is available at start
+        this.onlineStatus = net.online ? 'online' : 'offline';
     }
 
     public updateOptions(opts: CommandLineOptions): void {
@@ -510,9 +510,15 @@ export default class TweetWindow {
             this.ipc.on('tweetapp:online-status', this.onOnlineStatusChange);
             this.ipc.on('tweetapp:reset-window', this.onResetWindow);
 
-            const url = this.composeTweetUrl(reply, text);
-            log.info('Opening', url);
-            win.loadURL(url);
+            if (this.onlineStatus === 'online') {
+                const url = this.composeTweetUrl(reply, text);
+                log.info('Opening', url);
+                win.loadURL(url);
+            } else {
+                const url = `file://${path.join(__dirname, 'offline.html')}`;
+                win.loadURL(url);
+                log.debug('Opening offline page:', url);
+            }
 
             if (ON_DARWIN) {
                 win.setTouchBar(
