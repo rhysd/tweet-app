@@ -269,7 +269,7 @@ export default class TweetWindow {
             const autoHideMenuBar = this.windowConfig('auto_hide_menu_bar', true);
             const state = windowState({});
 
-            const winOpts = {
+            const winOpts: Electron.BrowserWindowConstructorOptions = {
                 width,
                 height,
                 resizable: false,
@@ -296,6 +296,7 @@ export default class TweetWindow {
                     webSecurity: true,
                     webviewTag: false,
                     zoomFactor,
+                    spellcheck: true,
                 },
             };
             log.debug('Create BrowserWindow with options:', winOpts);
