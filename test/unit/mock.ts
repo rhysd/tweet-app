@@ -37,6 +37,7 @@ class DummyWebContents extends EventEmitter {
     public send = sinon.fake();
     public insertText = sinon.fake();
     public url: string | undefined;
+    public setWindowOpenHandler = sinon.fake();
 
     public constructor() {
         super();
@@ -118,6 +119,9 @@ export function reset() {
         globalShortcut: {
             register: sinon.fake(),
             unregisterAll: sinon.fake(),
+        },
+        net: {
+            online: 'online',
         },
     });
 }
