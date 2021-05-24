@@ -489,7 +489,9 @@ export default class TweetWindow {
                     log.info(
                         'Blocked not allowed permission',
                         perm,
-                        '. Allowed permissions are:',
+                        'from url',
+                        url,
+                        'Allowed permissions are:',
                         allowed,
                         'Details:',
                         details,
