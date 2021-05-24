@@ -1,3 +1,14 @@
+<a name="v0.3.2"></a>
+# [v0.3.2](https://github.com/rhysd/tweet-app/releases/tag/v0.3.2) - 24 May 2021
+
+- Fix unnecessary files were included in a released npm package
+- Check network state at launching app and show 'Offline' page without trying to load twitter.com
+- Use `contents.setWindowOpenHandler` to deny making a new window instead of deprecated `new-window` event
+- Improve log message on denying permission requests
+
+[Changes][v0.3.2]
+
+
 <a name="v0.3.1"></a>
 # [v0.3.1](https://github.com/rhysd/tweet-app/releases/tag/v0.3.1) - 20 May 2021
 
@@ -123,6 +134,7 @@ Maintenance updates. No new features.
 [Changes][v0.1.0]
 
 
+[v0.3.2]: https://github.com/rhysd/tweet-app/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/rhysd/tweet-app/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/rhysd/tweet-app/compare/v0.2.9...v0.3.0
 [v0.2.9]: https://github.com/rhysd/tweet-app/compare/v0.2.7...v0.2.9
