@@ -62,7 +62,7 @@ const AfterTweetActions: ConfigAfterTweet[] = ['new tweet', 'reply previous', 'c
 
 const parsed = program
     .name('tweet')
-    .version('0.3.0')
+    .version('0.3.3')
     .usage('[options] [text]')
     .description('Desktop application for tweeting. Timeline never shows up.')
     .option('-t --hashtags <list>', 'comma-separated list of hashtags (e.g. "js,react,node")', s =>
