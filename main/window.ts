@@ -402,7 +402,7 @@ export default class TweetWindow {
             win.webContents.session.webRequest.onCompleted(
                 {
                     urls: [
-                        'https://mobile.twitter.com/i/api/1.1/statuses/update.json',
+                        'https://mobile.twitter.com/i/api/graphql/*/CreateTweet',
                         'https://mobile.twitter.com/i/api/1.1/statuses/destroy.json',
                     ],
                 },
@@ -446,11 +446,12 @@ export default class TweetWindow {
                 {
                     urls: [
                         'https://www.google-analytics.com/r/*',
-                        'https://mobile.twitter.com/i/api/1.1/statuses/update.json',
+                        'https://mobile.twitter.com/i/api/graphql/*/CreateTweet',
                     ],
                 },
                 (details: any, callback) => {
-                    if (details.url === 'https://api.twitter.com/1.1/statuses/update.json') {
+                    if (details.url.endsWith('/CreateTweet')) {
+                        log.debug('/i/api/graphql/*/CreateTweet', (details as any).uploadData?.[0]?.bytes?.toString());
                         // Tweet was posted. It means that user has already logged in.
                         win.webContents.session.webRequest.onBeforeRequest(null); // Unsubscribe this hook
                     } else if (details.referrer === 'https://mobile.twitter.com/login') {
