@@ -253,7 +253,7 @@ describe('TweetWindow', function () {
             ok(contents.session.webRequest.onCompleted.called);
             const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
             callback({
-                url: 'https://api.twitter.com/1.1/statuses/update.json',
+                url: 'https://mobile.twitter.com/i/api/graphql/hoge/CreateTweet',
                 statusCode: 200,
                 method: 'POST',
                 fromCache: false,
@@ -281,7 +281,7 @@ describe('TweetWindow', function () {
         ok(contents.session.webRequest.onCompleted.called);
         const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
         callback({
-            url: 'https://api.twitter.com/1.1/statuses/update.json',
+            url: 'https://mobile.twitter.com/i/api/graphql/hoge/CreateTweet',
             statusCode: 200,
             method: 'POST',
             fromCache: false,
@@ -307,7 +307,7 @@ describe('TweetWindow', function () {
         ok(contents.session.webRequest.onCompleted.called);
         const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
         callback({
-            url: 'https://api.twitter.com/1.1/statuses/update.json',
+            url: 'https://mobile.twitter.com/i/api/graphql/hoge/CreateTweet',
             statusCode: 200,
             method: 'POST',
             fromCache: false,
@@ -316,7 +316,7 @@ describe('TweetWindow', function () {
         await w.wantToQuit;
     });
 
-    it('does nothing when /statuses/update.json API fails', async function () {
+    it('does nothing when /i/api/graphql/hoge/CreateTweet API fails', async function () {
         const ipc = new Ipc();
         const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
         await w.openNewTweet();
@@ -326,7 +326,7 @@ describe('TweetWindow', function () {
         ok(contents.session.webRequest.onCompleted.called);
         const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
         callback({
-            url: 'https://api.twitter.com/1.1/statuses/update.json',
+            url: 'https://mobile.twitter.com/i/api/graphql/hoge/CreateTweet',
             statusCode: 400,
             method: 'POST',
             fromCache: false,
@@ -611,7 +611,7 @@ describe('TweetWindow', function () {
         cb = sinon.fake();
         callback(
             {
-                url: 'https://api.twitter.com/1.1/statuses/update.json',
+                url: 'https://mobile.twitter.com/i/api/graphql/hoge/CreateTweet',
                 referrer: 'https://mobile.twitter.com/compose/tweet',
             },
             cb,

@@ -451,7 +451,7 @@ export default class TweetWindow {
                 },
                 (details: any, callback) => {
                     if (details.url.endsWith('/CreateTweet')) {
-                        log.debug('/i/api/graphql/*/CreateTweet', (details as any).uploadData?.[0]?.bytes?.toString());
+                        log.debug('/i/api/graphql/*/CreateTweet', details.uploadData?.[0]?.bytes?.toString());
                         // Tweet was posted. It means that user has already logged in.
                         win.webContents.session.webRequest.onBeforeRequest(null); // Unsubscribe this hook
                     } else if (details.referrer === 'https://mobile.twitter.com/login') {
