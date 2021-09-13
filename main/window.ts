@@ -285,7 +285,6 @@ export default class TweetWindow {
                 autoHideMenuBar,
                 webPreferences: {
                     allowRunningInsecureContent: false,
-                    enableRemoteModule: false,
                     experimentalFeatures: false,
                     contextIsolation: true,
                     nodeIntegration: false,

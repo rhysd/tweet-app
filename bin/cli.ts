@@ -3,7 +3,7 @@
 import * as cp from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
-import commander = require('commander');
+import { program } from 'commander';
 
 function appExePath(exe: string | undefined): string {
     const specified = exe ?? process.env['TWEET_APP_ELECTRON_EXECUTABLE'];
@@ -60,9 +60,9 @@ function appExePath(exe: string | undefined): string {
 
 const AfterTweetActions: ConfigAfterTweet[] = ['new tweet', 'reply previous', 'close', 'quit'];
 
-const parsed = commander
-    .command('tweet')
-    .version('0.3.2')
+const parsed = program
+    .name('tweet')
+    .version('0.3.0')
     .usage('[options] [text]')
     .description('Desktop application for tweeting. Timeline never shows up.')
     .option('-t --hashtags <list>', 'comma-separated list of hashtags (e.g. "js,react,node")', s =>
