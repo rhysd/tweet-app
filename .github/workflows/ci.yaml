@@ -28,16 +28,17 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run nyc
-      - name: Run E2E tests (Linux)
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: |
-          export DISPLAY=:99
-          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-          sleep 5 # Ensure to start Xvfb display server
-          npm run test:integ
-      - name: Run E2E tests (not Linux)
-        if: ${{ matrix.os != 'ubuntu-latest' }}
-        run: npm run test:integ
+      # TODO: Uncomment when upgrading spectron to v16 which supports Electron v14
+      # - name: Run E2E tests (Linux)
+      #   if: ${{ matrix.os == 'ubuntu-latest' }}
+      #   run: |
+      #     export DISPLAY=:99
+      #     sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+      #     sleep 5 # Ensure to start Xvfb display server
+      #     npm run test:integ
+      # - name: Run E2E tests (not Linux)
+      #   if: ${{ matrix.os != 'ubuntu-latest' }}
+      #   run: npm run test:integ
       - name: Generate coverage report
         run: ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
       - name: Upload coverage report to Codecov
