@@ -1,3 +1,12 @@
+<a name="v0.3.3"></a>
+# [v0.3.3](https://github.com/rhysd/tweet-app/releases/tag/v0.3.3) - 14 Sep 2021
+
+- Update many dependencies to the latest, including Electron from v12 to v14.
+- Fix backing to a tweet input form page after sending a tweet. Previously tweet-app hooked `/i/api/1.1/statuses/update` but this API is no longer used by Twitter. Instead, now `/i/api/graphql/*/CreateTweet` GraphQL API is hooked.
+
+[Changes][v0.3.3]
+
+
 <a name="v0.3.2"></a>
 # [v0.3.2](https://github.com/rhysd/tweet-app/releases/tag/v0.3.2) - 24 May 2021
 
@@ -134,6 +143,7 @@ Maintenance updates. No new features.
 [Changes][v0.1.0]
 
 
+[v0.3.3]: https://github.com/rhysd/tweet-app/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/rhysd/tweet-app/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/rhysd/tweet-app/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/rhysd/tweet-app/compare/v0.2.9...v0.3.0
