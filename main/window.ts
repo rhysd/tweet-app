@@ -109,13 +109,13 @@ export default class TweetWindow {
         } else if (this.win.isMinimized()) {
             this.win.restore();
         }
-        assert.ok(this.win !== null);
 
         const url = `https://mobile.twitter.com/${this.screenName}/status/${this.prevTweetId}`;
         return new Promise<void>(resolve => {
+            assert.ok(this.win !== null);
             this.ipc.send('tweetapp:open', url);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            this.win!.webContents.once('dom-ready', () => {
+            this.win.webContents.once('dom-ready', () => {
                 log.debug('Opened previous tweet:', url);
                 resolve();
             });
@@ -317,14 +317,14 @@ export default class TweetWindow {
                 log.debug('Event: close');
                 assert.ok(this.win !== null);
                 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                this.ipc.detach(this.win!.webContents);
+                this.ipc.detach(this.win.webContents);
                 this.ipc.forget('tweetapp:prev-tweet-id', this.onPrevTweetIdReceived);
                 this.ipc.forget('tweetapp:online-status', this.onOnlineStatusChange);
                 this.ipc.forget('tweetapp:reset-window', this.onResetWindow);
-                this.win!.webContents.removeAllListeners();
-                this.win!.webContents.session.setPermissionRequestHandler(null);
-                this.win!.webContents.session.webRequest.onBeforeRequest(null);
-                this.win!.webContents.session.webRequest.onCompleted(null);
+                this.win.webContents.removeAllListeners();
+                this.win.webContents.session.setPermissionRequestHandler(null);
+                this.win.webContents.session.webRequest.onBeforeRequest(null);
+                this.win.webContents.session.webRequest.onCompleted(null);
                 /* eslint-enable @typescript-eslint/no-non-null-assertion */
             });
 
@@ -337,7 +337,7 @@ export default class TweetWindow {
                     log.debug('Event: closed');
                     assert.ok(this.win !== null);
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    this.win!.removeAllListeners();
+                    this.win.removeAllListeners();
                     this.win = null;
                     if (ON_DARWIN) {
                         app.hide();
