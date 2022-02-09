@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
       - run: npm ci
       - run: npm run build  # Building .js sources is necessary since eslint-plugin-node searches JavaScript sources
       - run: npm run lint
@@ -22,9 +22,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
       - run: npm ci
       - run: npm run build
       - run: npm run nyc
