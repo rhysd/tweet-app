@@ -11,8 +11,6 @@ jobs:
         with:
           node-version: '16'
       - run: npm ci
-      - name: TEMPORARILY apply a patch to the type defintiion of electron-context-menu (https://github.com/sindresorhus/electron-context-menu/pull/156)
-        run: curl -L 'https://raw.githubusercontent.com/rhysd/electron-context-menu/fix-ts-error-electron-v17/index.d.ts' -o node_modules/electron-context-menu/index.d.ts
       - run: npm run build  # Building .js sources is necessary since eslint-plugin-node searches JavaScript sources
       - run: npm run lint
   tests:
@@ -28,8 +26,6 @@ jobs:
         with:
           node-version: '16'
       - run: npm ci
-      - name: TEMPORARILY apply a patch to the type defintiion of electron-context-menu (https://github.com/sindresorhus/electron-context-menu/pull/156)
-        run: curl -L 'https://raw.githubusercontent.com/rhysd/electron-context-menu/fix-ts-error-electron-v17/index.d.ts' -o node_modules/electron-context-menu/index.d.ts
       - run: npm run build
       - run: npm run nyc
       # TODO: Uncomment when upgrading spectron to v16 which supports Electron v14
