@@ -19,10 +19,6 @@
     "sourceMap": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
-    "paths": {
-      "electron-context-menu": ["types/electron-context-menu"]
-    },
     "types": [
       "node",
       "webdriverio/async",
