@@ -358,13 +358,6 @@ export default class TweetWindow {
                 log.warn('Blocked navigation:', url);
             });
 
-            // Note: This event was deprecated in favor of `contents.setWindowOpenHandler()`
-            win.webContents.on('new-window', (e, url) => {
-                log.info('Event: new-window:', url);
-                e.preventDefault();
-                log.warn('Blocked gew window creation:', url);
-            });
-
             win.webContents.setWindowOpenHandler(details => {
                 log.warn('Blocked new window creation:', details.url, ', opener:', details.frameName);
                 return { action: 'deny' };
