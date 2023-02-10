@@ -532,12 +532,10 @@ describe('TweetWindow', function () {
         await w.openNewTweet();
 
         const wc = (w as any).win.webContents;
-        const e = {
-            preventDefault: sinon.fake(),
-        };
-
-        wc.emit('new-window', e, 'https://mobile.twitter.com/foo/status/114514');
-        ok(e.preventDefault.called);
+        ok(wc.setWindowOpenHandler.called);
+        const callback = wc.setWindowOpenHandler.lastCall.args[0];
+        const response = callback({});
+        eq(response.action, 'deny');
     });
 
     it('injects CSS to prevent some links from displaying', async function () {
@@ -581,27 +579,9 @@ describe('TweetWindow', function () {
             return called;
         }
 
-        // Do nothing when referrer is not /login URL
-        let cb = sinon.fake();
-        callback(
-            {
-                url: 'https://www.google-analytics.com/r/*',
-                referrer: 'https://mobile.twitter.com/compose/tweet',
-            },
-            cb,
-        );
-        ok(cb.called);
-        ok(!loginIpcSent());
-
         // Detect referrer is /login URL
-        cb = sinon.fake();
-        callback(
-            {
-                url: 'https://www.google-analytics.com/r/*',
-                referrer: 'https://mobile.twitter.com/login',
-            },
-            cb,
-        );
+        let cb = sinon.fake();
+        callback({ url: 'https://api.twitter.com/1.1/onboarding/task.json?flow_name=login' }, cb);
         ok(cb.called);
         ok(loginIpcSent());
         eq(wc.session.webRequest.onBeforeRequest.lastCall.args[0], null); // listener was removed
@@ -611,7 +591,7 @@ describe('TweetWindow', function () {
         cb = sinon.fake();
         callback(
             {
-                url: 'https://mobile.twitter.com/i/api/graphql/hoge/CreateTweet',
+                url: 'https://api.twitter.com/graphql/hogeCreateTweet',
                 referrer: 'https://mobile.twitter.com/compose/tweet',
             },
             cb,

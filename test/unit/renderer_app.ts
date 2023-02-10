@@ -136,14 +136,13 @@ describe('App', function () {
 
     it('sets login name to user name <input> on tweetapp:login', function () {
         (global as any).document = new JSDOM(`
-            <input name="username_or_email"/>
-            <input name="password"/>
+            <input autocomplete="username"/>
         `).window.document;
 
         emulateSend('tweetapp:screen-name', 'foo');
         emulateSend('tweetapp:login');
 
-        const input = document.querySelector('input[name*="username_or_email"]') as HTMLInputElement | null;
+        const input = document.querySelector('input[autocomplete="username"]') as HTMLInputElement | null;
         ok(input);
         eq(input!.value, 'foo');
     });
