@@ -432,20 +432,21 @@ export default class TweetWindow {
             // - 'https://api.twitter.com/1.1/client_event.json',
             win.webContents.session.webRequest.onBeforeRequest(
                 {
-                    urls: ['https://www.google-analytics.com/r/*', 'https://api.twitter.com/graphql/*/CreateTweet'],
+                    urls: [
+                        'https://api.twitter.com/graphql/*/CreateTweet',
+                        'https://api.twitter.com/1.1/onboarding/task.json?flow_name=login',
+                    ],
                 },
                 (details, callback) => {
                     if (details.url.endsWith('/CreateTweet')) {
                         log.debug('/i/api/graphql/*/CreateTweet', details.uploadData?.[0]?.bytes?.toString());
                         // Tweet was posted. It means that user has already logged in.
-                        win.webContents.session.webRequest.onBeforeRequest(null); // Unsubscribe this hook
-                    } else if (details.referrer === 'https://mobile.twitter.com/login') {
-                        // XXX: TENTATIVE: detect login from google-analitics requests
+                    } else if (details.url.endsWith('?flow_name=login')) {
                         log.debug('Login detected from URL', details.url);
                         this.ipc.send('tweetapp:login');
                         // Remove listener anymore
-                        win.webContents.session.webRequest.onBeforeRequest(null); // Unsubscribe this hook
                     }
+                    win.webContents.session.webRequest.onBeforeRequest(null); // Unsubscribe this hook at first callback
                     callback({});
                 },
             );
