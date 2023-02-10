@@ -68,24 +68,6 @@ module.exports = {
         'security/detect-object-injection': 'off', // false positive at array index accesses
         'node/shebang': 'off', // It complains bin/cli.ts
         'no-unused-vars': 'off', // For @typescript-eslint/no-unused-vars
-
-        // Configured
-        '@typescript-eslint/naming-convention': [
-            'error',
-            {
-                selector: 'default',
-                format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-                leadingUnderscore: 'allow',
-                filter: {
-                    // Keys in config.json
-                    regex:
-                        '^(default_account|other_accounts|quit_on_close|after_tweet|auto_hide_menu_bar|visible_on_all_workspaces|_)$',
-                    match: false,
-                },
-            },
-        ],
-
-        // Enabled
     },
     overrides: [
         {
