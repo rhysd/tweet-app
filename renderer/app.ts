@@ -87,18 +87,30 @@ export default class App {
 
         Ipc.on('tweetapp:login', _ => {
             console.log('Login detected with screen name', this.screenName);
-            const loginInput = document.querySelector('input[name*="username_or_email"]') as HTMLInputElement | null;
-            if (loginInput === null || this.screenName === null) {
-                console.warn('Cannot set screen name to <input>', loginInput, this.screenName);
+            if (this.screenName === null) {
                 return;
             }
 
-            loginInput.value = this.screenName;
+            const screenName = this.screenName;
+            let retry = 10;
+            function completeScreenName(): void {
+                const loginInput = document.querySelector('input[autocomplete="username"]') as HTMLInputElement | null;
+                if (loginInput !== null) {
+                    loginInput.focus();
+                    loginInput.value = screenName;
+                    return;
+                }
 
-            const passwordInput = document.querySelector('input[name*="password"]') as HTMLInputElement | null;
-            if (passwordInput !== null) {
-                passwordInput.focus();
+                if (retry <= 0) {
+                    console.warn('Username input in login window could not be detected after 2 seconds');
+                    return;
+                }
+
+                retry--;
+                window.setTimeout(completeScreenName, 200);
             }
+
+            completeScreenName();
         });
 
         Ipc.on('tweetapp:sent-tweet', async (_, url: string) => {
