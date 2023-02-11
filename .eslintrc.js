@@ -17,7 +17,7 @@ module.exports = {
         project: './tsconfig.json',
         sourceType: 'module', // Avoid 'Parsing error: ImportDeclaration should appear when the mode is ES6 and in the module context'
     },
-    plugins: ['@typescript-eslint', 'node', 'security', 'prettier'],
+    plugins: ['@typescript-eslint', 'node', 'security'],
     rules: {
         // Enabled
         '@typescript-eslint/prefer-for-of': 'error',
@@ -50,7 +50,6 @@ module.exports = {
         '@typescript-eslint/no-confusing-void-expression': 'error',
         '@typescript-eslint/explicit-function-return-type': 'error',
         '@typescript-eslint/consistent-type-imports': 'error',
-        'prettier/prettier': 'error',
         eqeqeq: 'error',
 
         // Disabled
