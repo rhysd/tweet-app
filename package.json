@@ -32,7 +32,8 @@
     "cov": "npm run nyc && nyc report --reporter html && open ./coverage/index.html",
     "lint": "eslint --max-warnings 0 \"main/**/*.ts\" \"renderer/**/*.ts\" \"bin/**/*.ts\" \"test/**/*.ts\"",
     "fix": "npm run lint -- --fix",
-    "prepublishOnly": "concurrently -c auto -m 1 npm:build npm:test npm:lint"
+    "prepublishOnly": "concurrently -c auto -m 1 npm:build npm:test npm:lint",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -130,11 +131,6 @@
       ],
       "synopsis": "Desktop app only for tweeting. Timeline never shows up",
       "category": "Network;SNS"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm run husky"
     }
   }
 }
