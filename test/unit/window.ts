@@ -495,7 +495,7 @@ describe('TweetWindow', function () {
         ok(contents.session.webRequest.onCompleted.called);
         const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
         callback({
-            url: 'https://api.twitter.com/1.1/statuses/destroy.json',
+            url: 'https://api.twitter.com/graphql/hoge/DeleteTweet',
             statusCode: 200,
             method: 'OPTIONS',
             fromCache: false,

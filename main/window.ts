@@ -392,7 +392,7 @@ export default class TweetWindow {
                 {
                     urls: [
                         'https://api.twitter.com/graphql/*/CreateTweet',
-                        'https://mobile.twitter.com/i/api/1.1/statuses/destroy.json',
+                        'https://api.twitter.com/graphql/*/DeleteTweet',
                     ],
                 },
                 details => {
@@ -400,7 +400,7 @@ export default class TweetWindow {
                         return;
                     }
 
-                    if (details.url.endsWith('/destroy.json')) {
+                    if (details.url.endsWith('/DeleteTweet')) {
                         const url = this.composeTweetUrl(false);
                         log.info('Destroyed tweet:', details.url, 'Next URL:', url);
                         this.prevTweetId = null; // Clear previous tweet ID since it would no longer exist
