@@ -11,10 +11,10 @@
     "tweet": "bin/cli.js"
   },
   "scripts": {
-    "build:tsc": "tsc -p . && shx chmod +x ./bin/cli.js",
+    "build:tsc": "tsc -p . --pretty && shx chmod +x ./bin/cli.js",
     "build:esbuild": "esbuild --bundle renderer/index.ts --outfile=renderer/preload.js --platform=node --external:electron --minify",
     "build": "concurrently -c auto -m 1 npm:build:tsc npm:build:esbuild",
-    "watch:tsc": "tsc -p . --watch",
+    "watch:tsc": "tsc -p . --watch --preserveWatchOutput --pretty",
     "watch:esbuild": "esbuild --watch --bundle --tsconfig=tsconfig.json renderer/index.ts --outfile=renderer/preload.js --platform=node --external:electron",
     "watch": "concurrently -c auto npm:watch:tsc npm:watch:esbuild",
     "cli": "node ./bin/cli.js",

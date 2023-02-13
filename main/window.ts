@@ -532,6 +532,13 @@ export default class TweetWindow {
                 win.setVisibleOnAllWorkspaces(true);
             }
 
+            if (IS_DEBUG) {
+                win.webContents.on('console-message', (_, level, message, line) => {
+                    const lv = ['verbose', 'info', 'warning', 'error'][level] ?? 'unknown';
+                    log.debug(`Renderer:${lv}: ${message} (line:${line})`);
+                });
+            }
+
             log.info('Created window for', this.screenName);
             this.win = win;
         });
