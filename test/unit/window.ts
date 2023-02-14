@@ -485,27 +485,32 @@ describe('TweetWindow', function () {
         ok(win.restore.called);
     });
 
-    it('opens "New Tweet" page again after deleting a tweet to prevent back to home timeline', async function () {
-        const ipc = new Ipc();
-        const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
-        await w.openNewTweet();
+    for (const [doing, url] of [
+        ['deleting', 'https://api.twitter.com/graphql/hoge/DeleteTweet'],
+        ['scheduling', 'https://api.twitter.com/graphql/hoge/CreateScheduledTweet'],
+    ]) {
+        it(`opens "New Tweet" page again after ${doing} a tweet to prevent back to home timeline`, async function () {
+            const ipc = new Ipc();
+            const w = new TweetWindow('foo', {}, ipc, { text: '' }, {} as any);
+            await w.openNewTweet();
 
-        const contents = (w as any).win.webContents;
+            const contents = (w as any).win.webContents;
 
-        ok(contents.session.webRequest.onCompleted.called);
-        const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
-        callback({
-            url: 'https://api.twitter.com/graphql/hoge/DeleteTweet',
-            statusCode: 200,
-            method: 'OPTIONS',
-            fromCache: false,
+            ok(contents.session.webRequest.onCompleted.called);
+            const callback = contents.session.webRequest.onCompleted.lastCall.args[1];
+            callback({
+                url,
+                statusCode: 200,
+                method: 'POST',
+                fromCache: false,
+            });
+
+            const ipcCall = findCall(contents.send, c => c.args[0] === 'tweetapp:open');
+            ok(ipcCall);
+            eq(ipcCall.args[1], 'https://mobile.twitter.com/compose/tweet');
+            eq(w.prevTweetId, null);
         });
-
-        const ipcCall = findCall(contents.send, c => c.args[0] === 'tweetapp:open');
-        ok(ipcCall);
-        eq(ipcCall.args[1], 'https://mobile.twitter.com/compose/tweet');
-        eq(w.prevTweetId, null);
-    });
+    }
 
     it('prevents navigation when the URL is not mobile.twitter.com', async function () {
         const w = new TweetWindow('foo', {}, new Ipc(), { text: '' }, {} as any);

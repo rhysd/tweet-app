@@ -393,6 +393,7 @@ export default class TweetWindow {
                     urls: [
                         'https://api.twitter.com/graphql/*/CreateTweet',
                         'https://api.twitter.com/graphql/*/DeleteTweet',
+                        'https://api.twitter.com/graphql/*/CreateScheduledTweet',
                     ],
                 },
                 details => {
@@ -405,6 +406,16 @@ export default class TweetWindow {
                         log.info('Destroyed tweet:', details.url, 'Next URL:', url);
                         this.prevTweetId = null; // Clear previous tweet ID since it would no longer exist
                         this.ipc.send('tweetapp:open', url);
+                        return;
+                    }
+
+                    if (details.url.endsWith('/CreateScheduledTweet')) {
+                        if (details.method === 'POST') {
+                            const url = this.composeTweetUrl(false);
+                            log.info('Scheduled tweet:', details.url, 'Next URL:', url);
+                            this.prevTweetId = null;
+                            this.ipc.send('tweetapp:open', url);
+                        }
                         return;
                     }
 
@@ -435,14 +446,12 @@ export default class TweetWindow {
                 {
                     urls: [
                         'https://api.twitter.com/graphql/*/CreateTweet',
+                        'https://api.twitter.com/graphql/*/CreateScheduledTweet',
                         'https://api.twitter.com/1.1/onboarding/task.json?flow_name=login',
                     ],
                 },
                 (details, callback) => {
-                    if (details.url.endsWith('/CreateTweet')) {
-                        log.debug('/i/api/graphql/*/CreateTweet', details.uploadData?.[0]?.bytes?.toString());
-                        // Tweet was posted. It means that user has already logged in.
-                    } else if (details.url.endsWith('?flow_name=login')) {
+                    if (details.url.endsWith('?flow_name=login')) {
                         log.debug('Login detected from URL', details.url);
                         this.ipc.send('tweetapp:login');
                         // Remove listener anymore

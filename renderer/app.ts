@@ -198,10 +198,10 @@ export default class App {
         const a: HTMLAnchorElement | null = document.querySelector(`a[href^="/${screenName}/status/" i]`);
         if (a === null) {
             if (retry > 40) {
-                window.location.href = url;
                 console.warn(
                     'Cannot retrieve previous tweet ID from timeline after 4s. Fallback into default tweet form',
                 );
+                window.location.href = url;
             } else {
                 // Retry
                 await wait(100);
