@@ -45,7 +45,7 @@ export default class App {
         }
 
         function findTweetButton(): HTMLElement | null {
-            const text = ['Tweet', 'Tweet All', 'Reply', 'ツイート', 'すべてツイート', '返信'];
+            const text = ['Tweet', 'Tweet All', 'Reply', 'Schedule', 'ツイート', 'すべてツイート', '返信', '予約設定'];
             return findButton('tweetButton', text);
         }
 

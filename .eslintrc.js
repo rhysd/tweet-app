@@ -50,6 +50,7 @@ module.exports = {
         '@typescript-eslint/no-confusing-void-expression': 'error',
         '@typescript-eslint/explicit-function-return-type': 'error',
         '@typescript-eslint/consistent-type-imports': 'error',
+        '@typescript-eslint/no-import-type-side-effects': 'error',
         eqeqeq: 'error',
 
         // Disabled
