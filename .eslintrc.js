@@ -41,6 +41,7 @@ module.exports = {
         '@typescript-eslint/prefer-string-starts-ends-with': 'error',
         '@typescript-eslint/prefer-readonly': 'error',
         '@typescript-eslint/prefer-ts-expect-error': 'error',
+        '@typescript-eslint/prefer-as-const': 'error',
         '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
         '@typescript-eslint/await-thenable': 'error',
         '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
@@ -51,6 +52,9 @@ module.exports = {
         '@typescript-eslint/explicit-function-return-type': 'error',
         '@typescript-eslint/consistent-type-imports': 'error',
         '@typescript-eslint/no-import-type-side-effects': 'error',
+        '@typescript-eslint/no-base-to-string': 'error',
+        '@typescript-eslint/no-invalid-void-type': 'error',
+        '@typescript-eslint/return-await': ['error', 'in-try-catch'],
         eqeqeq: 'error',
 
         // Disabled
