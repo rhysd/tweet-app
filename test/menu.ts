@@ -1,6 +1,6 @@
 import { deepStrictEqual as eq, ok } from 'assert';
 import sinon = require('sinon');
-import { createMenu, dockMenu, touchBar, MenuActions, TouchbarActions } from '../../main/menu';
+import { createMenu, dockMenu, touchBar, MenuActions, TouchbarActions } from '../main/menu';
 import { reset } from './mock';
 
 const { shell } = require('electron') as any; // mocked

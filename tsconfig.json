@@ -18,18 +18,7 @@
     "target": "es2017",
     "sourceMap": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "types": [
-      "node",
-      "webdriverio/async",
-      "electron-window-state",
-      "jsdom",
-      "lodash.merge",
-      "mocha",
-      "mock-require",
-      "sinon",
-      "twitter-text"
-    ]
+    "resolveJsonModule": true
   },
   "include": [
     "bin/cli.ts",

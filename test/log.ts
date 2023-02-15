@@ -1,4 +1,4 @@
-import log from '../../main/log';
+import log from '../main/log';
 import { ok } from 'assert';
 
 describe('log', function () {

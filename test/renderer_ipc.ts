@@ -1,6 +1,6 @@
 import { deepStrictEqual as eq, ok } from 'assert';
 import sinon = require('sinon');
-import Ipc from '../../renderer/ipc';
+import Ipc from '../renderer/ipc';
 import { reset } from './mock';
 
 const { ipcRenderer } = require('electron') as any; // mocked

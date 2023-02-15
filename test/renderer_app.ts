@@ -4,7 +4,7 @@ import { deepStrictEqual as eq, ok, fail } from 'assert';
 import { JSDOM } from 'jsdom';
 import sinon = require('sinon');
 import { reset } from './mock';
-import App from '../../renderer/app';
+import App from '../renderer/app';
 
 const { ipcRenderer } = require('electron') as any; // mocked
 

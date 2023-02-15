@@ -3,7 +3,7 @@ import TweetWindow from './window';
 import Ipc from './ipc';
 import log from './log';
 import { createMenu, dockMenu } from './menu';
-import { ON_DARWIN, ON_WINDOWS, ON_INTEG_TEST } from './constants';
+import { ON_DARWIN, ON_WINDOWS } from './constants';
 
 export default class Lifecycle {
     // Use Promise for representing quit() is called only once in lifecycle.
@@ -108,7 +108,7 @@ export default class Lifecycle {
         // In the case, What Spectron can do is only calling window.close(). It closes the window,
         // but it does not make app quit on macOS. To ensure to make app quit after integration test,
         // flag for integration test is necessary.
-        if (this.config.quit_on_close || ON_INTEG_TEST) {
+        if (this.config.quit_on_close) {
             // Ignore closing window while switching account
             do {
                 await this.currentWin.didClose;

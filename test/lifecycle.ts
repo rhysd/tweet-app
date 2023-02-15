@@ -2,7 +2,7 @@
 
 import { deepStrictEqual as eq, notDeepStrictEqual as neq, ok } from 'assert';
 import sinon = require('sinon');
-import Lifecycle from '../../main/lifecycle';
+import Lifecycle from '../main/lifecycle';
 import { reset } from './mock';
 
 const { globalShortcut } = require('electron') as any; // mocked

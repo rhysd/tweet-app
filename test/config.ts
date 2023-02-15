@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { deepStrictEqual as eq, ok } from 'assert';
 import { appDir, reset } from './mock';
-import { loadConfig, openConfig, DEFAULT_CONFIG } from '../../main/config';
+import { loadConfig, openConfig, DEFAULT_CONFIG } from '../main/config';
 
 const { shell } = require('electron') as any; // mocked
 
