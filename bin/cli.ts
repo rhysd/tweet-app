@@ -110,7 +110,12 @@ if (detach) {
     const proc = cp.spawn(appBinPath, argv, {
         stdio: 'inherit',
     });
-    proc.on('exit', code => {
-        process.exit(typeof code === 'number' ? code : 3);
+    proc.on('exit', (code, signal) => {
+        if (typeof code === 'number') {
+            process.exit(code);
+        } else {
+            console.error('Child Electron process seems to be terminated by signal:', signal);
+            process.exit(3);
+        }
     });
 }
