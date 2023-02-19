@@ -18,6 +18,8 @@ const INJECTED_CSS =
     'header[role="banner"] { display: none !important; }\n' +
     'div[data-testid="twc-cc-mask"] { display: none !important; }\n' + // This mask covers the entire tweet form page and navigates to home when it is clicked
     ['Back', '戻る'].map(aria => `[aria-label="${aria}"] { display: none !important; }`).join('\n');
+const USER_AGENT =
+    'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.5481.77 Mobile Safari/537.36';
 
 export default class TweetWindow {
     public readonly screenName: string | undefined;
@@ -518,7 +520,7 @@ export default class TweetWindow {
             if (this.onlineStatus === 'online') {
                 const url = this.composeTweetUrl(reply, text);
                 log.info('Opening', url);
-                win.loadURL(url);
+                win.loadURL(url, { userAgent: USER_AGENT });
             } else {
                 const url = `file://${path.join(__dirname, 'offline.html')}`;
                 win.loadURL(url);
@@ -575,7 +577,7 @@ export default class TweetWindow {
         if (status === 'online') {
             const url = this.composeTweetUrl(false);
             log.info('Reopen window since network is now online:', url);
-            this.win.loadURL(url);
+            this.win.loadURL(url, { userAgent: USER_AGENT });
             return;
         }
 

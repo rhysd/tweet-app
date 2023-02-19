@@ -54,6 +54,8 @@ describe('TweetWindow', function () {
         eq(contents.url, 'https://mobile.twitter.com/compose/tweet');
         eq(contents.send.getCall(0).args, ['tweetapp:screen-name', 'foo']);
         ok(contents.session.webRequest.onCompleted.calledOnce);
+        ok(contents.options, `Options: ${JSON.stringify(contents.options)}`);
+        ok(typeof contents.options.userAgent === 'string', `Options: ${JSON.stringify(contents.options)}`);
     });
 
     it('opens window multiple times', async function () {

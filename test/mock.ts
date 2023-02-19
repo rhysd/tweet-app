@@ -38,6 +38,7 @@ class DummyWebContents extends EventEmitter {
     public insertText = sinon.fake();
     public url: string | undefined;
     public setWindowOpenHandler = sinon.fake();
+    public options: any = null;
 
     public constructor() {
         super();
@@ -63,9 +64,10 @@ class DummyBrowserWindow extends EventEmitter {
         this.webContents = new DummyWebContents();
     }
 
-    public loadURL(url: string) {
+    public loadURL(url: string, opts?: any) {
         this.emit('ready-to-show');
         this.webContents.url = url;
+        this.webContents.options = opts;
         process.nextTick(() => this.webContents.emit('dom-ready'));
     }
 
