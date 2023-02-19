@@ -126,6 +126,7 @@
     },
     "linux": {
       "target": [
+        "zip",
         "deb",
         "AppImage"
       ],
