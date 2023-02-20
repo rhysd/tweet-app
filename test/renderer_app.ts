@@ -135,31 +135,36 @@ describe('App', function () {
     });
 
     it('sets login name to user name <input> on tweetapp:login', function () {
-        (global as any).document = new JSDOM(`
+        const window = new JSDOM(`
             <input autocomplete="username"/>
-        `).window.document;
+        `).window;
+        // JSDOM does not support `document.execCommand` since the method was removed from spec
+        const execCommand = sinon.fake();
+        (window.document as any).execCommand = execCommand;
+        (global as any).document = window.document;
 
         emulateSend('tweetapp:screen-name', 'foo');
         emulateSend('tweetapp:login');
 
         const input = document.querySelector('input[autocomplete="username"]') as HTMLInputElement | null;
         ok(input);
-        eq(input!.value, 'foo');
+
+        ok(execCommand.called);
+        eq(execCommand.lastCall.args, ['insertText', false, 'foo']);
     });
 
     it('does not set login name to user name <input> on tweetapp:login when screen name is unknown or <input> is not found', function () {
         (global as any).document = new JSDOM(`
-            <input name="username_or_email"/>
-            <input name="password"/>
+            <input autocomplete="username"/>
         `).window.document;
 
         emulateSend('tweetapp:login');
 
-        const input = document.querySelector('input[name*="username_or_email"]') as HTMLInputElement | null;
+        const input = document.querySelector('input[autocomplete="username"]') as HTMLInputElement | null;
         ok(input);
-        eq(input!.value, '');
+        eq(input.value, '');
 
-        input!.name = 'foooo';
+        input.name = 'foooo';
         emulateSend('tweetapp:login'); // Should not raise an error
     });
 

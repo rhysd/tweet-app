@@ -97,7 +97,7 @@ export default class App {
                 const loginInput = document.querySelector('input[autocomplete="username"]') as HTMLInputElement | null;
                 if (loginInput !== null) {
                     loginInput.focus();
-                    loginInput.value = screenName;
+                    document.execCommand('insertText', false, screenName);
                     return;
                 }
 
