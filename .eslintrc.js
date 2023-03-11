@@ -2,7 +2,7 @@ module.exports = {
     extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
-        'plugin:node/recommended',
+        'plugin:n/recommended',
         'plugin:security/recommended',
         'prettier',
     ],
@@ -17,7 +17,7 @@ module.exports = {
         project: './tsconfig.json',
         sourceType: 'module', // Avoid 'Parsing error: ImportDeclaration should appear when the mode is ES6 and in the module context'
     },
-    plugins: ['@typescript-eslint', 'node', 'security'],
+    plugins: ['@typescript-eslint', 'n', 'security'],
     rules: {
         // Enabled
         '@typescript-eslint/prefer-for-of': 'error',
@@ -66,12 +66,10 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         'no-console': 'off', // bin/ and renderer/ is still using console
         'no-process-exit': 'off',
-        'node/no-unsupported-features/es-syntax': 'off', // false positive at import statements
-        'node/no-unpublished-import': 'off', // false positive? at spectron and jsdom packages
+        'no-unused-vars': 'off', // For @typescript-eslint/no-unused-vars
         'security/detect-non-literal-fs-filename': 'off',
         'security/detect-object-injection': 'off', // false positive at array index accesses
-        'node/shebang': 'off', // It complains bin/cli.ts
-        'no-unused-vars': 'off', // For @typescript-eslint/no-unused-vars
+        'n/no-missing-import': 'off', // does not work with TypeScript sources
     },
     overrides: [
         {
@@ -92,6 +90,13 @@ module.exports = {
                 '@typescript-eslint/no-var-requires': 'off',
                 '@typescript-eslint/explicit-function-return-type': 'off',
                 '@typescript-eslint/consistent-type-imports': 'off',
+            },
+        },
+        {
+            files: ['bin/cli.ts'],
+            rules: {
+                'n/shebang': 'off',
+                'n/no-process-exit': 'off',
             },
         },
     ],

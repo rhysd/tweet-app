@@ -4,7 +4,7 @@
   "version": "0.4.1",
   "description": "Small Twitter client only for tweeting. Timeline never shows up",
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=18.12.1"
   },
   "main": "main/index.js",
   "bin": {
@@ -72,7 +72,7 @@
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-mocha": "^10.1.0",
-    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-security": "^1.7.1",
     "husky": "^8.0.3",
     "jsdom": "^21.1.0",
