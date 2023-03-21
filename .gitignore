@@ -1,12 +1,10 @@
+*.js.map
 /node_modules
 /bin/*.js
-/bin/*.js.map
 /main/**/*.js
-/main/**/*.map
 /renderer/**/*.js
-/renderer/**/*.map
 /test/**/*.js
-/test/**/*.map
+/types/**/*.js
 /.cache
 /config.json
 /dist

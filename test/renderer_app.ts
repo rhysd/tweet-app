@@ -3,8 +3,9 @@
 import { deepStrictEqual as eq, ok, fail } from 'assert';
 import { JSDOM } from 'jsdom';
 import sinon = require('sinon');
-import { reset } from './mock';
 import App from '../renderer/app';
+import type { IpcFromMain } from '../types/common';
+import { reset } from './mock';
 
 const { ipcRenderer } = require('electron') as any; // mocked
 
@@ -25,7 +26,7 @@ describe('App', function () {
         delete (global as any).document;
     });
 
-    function emulateSend(chan: IpcChan.FromMain, ...args: any[]) {
+    function emulateSend(chan: IpcFromMain, ...args: any[]) {
         ok(ipcRenderer.on.called);
         const calls = ipcRenderer.on.getCalls();
         for (const call of calls) {

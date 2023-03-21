@@ -2,6 +2,7 @@ import { Menu, shell, TouchBar } from 'electron';
 import { openConfig } from './config';
 import { ON_DARWIN, APP_NAME, IS_DEV } from './constants';
 import log from './log';
+import type { KeyMapConfig } from '../types/common';
 
 const { TouchBarLabel, TouchBarButton, TouchBarSpacer } = TouchBar;
 

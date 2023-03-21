@@ -4,6 +4,7 @@ import { deepStrictEqual as eq, notDeepStrictEqual as neq, ok } from 'assert';
 import sinon = require('sinon');
 import TweetWindow from '../main/window';
 import Ipc from '../main/ipc';
+import type { Config } from '../types/common';
 import { appDir, reset } from './mock';
 
 type Spy = sinon.SinonSpy;

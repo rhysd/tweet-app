@@ -4,6 +4,7 @@ import * as cp from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import { program } from 'commander';
+import type { ConfigAfterTweet, CommandLineOptions } from '../types/common';
 
 function appExePath(exe: string | undefined): string {
     const specified = exe ?? process.env['TWEET_APP_ELECTRON_EXECUTABLE'];

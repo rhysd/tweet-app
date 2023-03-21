@@ -1,4 +1,5 @@
 import Ipc from './ipc';
+import type { ConfigAfterTweet } from '../types/common';
 
 function wait(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));

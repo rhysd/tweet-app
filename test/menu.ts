@@ -1,6 +1,7 @@
 import { deepStrictEqual as eq, ok } from 'assert';
 import sinon = require('sinon');
 import { createMenu, dockMenu, touchBar, MenuActions, TouchbarActions } from '../main/menu';
+import type { KeyMapConfig } from '../types/common';
 import { reset } from './mock';
 
 const { shell } = require('electron') as any; // mocked

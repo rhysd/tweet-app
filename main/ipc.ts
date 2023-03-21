@@ -1,17 +1,18 @@
 import * as assert from 'assert';
 import { ipcMain } from 'electron';
 import log from './log';
+import type { IpcFromRenderer, IpcFromMain } from '../types/common';
 
 export type Listener = (event: Event, ...args: any[]) => void;
 
 export default class Ipc {
     private sender: Electron.WebContents | null;
     // XXX: Using Map<T, U> does not work when the same listener is used for multiple channels.
-    private readonly listeners: Map<Listener, IpcChan.FromRenderer>;
+    private readonly listeners: Map<Listener, IpcFromRenderer>;
 
     public constructor() {
         this.sender = null;
-        this.listeners = new Map<Listener, IpcChan.FromRenderer>();
+        this.listeners = new Map<Listener, IpcFromRenderer>();
     }
 
     public attach(sender: Electron.WebContents): void {
@@ -27,7 +28,7 @@ export default class Ipc {
         this.sender = null;
     }
 
-    public send(chan: IpcChan.FromMain, ...args: any[]): void {
+    public send(chan: IpcFromMain, ...args: any[]): void {
         if (this.sender === null) {
             log.error('Cannot send IPC message because sender is not existing', chan, args);
         } else {
@@ -36,14 +37,14 @@ export default class Ipc {
         }
     }
 
-    public on(chan: IpcChan.FromRenderer, listener: Listener): void {
+    public on(chan: IpcFromRenderer, listener: Listener): void {
         assert.ok(!this.listeners.has(listener));
         ipcMain.on(chan, listener);
         this.listeners.set(listener, chan);
         log.debug('Listen IPC channel', chan, listener.name);
     }
 
-    public forget(chan: IpcChan.FromRenderer, listener: Listener): void {
+    public forget(chan: IpcFromRenderer, listener: Listener): void {
         const deleted = this.listeners.delete(listener);
         if (!deleted) {
             log.warn('No listener found for', chan, 'channel to forget');

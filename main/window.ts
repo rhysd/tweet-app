@@ -10,6 +10,7 @@ import { ON_DARWIN, IS_DEBUG, PRELOAD_JS, ICON_PATH } from './constants';
 import type Ipc from './ipc';
 import { touchBar } from './menu';
 import { openConfig } from './config';
+import type { OnlineStatus, ConfigAfterTweet, CommandLineOptions, Config, WindowConfig } from '../types/common';
 
 // XXX: TENTATIVE: detect back button by aria label
 const INJECTED_CSS =

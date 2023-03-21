@@ -4,6 +4,7 @@ import Ipc from './ipc';
 import log from './log';
 import { createMenu, dockMenu } from './menu';
 import { ON_DARWIN, ON_WINDOWS } from './constants';
+import type { Config, CommandLineOptions } from '../types/common';
 
 export default class Lifecycle {
     // Use Promise for representing quit() is called only once in lifecycle.

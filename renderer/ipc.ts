@@ -1,19 +1,20 @@
 import { ipcRenderer } from 'electron';
+import type { IpcFromMain, IpcFromRenderer } from '../types/common';
 
 export type Listener = (event: Event, ...args: unknown[]) => void;
 
 const ipc = new (class {
-    private listeners: [IpcChan.FromMain, Listener][];
+    private listeners: [IpcFromMain, Listener][];
 
     public constructor() {
         this.listeners = [];
     }
 
-    public send(chan: IpcChan.FromRenderer, ...args: unknown[]): void {
+    public send(chan: IpcFromRenderer, ...args: unknown[]): void {
         ipcRenderer.send(chan, ...args);
     }
 
-    public on(chan: IpcChan.FromMain, listener: Listener): void {
+    public on(chan: IpcFromMain, listener: Listener): void {
         ipcRenderer.on(chan, listener);
         this.listeners.push([chan, listener]);
     }

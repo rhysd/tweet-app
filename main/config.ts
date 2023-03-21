@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import { shell } from 'electron';
 import { CONFIG_FILE, DATA_DIR, ON_DARWIN } from './constants';
 import log from './log';
+import type { Config } from '../types/common';
 
 export const DEFAULT_CONFIG: Config = {
     default_account: '',

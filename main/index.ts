@@ -4,6 +4,7 @@ import log from './log';
 import { loadConfig } from './config';
 import { ON_DARWIN, ICON_PATH } from './constants';
 import ContextMenu from './context_menu';
+import type { CommandLineOptions } from '../types/common';
 
 async function go(): Promise<void> {
     // default_app sets app.on('window-all-closed', () => app.quit()) before
