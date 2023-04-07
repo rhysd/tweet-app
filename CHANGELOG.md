@@ -1,3 +1,12 @@
+<a name="v0.4.2"></a>
+# [v0.4.2](https://github.com/rhysd/tweet-app/releases/tag/v0.4.2) - 07 Apr 2023
+
+- Update Electron to v24 for Chromium update and several security patches
+- Update TypeScript to v5
+
+[Changes][v0.4.2]
+
+
 <a name="v0.4.1"></a>
 # [v0.4.1](https://github.com/rhysd/tweet-app/releases/tag/v0.4.1) - 20 Feb 2023
 
@@ -183,6 +192,7 @@ Maintenance updates. No new features.
 [Changes][v0.1.0]
 
 
+[v0.4.2]: https://github.com/rhysd/tweet-app/compare/v0.4.1...v0.4.2
 [v0.4.1]: https://github.com/rhysd/tweet-app/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/rhysd/tweet-app/compare/v0.3.4...v0.4.0
 [v0.3.4]: https://github.com/rhysd/tweet-app/compare/v0.3.3...v0.3.4
