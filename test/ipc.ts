@@ -55,7 +55,7 @@ describe('Ipc', function () {
         });
 
         it('sets listener as IPC receiver', function () {
-            const listener = (_: Event) => {};
+            const listener = () => {};
             ipc.on('tweetapp:online-status', listener);
             ok(ipcMain.on.calledOnce);
             const call = ipcMain.on.getCalls()[0];
@@ -63,7 +63,7 @@ describe('Ipc', function () {
         });
 
         it('forgets listener', function () {
-            const listener = (_: Event) => {};
+            const listener = () => {};
             ipc.on('tweetapp:online-status', listener);
             ipc.forget('tweetapp:online-status', listener);
             ok(ipcMain.removeListener.calledOnce);
@@ -72,8 +72,8 @@ describe('Ipc', function () {
         });
 
         it('forgets all listeners on dispose()', function () {
-            const l1 = (_: Event) => {};
-            const l2 = (_: Event) => {};
+            const l1 = () => {};
+            const l2 = () => {};
             ipc.on('tweetapp:online-status', l1);
             ipc.on('tweetapp:online-status', l2);
             ipc.dispose();
@@ -89,8 +89,8 @@ describe('Ipc', function () {
         });
 
         it('forgets nothing when listener was acutally not registered', function () {
-            const l1 = (_: Event) => {};
-            const l2 = (_: Event) => {};
+            const l1 = () => {};
+            const l2 = () => {};
             ipc.on('tweetapp:online-status', l1);
             ipc.forget('tweetapp:online-status', l2);
             ok(!ipcMain.removeListener.called);

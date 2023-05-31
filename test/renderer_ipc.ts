@@ -30,9 +30,9 @@ describe('Ipc on renderer', function () {
 
     it('removes all listeners on dispose() method', function () {
         const listeners = [
-            ['tweetapp:open', (_: Event) => {}] as const,
-            ['tweetapp:open', (_: Event) => {}] as const,
-            ['tweetapp:action-after-tweet', (_: Event) => {}] as const,
+            ['tweetapp:open', () => {}] as const,
+            ['tweetapp:open', () => {}] as const,
+            ['tweetapp:action-after-tweet', () => {}] as const,
         ];
 
         for (const [c, l] of listeners) {

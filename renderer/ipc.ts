@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
 import type { IpcFromMain, IpcFromRenderer } from '../types/common';
 
-export type Listener = (event: Event, ...args: unknown[]) => void;
+export type Listener = (event: Electron.IpcRendererEvent, ...args: unknown[]) => void;
 
 const ipc = new (class {
     private listeners: [IpcFromMain, Listener][];

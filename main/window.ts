@@ -556,12 +556,12 @@ export default class TweetWindow {
         });
     }
 
-    private onPrevTweetIdReceived(_: Event, id: string): void {
+    private onPrevTweetIdReceived(_: Electron.IpcMainEvent, id: string): void {
         log.info('Previous tweet:', id);
         this.prevTweetId = id;
     }
 
-    private onOnlineStatusChange(_: Event, status: OnlineStatus): void {
+    private onOnlineStatusChange(_: Electron.IpcMainEvent, status: OnlineStatus): void {
         log.info('Online status changed:', status, 'Previous status:', this.onlineStatus);
 
         if (this.onlineStatus === status) {
@@ -589,7 +589,7 @@ export default class TweetWindow {
         log.debug('Open offline page:', html);
     }
 
-    private async onResetWindow(_: Event): Promise<void> {
+    private async onResetWindow(_: Electron.IpcMainEvent): Promise<void> {
         log.info('Reopen tweet window to reset');
         try {
             await this.open(false, undefined, true);

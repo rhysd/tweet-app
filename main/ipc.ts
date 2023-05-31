@@ -3,7 +3,7 @@ import { ipcMain } from 'electron';
 import log from './log';
 import type { IpcFromRenderer, IpcFromMain } from '../types/common';
 
-export type Listener = (event: Event, ...args: any[]) => void;
+export type Listener = (event: Electron.IpcMainEvent, ...args: any[]) => void;
 
 export default class Ipc {
     private sender: Electron.WebContents | null;
